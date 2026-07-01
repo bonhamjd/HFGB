@@ -61,16 +61,16 @@ Shows Google's own calendar widget. Whatever you add in Google appears instantly
 3. In `index.html`, find `id="gcalFrame"` and replace its `src` with yours.
 
 ### Option B — Branded list (matches the site, a little setup)
-Pulls your upcoming events and shows them as on-brand cards in "Our Lineup."
+Pulls upcoming events from **one or more** public Google Calendars, merges them by date, and shows them as on-brand cards in "Our Lineup." (Currently live: `Website Events` plus the Husker football, Husker men's/women's basketball, and Creighton men's basketball calendars.)
 1. Get a **Google API key**: [console.cloud.google.com](https://console.cloud.google.com) → new project → **APIs & Services → Enable APIs → Google Calendar API** → **Credentials → Create API key.** (Restrict it to the Calendar API.)
-2. Get your **Calendar ID**: Google Calendar → Settings → your calendar → "Integrate calendar" → **Calendar ID** (often your email, or an `...@group.calendar.google.com` address).
-3. In `app.js`, fill in the `GCAL` block:
+2. Get each **Calendar ID**: Google Calendar → Settings → the calendar → "Integrate calendar" → **Calendar ID**.
+3. In `app.js`, list them in the `GCAL` block:
    ```js
-   const GCAL = { calendarId: 'YOUR_CALENDAR_ID', apiKey: 'YOUR_API_KEY', maxEvents: 6 };
+   const GCAL = { calendars: ['id-one@group.calendar.google.com', 'id-two@group.v.calendar.google.com'], apiKey: 'YOUR_API_KEY', maxEvents: 8 };
    ```
-That's it — the "Our Lineup" cards will fill from Google automatically, and fall back to the hand-written `EVENTS` list if anything's off.
+That's it — the "Our Lineup" cards fill from all listed calendars automatically, sorted by date. If one calendar is private or blocked, it's skipped silently and the rest still show. Falls back to the hand-written `EVENTS` list only if every calendar comes back empty.
 
-**Not sure which?** Leave both as-is for now (the page works out of the box with the built-in list), and pick once your calendar's up.
+**Adding or removing a calendar later?** Just tell me — add its Calendar ID to the list (or ask me to pull it) and I'll push the change.
 
 ---
 

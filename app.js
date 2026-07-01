@@ -19,14 +19,22 @@ const EVENTS = [
 
 /* -------------------------------------------------------------------------
    2) GOOGLE CALENDAR (optional live sync)
-      Leave blank to use the EVENTS list above.
-      To go live: make a public Google Calendar, then paste its ID and a
-      Google API key here. Full steps in README.md.
+      Leave calendars empty to use the EVENTS list above.
+      Pulls from every calendar listed below, merges them into one
+      chronological list, and renders them as the same branded cards.
+      A calendar that fails (private, blocked, bad ID) is skipped —
+      the rest still show. Full steps in README.md.
    ------------------------------------------------------------------------- */
 const GCAL = {
-  calendarId: '',   // e.g. 'highflyersgolfbar@gmail.com'  (must be a PUBLIC calendar)
-  apiKey: '',       // e.g. 'AIzaSy...'  (restrict it to the Calendar API)
-  maxEvents: 6,
+  calendars: [
+    '2d6f7caf4bd53ee8c69b453d2ad3ef0cdf78ccbef8b358b08592e78c9753517e@group.calendar.google.com', // Website Events
+    "ncaab_-m-0278rkd_Nebraska Cornhuskers men's basketball#sports@group.v.calendar.google.com",
+    "ncaawb_-m-03c2x4r_Nebraska Cornhuskers women's basketball#sports@group.v.calendar.google.com",
+    "ncaab_-m-02qsymk_Creighton Bluejays men's basketball#sports@group.v.calendar.google.com",
+    'ncaaf_-m-0bjkk9_Nebraska Cornhuskers football#sports@group.v.calendar.google.com',
+  ],
+  apiKey: 'AIzaSyCPkfCssydAv_ed4u1A1Zzl04Sa2MQDbf0', // restricted to the Calendar API
+  maxEvents: 8,
 };
 
 /* ========================================================================= */
@@ -37,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDrinkTabs();
   setupEventsToggle();
   renderEvents(EVENTS);
-  if (GCAL.calendarId && GCAL.apiKey) loadGoogleCalendar();
+  if (GCAL.calendars && GCAL.calendars.length && GCAL.apiKey) loadGoogleCalendar();
 });
 
 /* ---- Mobile drawer ---- */
@@ -114,28 +122,42 @@ function renderEvents(list) {
   `).join('');
 }
 
-/* ---- Optional: pull upcoming events from a public Google Calendar ---- */
+/* ---- Optional: pull upcoming events from one or more public Google Calendars ---- */
 function loadGoogleCalendar() {
   const now = new Date().toISOString();
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GCAL.calendarId)}/events`
-    + `?key=${GCAL.apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=${GCAL.maxEvents}`;
-  fetch(url)
-    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => {
-      if (!data.items || !data.items.length) return;
-      const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-      const list = data.items.map(it => {
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  const fetches = GCAL.calendars.map(id => {
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(id)}/events`
+      + `?key=${GCAL.apiKey}&timeMin=${now}&singleEvents=true&orderBy=startTime&maxResults=${GCAL.maxEvents}`;
+    return fetch(url)
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(data => data.items || [])
+      .catch(err => {
+        console.warn(`Google Calendar unavailable, skipping: ${id}`, err);
+        return [];
+      });
+  });
+
+  Promise.all(fetches).then(results => {
+    const allItems = results.flat();
+    if (!allItems.length) return; // keep the built-in EVENTS list
+
+    const list = allItems
+      .map(it => {
         const startStr = it.start.dateTime || it.start.date;
         const d = new Date(startStr);
         const allDay = !it.start.dateTime;
         const time = allDay
           ? d.toLocaleDateString('en-US', { weekday: 'short' })
           : d.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
-        return { month: months[d.getMonth()], day: d.getDate(), title: it.summary || 'Event', time, note: it.description || '' };
-      });
-      renderEvents(list);
-    })
-    .catch(err => console.warn('Google Calendar sync unavailable, using built-in list.', err));
+        return { _sort: d, month: months[d.getMonth()], day: d.getDate(), title: it.summary || 'Event', time, note: it.description || '' };
+      })
+      .sort((a, b) => a._sort - b._sort)
+      .slice(0, GCAL.maxEvents);
+
+    renderEvents(list);
+  });
 }
 
 function escapeHtml(s) {
