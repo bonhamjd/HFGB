@@ -10,12 +10,40 @@
       once you set real years.
       month: 3-letter, day: number, title, time, note.
    ------------------------------------------------------------------------- */
+// date: YYYY-MM-DD (Central). Past dates hide automatically via upcoming().
+// Schedules verified Oct 12, 2026. Times are Central. TBA = not announced yet.
 const EVENTS = [
-  { month: 'SEP', day: 6,  title: 'Huskers Football — Season Opener', time: 'Sat · Kickoff on the big screen', note: 'Doors early. Drink specials all game. GBR.' },
-  { month: 'SEP', day: 13, title: 'Husker Volleyball Watch Party',     time: 'Fri · 7 PM',  note: 'Sound on, wings out. Bring the crew.' },
-  { month: 'SEP', day: 14, title: 'NFL Sunday',                        time: 'Sun · Noon',  note: 'Every game we can get. Buckets & baskets all afternoon.' },
-  { month: 'SEP', day: 19, title: 'Patio Happy Hour',                  time: 'Fri · 4–6 PM', note: '$1 off drafts. Golden hour out back if the weather holds.' },
+  { date: '2026-10-15', title: 'Husker Volleyball at Northwestern', time: 'Thu · 7 PM · B1G+', note: '' },
+  { date: '2026-10-17', title: 'Husker Volleyball vs Purdue',       time: 'Sat · 4 PM', note: '' },
+  { date: '2026-10-17', title: 'Husker Football at Oregon',         time: 'Sat · 10 PM · FOX', note: '' },
+  { date: '2026-10-22', title: 'Husker Volleyball vs UCLA',         time: 'Thu · 6 PM · FS1', note: '' },
+  { date: '2026-10-24', title: 'Husker Volleyball vs USC',          time: 'Sat · 8 PM', note: '' },
+  { date: '2026-10-30', title: 'Husker Volleyball at Michigan',     time: 'Fri · 5:30 PM', note: '' },
+  { date: '2026-10-31', title: 'Husker Volleyball at Michigan State', time: 'Sat · 3:30 PM', note: '' },
+  { date: '2026-10-31', title: 'Halloween + Husker Football vs Washington', time: 'Sat · Kickoff TBA', note: 'Costume night.' },
+  { date: '2026-11-06', title: 'Husker Football at Illinois',       time: 'Fri · 7 PM · FOX', note: '' },
+  { date: '2026-11-07', title: 'Husker Volleyball at Oregon',       time: 'Sat · 9 PM', note: '' },
+  { date: '2026-11-08', title: 'Husker Volleyball at Washington',   time: 'Sun · Time TBA', note: '' },
+  { date: '2026-11-12', title: 'Husker Volleyball vs Illinois',     time: 'Thu · 6 PM', note: '' },
+  { date: '2026-11-14', title: 'Husker Football at Rutgers',        time: 'Sat · Kickoff TBA', note: '' },
+  { date: '2026-11-14', title: 'Husker Volleyball vs Iowa',         time: 'Sat · Time TBA', note: '' },
+  { date: '2026-11-17', title: 'Husker Volleyball vs Minnesota',    time: 'Tue · 7:30 PM', note: '' },
+  { date: '2026-11-21', title: 'Husker Football vs Ohio State',     time: 'Sat · Kickoff TBA', note: '' },
+  { date: '2026-11-25', title: 'Thanksgiving Eve',                  time: 'Wed', note: '' },
+  { date: '2026-11-27', title: 'Husker Football at Iowa',           time: 'Fri · 11 AM · CBS', note: '' },
+  { date: '2026-12-31', title: "New Year's Eve",                    time: 'Thu', note: '' },
 ];
+
+// Keep only events dated today or later, add month/day for the cards.
+function upcoming(list, max = 8) {
+  const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const t = new Date(); const today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  return list
+    .map(ev => { const [y, m, d] = ev.date.split('-').map(Number); return { ...ev, _d: new Date(y, m - 1, d), month: MONTHS[m - 1], day: d }; })
+    .filter(ev => ev._d >= today)
+    .sort((a, b) => a._d - b._d)
+    .slice(0, max);
+}
 
 /* -------------------------------------------------------------------------
    2) GOOGLE CALENDAR (optional live sync)
@@ -28,10 +56,6 @@ const EVENTS = [
 const GCAL = {
   calendars: [
     '2d6f7caf4bd53ee8c69b453d2ad3ef0cdf78ccbef8b358b08592e78c9753517e@group.calendar.google.com', // Website Events
-    "ncaab_-m-0278rkd_Nebraska Cornhuskers men's basketball#sports@group.v.calendar.google.com",
-    "ncaawb_-m-03c2x4r_Nebraska Cornhuskers women's basketball#sports@group.v.calendar.google.com",
-    "ncaab_-m-02qsymk_Creighton Bluejays men's basketball#sports@group.v.calendar.google.com",
-    'ncaaf_-m-0bjkk9_Nebraska Cornhuskers football#sports@group.v.calendar.google.com',
   ],
   apiKey: 'AIzaSyCPkfCssydAv_ed4u1A1Zzl04Sa2MQDbf0', // restricted to the Calendar API
   maxEvents: 8,
@@ -44,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileMenu();
   setupDrinkTabs();
   setupEventsToggle();
-  renderEvents(EVENTS);
+  renderEvents(upcoming(EVENTS));
   if (GCAL.calendars && GCAL.calendars.length && GCAL.apiKey) loadGoogleCalendar();
 });
 
