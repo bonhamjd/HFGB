@@ -132,6 +132,7 @@ p{margin:0;text-wrap:pretty;}
 .hero h1{font-family:var(--font-disp);font-weight:900;font-size:clamp(48px,8vw,104px);
   line-height:.92;letter-spacing:-.015em;margin-top:16px;}
 .hero h1 .g{color:var(--brass);}
+.hero h1 .hero__town{display:block;margin-top:10px;font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:clamp(15px,1.8vw,20px);line-height:1.2;color:var(--parch);}
 .hero__sub{font-size:clamp(18px,2.2vw,22px);line-height:1.45;color:rgba(240,231,208,.85);
   max-width:40ch;margin-top:20px;}
 .hero__cta{display:flex;gap:13px;margin-top:32px;flex-wrap:wrap;}
