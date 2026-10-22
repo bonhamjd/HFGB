@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This page moved | High Flyers Golf Bar | Humphrey, NE</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14523a">
+<link rel="icon" href="/assets/logo-color.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700;900&family=Oswald:wght@500;600&family=Barlow:wght@400;600&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<script>
+// Old Square Online links: send people to the right spot on the new page.
+(function () {
+  var p = location.pathname.toLowerCase();
+  var dest = null;
+  if (/^\/(menu|shop|product|s\/order)(\/|$)/.test(p)) dest = '/#menu';
+  else if (/^\/contact-us(\/|$)/.test(p)) dest = '/#visit';
+  else if (p !== '/404.html') dest = '/';
+  if (dest) location.replace(dest);
+})();
+</script>
+<style>
+  .moved{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;background:var(--parch);}
+  .moved__card{max-width:520px;width:100%;text-align:center;background:var(--paper);border:var(--border);border-radius:var(--radius);box-shadow:var(--stamp-green);padding:36px 26px;}
+  .moved__logo{width:220px;margin:0 auto 22px;}
+  .moved h1{font-family:var(--font-disp);font-weight:900;font-size:40px;line-height:1.05;color:var(--green);margin-bottom:12px;}
+  .moved p{color:var(--ink-2);margin-bottom:26px;}
+  .moved__btns{display:flex;flex-direction:column;gap:12px;}
+  .moved__addr{margin-top:22px;font-size:15px;color:var(--n600);}
+</style>
+</head>
+<body>
+<main class="moved">
+  <div class="moved__card">
+    <a href="/"><img class="moved__logo" src="/assets/logo-color.png" alt="High Flyers Golf Bar"></a>
+    <h1>This page moved</h1>
+    <p>Our website got a fresh start. Everything now lives on one page: the menu, the games, hours and directions.</p>
+    <div class="moved__btns">
+      <a class="btn btn--green btn--lg" href="/#menu">See the Menu</a>
+      <a class="btn btn--brass btn--lg" href="/#visit">Hours and Directions</a>
+      <a class="btn btn--outline btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+    </div>
+    <div class="moved__addr">302 Main St, Humphrey, NE 68642</div>
+  </div>
+</main>
+</body>
+</html>
