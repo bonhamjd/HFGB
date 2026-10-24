@@ -32,10 +32,12 @@ export function makeConfig(env = {}) {
     adminKey: env.ADMIN_KEY || (mode === 'mock' ? 'demo' : ''),
     allowedOrigins: list(env.ALLOWED_ORIGINS || 'https://highflyersgolfbar.com,http://localhost:8787,http://127.0.0.1:8787'),
     allowTestClock: mode === 'mock',
+    // Hard kill switch: no Clover order, charge, customer or print unless PAYMENTS_ENABLED=true. Off by default for real Clover.
+    paymentsEnabled: mode === 'mock' ? env.PAYMENTS_ENABLED !== 'false' : env.PAYMENTS_ENABLED === 'true',
   };
 }
 export function publicConfig(cfg, base) {
   return { mode: cfg.mode, mid: cfg.mid, ecomPublic: cfg.ecomPublic, sdk: base.sdk,
     orderOpen: cfg.orderOpen, firstPickup: cfg.firstPickup, lastOrder: cfg.lastOrder, lastPickup: cfg.lastPickup,
-    slotCap: cfg.slotCap, prepMin: cfg.prepMin, tz: cfg.tz, smsEnabled: cfg.smsEnabled };
+    slotCap: cfg.slotCap, prepMin: cfg.prepMin, tz: cfg.tz, smsEnabled: cfg.smsEnabled, paymentsEnabled: cfg.paymentsEnabled };
 }

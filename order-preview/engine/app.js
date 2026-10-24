@@ -91,6 +91,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
 
   // ---------- place order ----------
   async function placeOrder(b, now) {
+    if (!cfg.paymentsEnabled) throw new HttpError(503, 'Online payments are not turned on yet. Please call the bar at (402) 923-0160 to order.', 'payments_disabled');
     if (b.idem) { const prev = await store.findOrderByIdem(String(b.idem)); if (prev) return { ok: true, order: pubOrder(prev), duplicate: true }; }
     const phone = digits(b.phone), name = String(b.name || '').trim().slice(0, 40), notes = String(b.notes || '').trim().slice(0, 240);
     if (phone.length !== 10) throw new HttpError(400, 'Please enter a 10 digit phone number.', 'phone');

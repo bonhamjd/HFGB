@@ -163,11 +163,13 @@ let lookT; $('#phone').addEventListener('input', e => {
 // ---------- payment ----------
 const payLabel = () => `Pay ${money(sums().total || 0)}` + (payMode === 'saved' && me?.savedCard ? ` · ${me.savedCard.brand} ${me.savedCard.last4}` : '');
 const liveCards = () => CFG.mode !== 'mock' && CFG.ecomPublic && CFG.sdk;
+const payOff = () => CFG.paymentsEnabled === false;
 function renderPay() {
   const box = $('#payBox'), s = sums();
   const saved = me?.savedCard && digits($('#phone').value || me.phone) === me.phone;
   if (saved && payMode !== 'newcard') payMode = 'saved'; else if (payMode === 'saved') payMode = 'card';
   let h = '<span class="flabel">Payment</span>';
+  if (payOff()) { box.innerHTML = h + '<p class="testnote">Online payments are not turned on yet. This is a preview. Please call the bar at (402) 923-0160 to order.</p>'; $('#payBtn').textContent = 'Payments off (preview)'; $('#payBtn').disabled = true; return; }
   if (payMode === 'saved') h += `<div class="saved"><span class="chk">&#10003;</span><b>${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</b><button class="linkbtn sm" id="useNew">Use a different card</button></div>`;
   else {
     if (liveCards()) h += `<div class="cf"><div class="fld" id="cfNum"></div><div class="row"><div class="fld" id="cfDate"></div><div class="fld" id="cfCvv"></div><div class="fld" id="cfZip"></div></div><div class="err" id="cfErr"></div></div>`;
@@ -199,7 +201,7 @@ async function getToken() {
 }
 function err(m) { const e = $('#coErr'); e.textContent = m; e.classList.toggle('hidden', !m); if (m) e.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
 $('#payBtn').addEventListener('click', async () => {
-  if (busy) return; err('');
+  if (busy || payOff()) return; err('');
   const phone = digits($('#phone').value), name = $('#name').value.trim(), email = ($('#email')?.value || '').trim();
   if (phone.length !== 10) return err('Please enter your 10 digit phone number.');
   if (!name) return err('Please add a name for the order.');
@@ -225,7 +227,7 @@ $('#payBtn').addEventListener('click', async () => {
     if (e.code === 'card_device') { payMode = 'newcard'; renderPay(); }
     if (['slot', 'slot_full', 'sold_out'].includes(e.code)) refreshSchedule();
     if (e.code === 'declined') idem = null;
-  } finally { busy = false; b.disabled = !SCHED.open; b.textContent = payLabel(); }
+  } finally { busy = false; b.disabled = !SCHED.open || payOff(); b.textContent = payOff() ? 'Payments off (preview)' : payLabel(); }
 });
 
 // ---------- confirmation ----------

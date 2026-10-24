@@ -14,6 +14,8 @@ export class CloverClient {
   }
   async req(url, { method = 'GET', body, auth, headers = {} } = {}, where = '') {
     this.calls++;
+    if (method !== 'GET' && this.cfg.mode !== 'mock' && !this.cfg.paymentsEnabled && !(this.cfg.allowSetup && /\/order_types$/.test(url)))
+      throw new CloverError(423, 'writes to Clover are locked while PAYMENTS_ENABLED is false', where || url);
     const h = { accept: 'application/json', ...headers };
     if (auth) h.authorization = 'Bearer ' + auth;
     if (body !== undefined) h['content-type'] = 'application/json';
