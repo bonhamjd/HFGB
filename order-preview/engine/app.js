@@ -103,6 +103,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     const m = await menu(), q = price(m, b.items);
     if (q.problems.length) throw new HttpError(409, 'Some items just sold out: ' + q.problems.map(p => p.name || 'an item').join(', '), 'sold_out');
     if (!q.lines.length) throw new HttpError(400, 'Your order is empty.', 'empty');
+    if (cfg.maxTotal && q.total > cfg.maxTotal) throw new HttpError(400, `Online orders are limited to ${money(cfg.maxTotal)} right now. Please call the bar for bigger orders.`, 'over_cap');
     const pay = b.payment || {}; const cust = await store.getCustomer(phone);
     const devHash = b.deviceToken ? await sha(String(b.deviceToken)) : '';
     if (pay.type === 'saved') {

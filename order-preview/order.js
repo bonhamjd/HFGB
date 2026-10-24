@@ -164,6 +164,7 @@ let lookT; $('#phone').addEventListener('input', e => {
 const payLabel = () => `Pay ${money(sums().total || 0)}` + (payMode === 'saved' && me?.savedCard ? ` · ${me.savedCard.brand} ${me.savedCard.last4}` : '');
 const liveCards = () => CFG.mode !== 'mock' && CFG.ecomPublic && CFG.sdk;
 const payOff = () => CFG.paymentsEnabled === false;
+const appleOk = () => { try { return !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()); } catch { return false; } };
 function renderPay() {
   const box = $('#payBox'), s = sums();
   const saved = me?.savedCard && digits($('#phone').value || me.phone) === me.phone;
@@ -172,6 +173,7 @@ function renderPay() {
   if (payOff()) { box.innerHTML = h + '<p class="testnote">Online payments are not turned on yet. This is a preview. Please call the bar at (402) 923-0160 to order.</p>'; $('#payBtn').textContent = 'Payments off (preview)'; $('#payBtn').disabled = true; return; }
   if (payMode === 'saved') h += `<div class="saved"><span class="chk">&#10003;</span><b>${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</b><button class="linkbtn sm" id="useNew">Use a different card</button></div>`;
   else {
+    if (liveCards() && appleOk()) h += '<div id="applePayBtn" class="applepay"></div><div class="paysep">or pay with card</div>';
     if (liveCards()) h += `<div class="cf"><div class="fld" id="cfNum"></div><div class="row"><div class="fld" id="cfDate"></div><div class="fld" id="cfCvv"></div><div class="fld" id="cfZip"></div></div><div class="err" id="cfErr"></div></div>`;
     else h += `<div class="testcards" id="testCards">
       <button type="button" data-tc="approve" class="${testCard === 'approve' ? 'on' : ''}"><span>&#128179;</span><span>Test Visa ending 4242<small>Approves</small></span></button>
@@ -194,23 +196,32 @@ async function mountClover() { // Clover hosted iframe fields (Ecommerce public 
   cloverSdk = cloverSdk || new window.Clover(CFG.ecomPublic, { merchantId: CFG.mid });
   const el = cloverSdk.elements(), st = { body: { fontFamily: 'Barlow, sans-serif', fontSize: '17px' } };
   el.create('CARD_NUMBER', st).mount('#cfNum'); el.create('CARD_DATE', st).mount('#cfDate'); el.create('CARD_CVV', st).mount('#cfCvv'); el.create('CARD_POSTAL_CODE', st).mount('#cfZip');
+  if ($('#applePayBtn')) {
+    try {
+      const req = cloverSdk.createApplePaymentRequest({ amount: sums().total, countryCode: 'US', currencyCode: 'USD' });
+      el.create('PAYMENT_REQUEST_BUTTON_APPLE_PAY', { applePaymentRequest: req, sessionIdentifier: CFG.mid }).mount('#applePayBtn');
+    } catch (e) { $('#applePayBtn')?.remove(); document.querySelector('.paysep')?.remove(); }
+  }
 }
 async function getToken() {
   if (liveCards()) { const r = await cloverSdk.createToken(); if (r.errors) throw new Error(Object.values(r.errors).join(' ')); return { token: r.token, card: { brand: r.card?.brand, last4: r.card?.last4 } }; }
   const r = await api('/dev/tokenize', { method: 'POST', body: { number: testCard === 'approve' ? '4242424242424242' : '4000000000000002' } }); return r;
 }
 function err(m) { const e = $('#coErr'); e.textContent = m; e.classList.toggle('hidden', !m); if (m) e.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
-$('#payBtn').addEventListener('click', async () => {
-  if (busy || payOff()) return; err('');
+$('#payBtn').addEventListener('click', () => submitOrder(null));
+// wallet = { token, card } from Apple Pay (Clover iframe); null = Pay button. Returns true when the order is paid.
+async function submitOrder(wallet) {
+  if (busy || payOff()) return false; err('');
   const phone = digits($('#phone').value), name = $('#name').value.trim(), email = ($('#email')?.value || '').trim();
-  if (phone.length !== 10) return err('Please enter your 10 digit phone number.');
-  if (!name) return err('Please add a name for the order.');
-  if (payMode !== 'saved' && saveCard && !/^\S+@\S+\.\S+$/.test(email)) return err('Add your email to save the card, or uncheck "Save my card".');
+  if (phone.length !== 10) { err('Please enter your 10 digit phone number' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
+  if (!name) { err('Please add a name for the order' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
+  if (!wallet && payMode !== 'saved' && saveCard && !/^\S+@\S+\.\S+$/.test(email)) { err('Add your email to save the card, or uncheck "Save my card".'); return false; }
   const slot = when === 'asap' ? 'asap' : $('#pickupTime').value;
-  busy = true; const b = $('#payBtn'); b.disabled = true; b.textContent = 'Paying...';
+  busy = true; idem = idem || ('i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8)); const b = $('#payBtn'); b.disabled = true; b.textContent = 'Paying...';
   try {
     let payment;
-    if (payMode === 'saved') payment = { type: 'saved' };
+    if (wallet) payment = { type: 'token', token: wallet.token, card: wallet.card, save: false };
+    else if (payMode === 'saved') payment = { type: 'saved' };
     else { const t = await getToken(); payment = { type: 'token', token: t.token, card: t.card, save: saveCard }; if (saveCard) LS.set('hfgb_email', email); }
     const d = device();
     const r = await api('/order', { method: 'POST', body: { idem, items: Object.entries(cart).map(([id, qty]) => ({ id, qty })), phone, name, email: email || undefined,
@@ -222,12 +233,20 @@ $('#payBtn').addEventListener('click', async () => {
     ups.shown.clear(); ups.added.clear(); ups.cartDone = false; ups.cartPick = null;
     showDone(r.order); go('done');
     try { const m2 = await api('/me', { method: 'POST', body: device() }); if (m2.known) me = { ...m2, phone }; } catch {}
+    return true;
   } catch (e) {
     err(e.message || 'Something went wrong. Nothing was charged.');
     if (e.code === 'card_device') { payMode = 'newcard'; renderPay(); }
     if (['slot', 'slot_full', 'sold_out'].includes(e.code)) refreshSchedule();
     if (e.code === 'declined') idem = null;
+    return false;
   } finally { busy = false; b.disabled = !SCHED.open || payOff(); b.textContent = payOff() ? 'Payments off (preview)' : payLabel(); }
+}
+// Apple Pay (Clover iframe). Only on Safari/Apple devices that can pay; the card form stays as the fallback.
+window.addEventListener('paymentMethod', async ev => {
+  const t = ev?.detail?.tokenRecieved; if (!t?.id) return;
+  const ok = await submitOrder({ token: t.id, card: { brand: 'Apple Pay', last4: t.wallet?.last4 || t.card?.last4 || '' } });
+  try { cloverSdk.updateApplePaymentStatus(ok ? 'success' : 'failed'); } catch {}
 });
 
 // ---------- confirmation ----------

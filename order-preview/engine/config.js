@@ -24,6 +24,7 @@ export function makeConfig(env = {}) {
     slotCap: +(env.SLOT_CAP || 6),
     prepMin: +(env.PREP_MIN || 20),
     maxItems: +(env.MAX_ITEMS || 40),
+    maxTotal: +(env.MAX_ORDER_TOTAL || 0), // cents, 0 = no cap. Safety cap for the test window.
     printEnabled: env.PRINT_ENABLED !== 'false',
     smsEnabled: env.SMS_ENABLED === 'true',
     smsTo: env.SMS_TO || '',
