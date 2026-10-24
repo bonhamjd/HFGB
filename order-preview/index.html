@@ -4,46 +4,42 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Order Online (Preview) | High Flyers Golf Bar</title>
+<title>Order Online | High Flyers Golf Bar</title>
 <meta name="theme-color" content="#14523a">
 <link rel="icon" href="/assets/logo-color.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,500;0,700;0,900;1,700&family=Oswald:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
 <link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="order.css">
+<link rel="stylesheet" href="order.css?v=2">
+<script src="config.js?v=2"></script>
 </head>
 <body class="oo">
-<div class="demo-strip">Preview only. Demo orders, no real payments.</div>
+<div class="demo-strip hidden" id="envStrip"></div>
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="hdr__logo" href="/" aria-label="High Flyers Golf Bar home"><img src="/assets/logo-color.png" alt="High Flyers Golf Bar"></a>
-    <nav class="nav" aria-label="Primary">
-      <a href="/#menu">Menu</a><a href="/#lineup">The Lineup</a><a href="/#visit">Visit</a>
-    </nav>
+    <nav class="nav" aria-label="Primary"><a href="/#menu">Menu</a><a href="/#lineup">The Lineup</a><a href="/#visit">Visit</a></nav>
     <div class="hdr__right">
       <span class="hdr__open"><span class="dot"></span>Pickup at 302 Main St</span>
       <a class="btn btn--brass btn--sm" href="tel:+14029230160">Call</a>
     </div>
   </div>
 </header>
-
 <main id="app">
-  <!-- MENU VIEW -->
   <section class="view" id="v-menu">
-    <div class="oo-hero">
-      <div class="wrap">
-        <span class="sec-head__eyebrow">Order Ahead · Pickup</span>
-        <h1 class="disp">Order <span class="g">Online</span></h1>
-        <p class="oo-hero__sub">Order now, grab it at the bar. Most orders ready in about <b id="etaMin">20</b> minutes.</p>
-      </div>
-    </div>
+    <div class="oo-hero"><div class="wrap">
+      <span class="sec-head__eyebrow">Order Ahead · Pickup</span>
+      <h1 class="disp">Order <span class="g">Online</span></h1>
+      <div class="status-line" id="statusLine"><span class="dot"></span><span id="statusTxt">Loading...</span></div>
+    </div></div>
     <div class="wrap">
       <div class="welcome hidden" id="welcome">
         <div class="welcome__txt">
           <span class="label">Welcome back</span>
-          <div class="welcome__name" id="welcomeName">Friend</div>
+          <div class="welcome__name" id="welcomeName"></div>
           <div class="welcome__usual" id="welcomeUsual"></div>
+          <div class="welcome__card hidden" id="welcomeCard"></div>
         </div>
         <button class="btn btn--brass" id="reorderBtn">Reorder Your Usual</button>
         <button class="linkbtn" id="notYou">Not you?</button>
@@ -51,27 +47,18 @@
     </div>
     <nav class="tabs" id="tabs" aria-label="Menu categories"></nav>
     <div class="wrap" id="menuList"></div>
-    <div class="wrap"><div class="tbd" id="drinksNote"></div></div>
+    <div class="wrap"><div class="tbd"><b>Drinks</b>Beer, cocktails and other drinks are bar only. Pop is on the menu above. See you at the bar!</div></div>
     <div class="spacer"></div>
   </section>
 
-  <!-- CHECKOUT VIEW -->
   <section class="view hidden" id="v-checkout">
     <div class="wrap narrow">
       <button class="back" data-go="menu">&larr; Back to menu</button>
       <h2 class="disp v-title">Your <span class="g">Order</span></h2>
+      <div class="closedbox hidden" id="closedBox"></div>
       <div class="card" id="cartLines"></div>
       <div class="card totals" id="totals"></div>
-      <form class="card form" id="coForm" autocomplete="on" novalidate>
-        <div class="field">
-          <label for="phone">Phone</label>
-          <input id="phone" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(402) 555-0123" required>
-          <small class="hint" id="phoneHint">We'll remember you next time.</small>
-        </div>
-        <div class="field">
-          <label for="name">Name for the order</label>
-          <input id="name" name="name" autocomplete="given-name" placeholder="First name" required>
-        </div>
+      <form class="card form" id="coForm" autocomplete="on" novalidate onsubmit="return false">
         <div class="field">
           <span class="flabel">Pickup</span>
           <div class="seg" id="whenSeg">
@@ -81,64 +68,45 @@
           <select id="pickupTime" class="hidden" aria-label="Pickup time"></select>
         </div>
         <div class="field">
-          <label for="notes">Notes <small>(optional)</small></label>
-          <textarea id="notes" rows="2" placeholder="Wing sauce, topping, no onions..."></textarea>
+          <label for="phone">Phone</label>
+          <input id="phone" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="(402) 555-0123">
+          <small class="hint" id="phoneHint">We'll remember you next time.</small>
         </div>
-        <p class="err hidden" id="coErr">Add your name and a 10 digit phone number.</p>
+        <div class="field">
+          <label for="name">Name for the order</label>
+          <input id="name" name="name" autocomplete="given-name" placeholder="First name">
+        </div>
+        <button type="button" class="notelink" id="noteLink">+ Add a note (sauce, topping...)</button>
+        <div class="field hidden" id="noteField">
+          <label for="notes">Notes</label>
+          <textarea id="notes" rows="2" placeholder="Buffalo on the wings, pepperoni on the pizza..."></textarea>
+        </div>
       </form>
+      <div class="card paybox" id="payBox"></div>
+      <p class="err hidden" id="coErr"></p>
     </div>
-    <div class="paybar"><button class="btn btn--green btn--lg" id="toPay">Continue to Pay</button></div>
+    <div class="paybar"><button class="btn btn--green btn--lg" id="payBtn">Pay</button></div>
   </section>
 
-  <!-- PAY VIEW (DEMO) -->
-  <section class="view hidden" id="v-pay">
-    <div class="wrap narrow">
-      <button class="back" data-go="checkout">&larr; Back</button>
-      <h2 class="disp v-title">Pay</h2>
-      <div class="card totals" id="payTotals"></div>
-      <div class="card demo-pay">
-        <span class="badge badge--brass">Demo</span>
-        <div class="demo-pay__box">
-          <div class="demo-pay__lock">&#128274;</div>
-          <b>Clover secure card form goes here</b>
-          <p>In the real version, Clover's own card box loads here, so card numbers never touch our site. Apple Pay and Google Pay can sit above it.</p>
-          <p class="demo-pay__no">Nothing to type. This preview does not collect any card info.</p>
-        </div>
-      </div>
-    </div>
-    <div class="paybar"><button class="btn btn--green btn--lg" id="payBtn">Pay <span id="payAmt"></span> (Demo)</button></div>
-  </section>
-
-  <!-- CONFIRMATION VIEW -->
   <section class="view hidden" id="v-done">
-    <div class="wrap narrow">
-      <div class="done">
-        <div class="done__check">&#10003;</div>
-        <span class="label">Order received</span>
-        <div class="done__num" id="doneNum">#0000</div>
-        <p class="done__ready">Ready about <b id="doneReady">--</b></p>
-        <p class="done__sub" id="doneSub"></p>
-        <div class="card" id="doneLines"></div>
-        <div class="done__where">
-          <b>Pickup at the bar</b><br>302 Main St, Humphrey<br>
-          <a href="tel:+14029230160">(402) 923-0160</a>
-        </div>
-        <button class="btn btn--outline" id="newOrder">Back to Menu</button>
-        <p class="demo-note">Demo: no money moved and nothing was sent to Clover. Open the <a href="staff.html" target="_blank">staff screen</a> to see how the bar would get it.</p>
-      </div>
-    </div>
+    <div class="wrap narrow"><div class="done">
+      <div class="done__check">&#10003;</div>
+      <span class="done__status" id="doneStatus">Order received</span>
+      <div class="track" id="doneTrack"><span class="on"></span><span></span><span></span></div>
+      <div class="done__num" id="doneNum"></div>
+      <p class="done__ready" id="doneReady"></p>
+      <p class="done__sub" id="doneSub"></p>
+      <div class="card" id="doneLines"></div>
+      <div class="done__where"><b>Pick up at the bar</b><br>302 Main St, Humphrey<br><a href="tel:+14029230160">(402) 923-0160</a></div>
+      <button class="btn btn--outline" id="newOrder">Back to Menu</button>
+      <p class="demo-note hidden" id="doneDemo">Test mode: paid with a test card on mock Clover. No money moved. The <a href="staff.html" target="_blank">staff screen</a> and <a href="admin.html" target="_blank">dashboard</a> update in this browser.</p>
+    </div></div>
   </section>
 </main>
-
-<!-- STICKY CART BAR -->
 <div class="cartbar hidden" id="cartbar">
-  <button class="cartbar__btn" id="cartBtn">
-    <span class="cartbar__count" id="cartCount">0</span>
-    <span class="cartbar__lbl">View Order</span>
-    <span class="cartbar__amt" id="cartAmt">$0.00</span>
-  </button>
+  <button class="cartbar__btn" id="cartBtn"><span class="cartbar__count" id="cartCount">0</span><span class="cartbar__lbl">View Order</span><span class="cartbar__amt" id="cartAmt">$0.00</span></button>
 </div>
 <div class="toast" id="toast"></div>
-<script src="order.js"></script>
+<script type="module" src="order.js?v=2"></script>
 </body>
 </html>

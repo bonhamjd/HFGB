@@ -1,0 +1,137 @@
+{
+ "NETRVSWPPN4XP": {
+  "name": "All Meat Flatbread",
+  "note": "",
+  "group": "Flatbreads"
+ },
+ "TXFT91V742RN4": {
+  "name": "Hot Honey Pepperoni Flatbread",
+  "note": "",
+  "group": "Flatbreads"
+ },
+ "G4S8MDT7W7B4T": {
+  "name": "One Topping Pizza",
+  "note": "Tell us the topping in notes",
+  "group": "Flatbreads"
+ },
+ "SZZQCE9HAYYXM": {
+  "name": "Cheese Flatbread",
+  "note": "",
+  "group": "Flatbreads"
+ },
+ "H1DV39M1N1FCT": {
+  "name": "Breakfast Pizza",
+  "note": "",
+  "group": "Flatbreads"
+ },
+ "2R4RZ4R701V6G": {
+  "name": "Wings",
+  "note": "12 piece",
+  "group": "Wings"
+ },
+ "K62THAKJNS9BW": {
+  "name": "Wings",
+  "note": "6 piece",
+  "group": "Wings"
+ },
+ "QX5PVE7HBAEDM": {
+  "name": "Boneless Bites",
+  "note": "12 piece",
+  "group": "Wings"
+ },
+ "FGJAFMMZTBHBY": {
+  "name": "Boneless Bites",
+  "note": "6 piece",
+  "group": "Wings"
+ },
+ "3ZX33E5G6R7GE": {
+  "name": "Cheeseburger",
+  "note": "",
+  "group": "Burgers"
+ },
+ "QP9JY185RJJ0E": {
+  "name": "Burger",
+  "note": "",
+  "group": "Burgers"
+ },
+ "HZJTB424E3PQJ": {
+  "name": "Chicken Sandwich",
+  "note": "",
+  "group": "Burgers"
+ },
+ "1WS22QFSWT30M": {
+  "name": "Double Cheeseburger",
+  "note": "",
+  "group": "Burgers"
+ },
+ "G87DXS86H5C3E": {
+  "name": "McRib",
+  "note": "",
+  "group": "Burgers"
+ },
+ "A7BHBXAD6HV5W": {
+  "name": "Pretzel Bites",
+  "note": "15, w/ cheese",
+  "group": "Front 9"
+ },
+ "6BVRZ13F73RGT": {
+  "name": "Cheese Balls",
+  "note": "Bucket of 18",
+  "group": "Front 9"
+ },
+ "YRC7MZ0BG5NS2": {
+  "name": "Pickle Chips",
+  "note": "15",
+  "group": "Front 9"
+ },
+ "MBKHC77MKZZ5T": {
+  "name": "Jalapeno Poppers",
+  "note": "8",
+  "group": "Front 9"
+ },
+ "KRYXE4BXF44R2": {
+  "name": "Mac & Cheese Bites",
+  "note": "10",
+  "group": "Front 9"
+ },
+ "3K9MPNMEJ9JB8": {
+  "name": "Potato Rounds",
+  "note": "Full, 10 oz",
+  "group": "Front 9"
+ },
+ "DKAPBX21VETCM": {
+  "name": "Potato Rounds",
+  "note": "Half, 4 oz",
+  "group": "Front 9"
+ },
+ "QM983WNGNTJDR": {
+  "name": "Fries",
+  "note": "10 oz",
+  "group": "Front 9"
+ },
+ "CVRCVJ5NFFS12": {
+  "name": "Fairway Fries",
+  "note": "Half order",
+  "group": "Front 9"
+ },
+ "6BWN4P6S8FH1Y": {
+  "name": "Nachos",
+  "note": "",
+  "group": "Front 9"
+ },
+ "HNHX3RC405KHW": {
+  "name": "Mini Tacos",
+  "note": "",
+  "group": "Front 9"
+ },
+ "28Q1K967KGAWA": {
+  "name": "Beef Sticks",
+  "note": "",
+  "group": "Front 9"
+ },
+ "ED4V18T3EN0DM": {
+  "name": "Churros",
+  "note": "15, w/ marshmallow",
+  "group": "Sweets"
+ }
+}

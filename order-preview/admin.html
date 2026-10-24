@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Online Orders Dashboard | High Flyers Golf Bar</title>
+<link rel="icon" href="/assets/logo-color.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700;900&family=Oswald:wght@500;600;700&family=Barlow:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="admin.css?v=2">
+<script src="config.js?v=2"></script>
+</head>
+<body class="ad">
+<div id="loginView" class="login hidden">
+  <img src="/assets/logo-color.png" alt="" style="height:56px;width:auto">
+  <h1 class="disp" style="font-size:30px">Owner dashboard</h1>
+  <input id="akey" type="password" placeholder="Admin key" autocomplete="current-password">
+  <button class="btn btn--green" id="loginBtn">Sign in</button>
+  <p class="fine" id="loginErr"></p>
+</div>
+<div id="appView" class="hidden">
+  <div class="ad-top"><img src="/assets/logo-color.png" alt=""><b>Online Orders</b>
+    <select id="range" aria-label="Date range"><option value="today">Today</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option><option value="all">All time</option></select></div>
+  <div class="admin-shell">
+    <div class="admin-side" role="tablist">
+      <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+      <button role="tab" data-tab="orders">Orders</button>
+      <button role="tab" data-tab="menu">Online menu</button>
+      <button role="tab" data-tab="settings">Settings</button>
+      <button id="logout">Sign out</button>
+    </div>
+    <div class="admin-main" id="panel"></div>
+  </div>
+</div>
+<script type="module" src="admin.js?v=2"></script>
+</body>
+</html>

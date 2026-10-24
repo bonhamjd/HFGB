@@ -1,208 +1,262 @@
-/* High Flyers online ordering PREVIEW. Static mockup: menu snapshot from Clover (read-only),
-   customers remembered in this browser only (localStorage), no real payment, nothing sent to Clover. */
-(function(){
-  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-  const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
-  const money=c=>'$'+(c/100).toFixed(2);
-  const digits=s=>(s||'').replace(/\D/g,'').slice(-10);
-  const fmtPhone=d=>d.length===10?`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}`:d;
-  const fmtTime=t=>new Date(t).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
-  let MENU=null, ITEMS={}, cart={}, when='asap', TAX=0.075;
-  const PREP_MIN=20;
+// High Flyers online ordering: menu, cart, checkout, pay, confirmation. Prices and availability come from the backend (Clover).
+import { api, isDemo, money, fmtPhone, digits, fmtTime, esc } from './api.js';
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const LS = { get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }, set: (k, v) => localStorage.setItem(k, JSON.stringify(v)), del: k => localStorage.removeItem(k) };
+const UPSELL_GROUPS = ['Front 9', 'Sweets', 'Pop'];
+let CFG, MENU, SCHED, ITEMS = {}, cart = LS.get('hfgb_cart', {}), me = null, when = 'asap';
+const ups = { shown: new Set(), added: new Set(), dismissed: new Set(), chipFor: null, cartDone: false };
+let payMode = 'card', testCard = 'approve', saveCard = true, cloverSdk = null, idem = null, busy = false;
 
-  function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1400);}
+function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1400); }
+const device = () => LS.get('hfgb_device', null);
 
-  // ---------- data ----------
-  fetch('menu.json').then(r=>r.json()).then(m=>{
-    MENU=m; TAX=m.taxRate||TAX;
-    m.categories.forEach(c=>c.items.forEach(i=>ITEMS[i.id]=Object.assign({cat:c.name},i)));
-    cart=LS.get('hfgb_oo_cart',{});
-    Object.keys(cart).forEach(k=>{if(!ITEMS[k])delete cart[k]});
-    renderMenu(); renderWelcome(); renderCartBar(); route();
-  });
+async function boot() {
+  try {
+    [CFG, MENU] = await Promise.all([api('/config'), api('/menu')]);
+  } catch (e) { $('#statusTxt').textContent = 'Online ordering is not available right now. Please call (402) 923-0160.'; return; }
+  SCHED = MENU.schedule;
+  MENU.groups.forEach(g => g.items.forEach(i => ITEMS[i.id] = { ...i, group: g.name }));
+  Object.keys(cart).forEach(k => { if (!ITEMS[k] || ITEMS[k].soldOut) delete cart[k]; }); saveCart();
+  if (CFG.mode !== 'production') { const s = $('#envStrip'); s.textContent = window.HFGB_ORDER.label || ('Test mode: ' + CFG.mode); s.classList.remove('hidden'); }
+  renderStatus(); renderMenu(); renderCartBar();
+  const d = device();
+  if (d) { try { const r = await api('/me', { method: 'POST', body: d }); if (r.known) me = { ...r, phone: d.phone }; } catch {} }
+  renderWelcome(); route();
+  setInterval(refreshSchedule, 60000);
+}
+async function refreshSchedule() { try { const m = await api('/menu'); SCHED = m.schedule; m.groups.forEach(g => g.items.forEach(i => { if (ITEMS[i.id]) ITEMS[i.id].soldOut = i.soldOut; })); renderStatus(); if (view() === 'checkout') renderCheckout(); } catch {} }
+function statusText(s) {
+  if (s.open) return `Open for pickup today. Ready in about ${s.prepMin} min.`;
+  return { not_yet: `Online ordering opens at ${s.opensLabel}. First pickup ${s.firstPickupLabel}.`, done_for_day: `Online orders are done for today (they stop at ${s.lastOrderLabel}). Come see us at the bar!`,
+    closed_today: 'Online ordering is closed today.', paused: 'Online ordering is paused for a bit. Please call the bar.', full: 'All pickup times are full for today. Please call the bar.' }[s.reason] || 'Online ordering is closed.';
+}
+function renderStatus() { $('#statusTxt').textContent = statusText(SCHED); $('#statusLine').classList.toggle('closed', !SCHED.open); }
 
-  // ---------- menu ----------
-  function renderMenu(){
-    $('#etaMin').textContent=PREP_MIN;
-    if(!openNow()) $('.oo-hero__sub').innerHTML="We're closed right now. Order ahead and pick a time after we open at <b>11 AM</b>.";
-    $('#tabs').innerHTML=MENU.categories.map((c,i)=>`<a href="#cat-${c.id}" data-cat="${c.id}" class="${i?'':'on'}">${c.name}</a>`).join('')+'<a href="#drinks" data-cat="drinks">Beer &amp; Cocktails</a>';
-    $('#menuList').innerHTML=MENU.categories.map(c=>`
-      <div class="cat" id="cat-${c.id}">
-        <div class="cat__head"><span class="cat__title">${c.name}</span><img src="/assets/logo-color.png" alt=""></div>
-        <div class="cat__body">${c.items.map(itemRow).join('')}</div>
-      </div>`).join('');
-    $('#drinksNote').id='drinks';
-    $('#drinks').innerHTML='<b>Beer &amp; cocktails: TBD with JD</b>'+MENU.drinksNote+' Pop is on the menu above.';
-    $$('.tabs a').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();
-      const el=document.getElementById(a.getAttribute('href').slice(1));
-      window.scrollTo({top:el.getBoundingClientRect().top+scrollY-140,behavior:'smooth'});
-      setTab(a.dataset.cat);}));
-    $('#menuList').addEventListener('click',e=>{
-      const b=e.target.closest('button[data-act]'); if(!b)return;
-      const id=b.dataset.id; cart[id]=(cart[id]||0)+(b.dataset.act==='add'||b.dataset.act==='inc'?1:-1);
-      if(cart[id]<=0)delete cart[id];
-      if(b.dataset.act==='add')toast('Added '+ITEMS[id].name);
-      saveCart(); refreshRow(id); renderCartBar(true);
-    });
-    window.addEventListener('scroll',spy,{passive:true});
-  }
-  function itemRow(i){
-    return `<div class="item" data-row="${i.id}">
-      <div class="item__main"><div class="item__name">${i.name}</div>${i.note?`<div class="item__note">${i.note}</div>`:''}</div>
-      <div class="item__price">${money(i.price)}</div>${ctrl(i.id)}</div>`;
-  }
-  function ctrl(id){
-    const q=cart[id]||0;
-    return q?`<div class="qty"><button data-act="dec" data-id="${id}" aria-label="Remove one">&minus;</button><span>${q}</span><button data-act="inc" data-id="${id}" aria-label="Add one">+</button></div>`
-            :`<button class="add" data-act="add" data-id="${id}" aria-label="Add ${ITEMS[id].name}">+</button>`;
-  }
-  function refreshRow(id){const r=document.querySelector(`[data-row="${id}"]`);if(!r)return;r.lastElementChild.outerHTML=ctrl(id);}
-  function setTab(id){$$('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.cat===id));
-    const on=$('.tabs a.on'); if(on)on.scrollIntoView({inline:'center',block:'nearest'});}
-  let spyT; function spy(){clearTimeout(spyT);spyT=setTimeout(()=>{
-    let cur=MENU.categories[0].id; MENU.categories.forEach(c=>{const el=document.getElementById('cat-'+c.id);if(el&&el.getBoundingClientRect().top<170)cur=c.id;});
-    const d=$('#drinks'); if(d&&d.getBoundingClientRect().top<window.innerHeight-120&&window.innerHeight+scrollY>=document.body.scrollHeight-40)cur='drinks';
-    setTab(cur);},60);}
+// ---------- menu ----------
+function renderMenu() {
+  $('#tabs').innerHTML = MENU.groups.map((g, i) => `<a href="#g-${i}" data-g="${i}" class="${i ? '' : 'on'}">${esc(g.name)}</a>`).join('');
+  $('#menuList').innerHTML = MENU.groups.map((g, i) => `<div class="cat" id="g-${i}"><div class="cat__head"><span class="cat__title">${esc(g.name)}</span><img src="/assets/logo-color.png" alt=""></div>
+    <div class="cat__body">${g.items.map(it => `<div class="item-wrap" data-wrap="${it.id}">${rowHTML(it.id)}</div>`).join('')}</div></div>`).join('');
+  $$('.tabs a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const el = document.getElementById('g-' + a.dataset.g); window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - 140, behavior: 'smooth' }); setTab(a.dataset.g); }));
+  $('#menuList').addEventListener('click', onMenuClick);
+  window.addEventListener('scroll', spy, { passive: true });
+}
+function rowHTML(id) {
+  const i = ITEMS[id], q = cart[id] || 0;
+  const ctl = i.soldOut ? '<span class="sold-tag">Sold out</span>' : q ? `<div class="qty"><button data-act="dec" data-id="${id}" aria-label="Remove one">&minus;</button><span>${q}</span><button data-act="inc" data-id="${id}" aria-label="Add one">+</button></div>`
+    : `<button class="add" data-act="add" data-id="${id}" aria-label="Add ${esc(i.name)}">+</button>`;
+  return `<div class="item ${i.soldOut ? 'item--sold' : ''}"><div class="item__main"><div class="item__name">${esc(i.name)}</div>${i.note ? `<div class="item__note">${esc(i.note)}</div>` : ''}</div>
+    <div class="item__price">${money(i.price)}</div>${ctl}</div>${ups.chipFor === id ? chipHTML(id) : ''}`;
+}
+function refreshRow(id) { const w = document.querySelector(`[data-wrap="${id}"]`); if (w) w.innerHTML = rowHTML(id); }
+function onMenuClick(e) {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.ups) { addUpsell(b.dataset.ups, b.dataset.from); return; }
+  if (b.dataset.upsx) { ups.dismissed.add(b.dataset.upsx); const f = ups.chipFor; ups.chipFor = null; refreshRow(f); return; }
+  const id = b.dataset.id, act = b.dataset.act; if (!id || !act) return;
+  const was = cart[id] || 0; cart[id] = was + (act === 'dec' ? -1 : 1); if (cart[id] <= 0) delete cart[id];
+  saveCart();
+  if (act === 'add') { toast('Added ' + ITEMS[id].name); maybeChip(id); }
+  refreshRow(id); renderCartBar(true);
+}
+// one gentle suggestion: shown under the item you just added, based on what people order together at the bar
+function pickPair(fromIds) {
+  const score = {};
+  for (const f of fromIds) (MENU.pairs[f] || []).forEach((p, rank) => { if (!cart[p] && ITEMS[p] && !ITEMS[p].soldOut && !ups.dismissed.has(p) && UPSELL_GROUPS.includes(ITEMS[p].group)) score[p] = (score[p] || 0) + (5 - rank); });
+  return Object.entries(score).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+}
+function maybeChip(id) {
+  if (UPSELL_GROUPS.includes(ITEMS[id].group) || ups.shown.size >= 3) return;
+  const p = pickPair([id]); if (!p) return;
+  const prev = ups.chipFor; ups.chipFor = id; ups.shown.add(p); ups.chipPick = p; if (prev && prev !== id) refreshRow(prev);
+}
+function chipHTML(from) {
+  const p = ups.chipPick; if (!p || cart[p]) return '';
+  return `<div class="ups" role="note"><div class="ups__txt">Goes great with <b>${esc(ITEMS[p].name)}</b>${ITEMS[p].note ? ` <small>${esc(ITEMS[p].note)} · ${money(ITEMS[p].price)}</small>` : ` <small>${money(ITEMS[p].price)}</small>`}</div>
+    <button class="ups__add" data-ups="${p}" data-from="${from}">+ Add</button><button class="ups__x" data-upsx="${p}" aria-label="No thanks">&times;</button></div>`;
+}
+function addUpsell(p, from) {
+  cart[p] = (cart[p] || 0) + 1; ups.added.add(p); if (from === 'cart') ups.cartDone = true; saveCart(); toast('Added ' + ITEMS[p].name);
+  if (from && from !== 'cart') { ups.chipFor = null; refreshRow(from); }
+  refreshRow(p); renderCartBar(true); if (view() === 'checkout') renderCheckout();
+}
+function setTab(g) { $$('.tabs a').forEach(a => a.classList.toggle('on', a.dataset.g === String(g))); const on = $('.tabs a.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+let spyT; function spy() { clearTimeout(spyT); spyT = setTimeout(() => { let cur = 0; MENU.groups.forEach((g, i) => { const el = document.getElementById('g-' + i); if (el && el.getBoundingClientRect().top < 170) cur = i; }); setTab(cur); }, 60); }
 
-  // ---------- cart ----------
-  function saveCart(){LS.set('hfgb_oo_cart',cart);}
-  function sums(){
-    let n=0,sub=0; Object.entries(cart).forEach(([id,q])=>{n+=q;sub+=ITEMS[id].price*q;});
-    const tax=Math.round(sub*TAX); return {n,sub,tax,total:sub+tax};
-  }
-  function renderCartBar(bump){
-    const s=sums(), bar=$('#cartbar');
-    $('#cartCount').textContent=s.n; $('#cartAmt').textContent=money(s.sub);
-    bar.classList.toggle('hidden',!s.n||currentView()!=='menu');
-    if(bump){bar.classList.remove('bump');void bar.offsetWidth;bar.classList.add('bump');}
-  }
-  $('#cartBtn').addEventListener('click',()=>go('checkout'));
+// ---------- cart ----------
+function saveCart() { LS.set('hfgb_cart', cart); }
+function sums() { let n = 0, sub = 0; for (const [id, q] of Object.entries(cart)) { n += q; sub += ITEMS[id].price * q; } const tax = Math.round(sub * MENU.taxRate); return { n, sub, tax, total: sub + tax }; }
+function renderCartBar(bump) {
+  const s = sums(), bar = $('#cartbar'); $('#cartCount').textContent = s.n; $('#cartAmt').textContent = money(s.sub);
+  bar.classList.toggle('hidden', !s.n || view() !== 'menu');
+  if (bump) { bar.classList.remove('bump'); void bar.offsetWidth; bar.classList.add('bump'); }
+}
+$('#cartBtn').addEventListener('click', () => go('checkout'));
 
-  function lineHTML(id,q,editable){
-    const i=ITEMS[id];
-    return `<div class="line"><div class="line__name">${i.name}${i.note?`<small>${i.note}</small>`:''}</div>
-      ${editable?`<div class="qty"><button data-act="dec" data-id="${id}">&minus;</button><span>${q}</span><button data-act="inc" data-id="${id}">+</button></div>`:`<span>&times;${q}</span>`}
-      <div class="line__amt">${money(i.price*q)}</div></div>`;
-  }
-  function totalsHTML(){const s=sums();return `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div>
-    <div class="trow"><span>Tax (7.5%)</span><span>${money(s.tax)}</span></div>
-    <div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`;}
-  function renderCheckout(){
-    const ids=Object.keys(cart);
-    if(!ids.length){go('menu');return;}
-    $('#cartLines').innerHTML=ids.map(id=>lineHTML(id,cart[id],true)).join('');
-    $('#totals').innerHTML=totalsHTML();
-    fillTimes();
-    const asapBtn=$('#whenSeg [data-when="asap"]');
-    if(openNow()){asapBtn.disabled=false;$('#asapTime').textContent='about '+fmtTime(readyAsap());}
-    else{asapBtn.disabled=true;$('#asapTime').textContent='closed now';if(when==='asap')$('#whenSeg [data-when="later"]').click();}
-    const me=currentCustomer();
-    if(me){ if(!$('#phone').value)$('#phone').value=fmtPhone(me.phone); if(!$('#name').value)$('#name').value=me.name; phoneLookup(); }
-  }
-  $('#cartLines').addEventListener('click',e=>{const b=e.target.closest('button[data-act]');if(!b)return;
-    const id=b.dataset.id;cart[id]=(cart[id]||0)+(b.dataset.act==='inc'?1:-1);if(cart[id]<=0)delete cart[id];
-    saveCart();refreshRow(id);renderCheckout();});
+// ---------- welcome / reorder ----------
+const usualText = u => u.filter(x => ITEMS[x.id]).map(x => `${x.qty > 1 ? x.qty + '&times; ' : ''}${esc(ITEMS[x.id].name)}${ITEMS[x.id].note ? ' (' + esc(ITEMS[x.id].note) + ')' : ''}`).join(', ');
+function renderWelcome() {
+  const w = $('#welcome'); if (!me || !me.known) { w.classList.add('hidden'); return; }
+  const u = (me.usual || []).filter(x => ITEMS[x.id] && !ITEMS[x.id].soldOut);
+  $('#welcomeName').textContent = 'Hey, ' + me.firstName + '!';
+  $('#welcomeUsual').innerHTML = u.length ? 'Your usual: ' + usualText(u) : '';
+  $('#welcomeCard').classList.toggle('hidden', !me.savedCard); if (me.savedCard) $('#welcomeCard').textContent = `Pays with ${me.savedCard.brand} ending ${me.savedCard.last4}`;
+  $('#reorderBtn').classList.toggle('hidden', !u.length); w.classList.remove('hidden');
+}
+$('#reorderBtn').addEventListener('click', () => {
+  cart = {}; (me.usual || []).forEach(x => { if (ITEMS[x.id] && !ITEMS[x.id].soldOut) cart[x.id] = x.qty; }); saveCart();
+  Object.keys(ITEMS).forEach(refreshRow); ups.cartDone = true; go('checkout');
+});
+$('#notYou').addEventListener('click', () => { LS.del('hfgb_device'); me = null; $('#phone').value = ''; $('#name').value = ''; renderWelcome(); });
 
-  // pickup time. Hours from the site: Mon-Sat 11 AM to 1 AM, Sun 11 AM to 10 PM (kitchen cutoff TBD with JD).
-  function isOpen(ms){
-    const t=new Date(ms), h=t.getHours()+t.getMinutes()/60, d=t.getDay();
-    if(h>=11) return d===0 ? h<21.75 : true;          // last pickup 15 min before close
-    const prev=(d+6)%7; return h<0.75 && prev!==0;     // after midnight: open till 1 AM except Sun night
-  }
-  function openNow(){return isOpen(readyAsap());}
-  function readyAsap(){const n=sums().n;return Date.now()+(PREP_MIN+(n>6?5:0))*60000;}
-  function fillTimes(){
-    const sel=$('#pickupTime'), keep=sel.value; sel.innerHTML='';
-    let t=new Date(Date.now()+30*60000); t.setMinutes(Math.ceil(t.getMinutes()/15)*15,0,0);
-    let k=0; for(let g=0;g<200&&k<16;g++){ if(isOpen(t.getTime())){const o=document.createElement('option');o.value=t.getTime();o.textContent=fmtTime(t)+(t.getDate()!==new Date().getDate()?' (tomorrow)':'');sel.appendChild(o);k++;} t=new Date(t.getTime()+15*60000);}
-    if(keep)sel.value=keep;
-  }
-  $('#whenSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;when=b.dataset.when;
-    $$('#whenSeg button').forEach(x=>x.classList.toggle('on',x===b));$('#pickupTime').classList.toggle('hidden',when!=='later');});
+// ---------- checkout ----------
+function lineHTML(id, q) { const i = ITEMS[id]; return `<div class="line"><div class="line__name">${esc(i.name)}${i.note ? `<small>${esc(i.note)}</small>` : ''}</div>
+  <div class="qty"><button data-act="dec" data-id="${id}" aria-label="Remove one">&minus;</button><span>${q}</span><button data-act="inc" data-id="${id}" aria-label="Add one">+</button></div><div class="line__amt">${money(i.price * q)}</div></div>`; }
+function cartUpsell() {
+  if (ups.cartDone) return '';
+  let p = ups.cartPick && !cart[ups.cartPick] && !ups.dismissed.has(ups.cartPick) ? ups.cartPick : pickPair(Object.keys(cart));
+  if (!p) { const sweet = Object.values(ITEMS).find(i => i.group === 'Sweets' && !i.soldOut && !cart[i.id] && !ups.dismissed.has(i.id)); p = sweet && sweet.id; }
+  if (!p) return ''; ups.cartPick = p; ups.shown.add(p);
+  return `<div class="ups"><div class="ups__txt">Add <b>${esc(ITEMS[p].name)}</b>? <small>${ITEMS[p].note ? esc(ITEMS[p].note) + ' · ' : ''}${money(ITEMS[p].price)}</small></div><button class="ups__add" data-ups="${p}" data-from="cart">+ Add</button><button class="ups__x" data-upsx="${p}" aria-label="No thanks">&times;</button></div>`;
+}
+function renderCheckout() {
+  const ids = Object.keys(cart); if (!ids.length) { go('menu'); return; }
+  $('#cartLines').innerHTML = ids.map(id => lineHTML(id, cart[id])).join('') + cartUpsell();
+  const s = sums();
+  $('#totals').innerHTML = `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div><div class="trow"><span>Tax (${(MENU.taxRate * 100).toFixed(1)}%)</span><span>${money(s.tax)}</span></div><div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`;
+  // pickup
+  const asapBtn = $('#whenSeg [data-when="asap"]'), sel = $('#pickupTime'), keep = sel.value;
+  sel.innerHTML = SCHED.slots.map(x => `<option value="${x.t}" ${x.left < 1 ? 'disabled' : ''}>${x.label}${x.left < 1 ? ' (full)' : ''}</option>`).join('');
+  if (keep) sel.value = keep;
+  if (SCHED.asap) { asapBtn.disabled = false; $('#asapTime').textContent = 'about ' + fmtTime(SCHED.asap.readyAt); } else { asapBtn.disabled = true; $('#asapTime').textContent = 'n/a'; if (when === 'asap' && SCHED.slots.length) setWhen('later'); }
+  const cb = $('#closedBox'); cb.classList.toggle('hidden', SCHED.open); cb.textContent = statusText(SCHED);
+  // who
+  const d = device();
+  if (!$('#phone').value && (me?.phone || d?.phone)) $('#phone').value = fmtPhone(me?.phone || d.phone);
+  if (!$('#name').value && me?.firstName) $('#name').value = me.firstName;
+  if (me?.firstName && digits($('#phone').value) === me.phone) { $('#phoneHint').textContent = 'Welcome back, ' + me.firstName + '!'; $('#phoneHint').classList.add('ok'); }
+  if (!idem) idem = 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  renderPay();
+}
+$('#cartLines').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.ups) { addUpsell(b.dataset.ups, 'cart'); return; }
+  if (b.dataset.upsx) { ups.dismissed.add(b.dataset.upsx); ups.cartDone = true; renderCheckout(); return; }
+  const id = b.dataset.id; if (!id) return; cart[id] = (cart[id] || 0) + (b.dataset.act === 'inc' ? 1 : -1); if (cart[id] <= 0) delete cart[id];
+  saveCart(); refreshRow(id); renderCartBar(); renderCheckout();
+});
+function setWhen(w) { when = w; $$('#whenSeg button').forEach(x => x.classList.toggle('on', x.dataset.when === w)); $('#pickupTime').classList.toggle('hidden', w !== 'later'); }
+$('#whenSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b && !b.disabled) setWhen(b.dataset.when); });
+$('#noteLink').addEventListener('click', () => { $('#noteField').classList.remove('hidden'); $('#noteLink').classList.add('hidden'); $('#notes').focus(); });
+let lookT; $('#phone').addEventListener('input', e => {
+  const d = digits(e.target.value); if (d.length === 10) e.target.value = fmtPhone(d);
+  clearTimeout(lookT); const h = $('#phoneHint');
+  if (d.length !== 10) { h.textContent = "We'll remember you next time."; h.classList.remove('ok'); return; }
+  lookT = setTimeout(async () => {
+    try { const r = await api('/customer/lookup', { method: 'POST', body: { phone: d, deviceToken: device()?.phone === d ? device().deviceToken : undefined } });
+      if (r.known) { if (!$('#name').value) $('#name').value = r.firstName; h.textContent = 'Welcome back, ' + r.firstName + '!' + (r.cardOnFileElsewhere ? ' Your saved card works on the phone you saved it on.' : ''); h.classList.add('ok');
+        if (r.savedCard) { me = { ...r, phone: d }; renderPay(); } }
+      else { h.textContent = "We'll remember you next time."; h.classList.remove('ok'); } } catch {}
+  }, 250);
+});
 
-  // remember customers by phone
-  function customers(){return LS.get('hfgb_oo_customers',{});}
-  function currentCustomer(){const p=LS.get('hfgb_oo_me',null);return p?customers()[p]||null:null;}
-  function phoneLookup(){
-    const d=digits($('#phone').value), c=customers()[d], h=$('#phoneHint');
-    if(d.length===10&&c){ if(!$('#name').value)$('#name').value=c.name; h.textContent='Welcome back, '+c.name+'!'; h.classList.add('ok'); }
-    else { h.textContent="We'll remember you next time."; h.classList.remove('ok'); }
+// ---------- payment ----------
+const payLabel = () => `Pay ${money(sums().total || 0)}` + (payMode === 'saved' && me?.savedCard ? ` · ${me.savedCard.brand} ${me.savedCard.last4}` : '');
+const liveCards = () => CFG.mode !== 'mock' && CFG.ecomPublic && CFG.sdk;
+function renderPay() {
+  const box = $('#payBox'), s = sums();
+  const saved = me?.savedCard && digits($('#phone').value || me.phone) === me.phone;
+  if (saved && payMode !== 'newcard') payMode = 'saved'; else if (payMode === 'saved') payMode = 'card';
+  let h = '<span class="flabel">Payment</span>';
+  if (payMode === 'saved') h += `<div class="saved"><span class="chk">&#10003;</span><b>${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</b><button class="linkbtn sm" id="useNew">Use a different card</button></div>`;
+  else {
+    if (liveCards()) h += `<div class="cf"><div class="fld" id="cfNum"></div><div class="row"><div class="fld" id="cfDate"></div><div class="fld" id="cfCvv"></div><div class="fld" id="cfZip"></div></div><div class="err" id="cfErr"></div></div>`;
+    else h += `<div class="testcards" id="testCards">
+      <button type="button" data-tc="approve" class="${testCard === 'approve' ? 'on' : ''}"><span>&#128179;</span><span>Test Visa ending 4242<small>Approves</small></span></button>
+      <button type="button" data-tc="decline" class="${testCard === 'decline' ? 'on' : ''}"><span>&#128179;</span><span>Test Visa ending 0002<small>Declines, to test the error</small></span></button></div>
+      <p class="testnote">Test mode. In the live version Clover's secure card box shows here, so card numbers never touch our site.</p>`;
+    h += `<label class="check"><input type="checkbox" id="saveCard" ${saveCard ? 'checked' : ''}><span>Save my card for faster checkout next time. Clover stores it, not us.</span></label>
+      <div class="field ${saveCard ? '' : 'hidden'}" id="emailField"><label for="email">Email for receipts</label><input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(LS.get('hfgb_email', ''))}"></div>`;
+    if (me?.savedCard) h += `<button class="linkbtn sm" id="useSaved">Use saved ${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</button>`;
   }
-  $('#phone').addEventListener('input',e=>{const d=digits(e.target.value);if(d.length===10)e.target.value=fmtPhone(d);phoneLookup();});
+  box.innerHTML = h;
+  $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy;
+  $('#useNew')?.addEventListener('click', () => { payMode = 'newcard'; renderPay(); });
+  $('#useSaved')?.addEventListener('click', () => { payMode = 'saved'; renderPay(); });
+  $('#saveCard')?.addEventListener('change', e => { saveCard = e.target.checked; $('#emailField').classList.toggle('hidden', !saveCard); });
+  $$('#testCards button').forEach(b => b.addEventListener('click', () => { testCard = b.dataset.tc; $$('#testCards button').forEach(x => x.classList.toggle('on', x === b)); }));
+  if (payMode !== 'saved' && liveCards()) mountClover();
+}
+async function mountClover() { // Clover hosted iframe fields (Ecommerce public key). Card data goes straight to Clover.
+  if (!window.Clover) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = CFG.sdk; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  cloverSdk = cloverSdk || new window.Clover(CFG.ecomPublic, { merchantId: CFG.mid });
+  const el = cloverSdk.elements(), st = { body: { fontFamily: 'Barlow, sans-serif', fontSize: '17px' } };
+  el.create('CARD_NUMBER', st).mount('#cfNum'); el.create('CARD_DATE', st).mount('#cfDate'); el.create('CARD_CVV', st).mount('#cfCvv'); el.create('CARD_POSTAL_CODE', st).mount('#cfZip');
+}
+async function getToken() {
+  if (liveCards()) { const r = await cloverSdk.createToken(); if (r.errors) throw new Error(Object.values(r.errors).join(' ')); return { token: r.token, card: { brand: r.card?.brand, last4: r.card?.last4 } }; }
+  const r = await api('/dev/tokenize', { method: 'POST', body: { number: testCard === 'approve' ? '4242424242424242' : '4000000000000002' } }); return r;
+}
+function err(m) { const e = $('#coErr'); e.textContent = m; e.classList.toggle('hidden', !m); if (m) e.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+$('#payBtn').addEventListener('click', async () => {
+  if (busy) return; err('');
+  const phone = digits($('#phone').value), name = $('#name').value.trim(), email = ($('#email')?.value || '').trim();
+  if (phone.length !== 10) return err('Please enter your 10 digit phone number.');
+  if (!name) return err('Please add a name for the order.');
+  if (payMode !== 'saved' && saveCard && !/^\S+@\S+\.\S+$/.test(email)) return err('Add your email to save the card, or uncheck "Save my card".');
+  const slot = when === 'asap' ? 'asap' : $('#pickupTime').value;
+  busy = true; const b = $('#payBtn'); b.disabled = true; b.textContent = 'Paying...';
+  try {
+    let payment;
+    if (payMode === 'saved') payment = { type: 'saved' };
+    else { const t = await getToken(); payment = { type: 'token', token: t.token, card: t.card, save: saveCard }; if (saveCard) LS.set('hfgb_email', email); }
+    const d = device();
+    const r = await api('/order', { method: 'POST', body: { idem, items: Object.entries(cart).map(([id, qty]) => ({ id, qty })), phone, name, email: email || undefined,
+      slot, notes: $('#notes').value, payment, deviceToken: d && d.phone === phone ? d.deviceToken : undefined, upsell: { shown: [...ups.shown], added: [...ups.added] } } });
+    LS.set('hfgb_device', { phone, deviceToken: r.deviceToken, firstName: name });
+    me = { known: true, firstName: name, phone, savedCard: r.savedCard || (payMode === 'saved' ? me.savedCard : null), usual: me?.usual };
+    LS.set('hfgb_last_order', { id: r.order.id, key: r.order.key });
+    cart = {}; saveCart(); Object.keys(ITEMS).forEach(refreshRow); idem = null; payMode = 'card';
+    ups.shown.clear(); ups.added.clear(); ups.cartDone = false; ups.cartPick = null;
+    showDone(r.order); go('done');
+    try { const m2 = await api('/me', { method: 'POST', body: device() }); if (m2.known) me = { ...m2, phone }; } catch {}
+  } catch (e) {
+    err(e.message || 'Something went wrong. Nothing was charged.');
+    if (e.code === 'card_device') { payMode = 'newcard'; renderPay(); }
+    if (['slot', 'slot_full', 'sold_out'].includes(e.code)) refreshSchedule();
+    if (e.code === 'declined') idem = null;
+  } finally { busy = false; b.disabled = !SCHED.open; b.textContent = payLabel(); }
+});
 
-  $('#toPay').addEventListener('click',()=>{
-    const d=digits($('#phone').value), nm=$('#name').value.trim();
-    if(d.length!==10||!nm){$('#coErr').classList.remove('hidden');return;}
-    $('#coErr').classList.add('hidden'); go('pay');
-  });
+// ---------- confirmation ----------
+let pollT;
+function showDone(o) {
+  $('#doneNum').textContent = '#' + o.no; $('#doneSub').textContent = `Thanks, ${o.name}! Paid ${money(o.total)} with ${o.payment.brand} ending ${o.payment.last4}.`;
+  $('#doneLines').innerHTML = o.items.map(l => `<div class="line"><div class="line__name">${esc(l.name)}${l.note ? `<small>${esc(l.note)}</small>` : ''}</div><span>&times;${l.qty}</span><div class="line__amt">${money(l.price * l.qty)}</div></div>`).join('');
+  $('#doneDemo').classList.toggle('hidden', CFG.mode === 'production');
+  status(o); clearInterval(pollT);
+  pollT = setInterval(async () => { const lo = LS.get('hfgb_last_order'); if (!lo || view() !== 'done') return; try { status(await api(`/order/${lo.id}?k=${lo.key}`)); } catch {} }, 8000);
+}
+function status(o) {
+  const st = { new: ['Order received', 1, `Ready about ${fmtTime(o.readyAt)}`], making: ['The kitchen has it', 2, `Ready at ${fmtTime(o.readyAt)}`], ready: ['Ready for pickup!', 3, 'Come on in, it is at the bar.'],
+    picked: ['Picked up. Enjoy!', 3, ''], cancelled: ['Cancelled', 0, 'Please call the bar at (402) 923-0160.'] }[o.status] || ['Order received', 1, ''];
+  $('#doneStatus').textContent = st[0]; $('#doneReady').innerHTML = st[2].replace(/(\d+:\d+ [AP]M)/, '<b>$1</b>');
+  $$('#doneTrack span').forEach((s, i) => s.classList.toggle('on', i < st[1]));
+}
+$('#newOrder').addEventListener('click', () => { renderWelcome(); go('menu'); window.scrollTo(0, 0); });
 
-  function renderPay(){
-    if(!Object.keys(cart).length){go('menu');return;}
-    $('#payTotals').innerHTML=totalsHTML(); $('#payAmt').textContent=money(sums().total);
-  }
-  $('#payBtn').addEventListener('click',()=>{
-    const b=$('#payBtn'); b.disabled=true; b.textContent='Processing (Demo)...';
-    setTimeout(()=>{placeOrder(); b.disabled=false;},700);
-  });
-
-  function placeOrder(){
-    const d=digits($('#phone').value), nm=$('#name').value.trim(), s=sums();
-    const seq=LS.get('hfgb_oo_seq',1040)+1; LS.set('hfgb_oo_seq',seq);
-    const readyAt= when==='later'?+$('#pickupTime').value:readyAsap();
-    const order={num:seq,name:nm,phone:d,items:Object.entries(cart).map(([id,q])=>({id,q,name:ITEMS[id].name,note:ITEMS[id].note,price:ITEMS[id].price})),
-      notes:$('#notes').value.trim(),sub:s.sub,tax:s.tax,total:s.total,when,readyAt,createdAt:Date.now(),status:'new',demo:true};
-    // remember the customer (this browser only in the preview)
-    const cs=customers(), c=cs[d]||{phone:d,orders:[]};
-    c.name=nm; c.orders=(c.orders||[]).concat([{items:Object.assign({},cart),ts:Date.now(),total:s.total}]).slice(-10);
-    cs[d]=c; LS.set('hfgb_oo_customers',cs); LS.set('hfgb_oo_me',d);
-    // demo "order bus" the staff screen listens to
-    const q=LS.get('hfgb_oo_orders',[]); q.push(order); LS.set('hfgb_oo_orders',q.slice(-30));
-    LS.set('hfgb_oo_lastOrder',order);
-    cart={}; saveCart(); $$('[data-row]').forEach(r=>refreshRow(r.dataset.row)); $('#notes').value='';
-    go('done');
-  }
-  function renderDone(){
-    const o=LS.get('hfgb_oo_lastOrder',null); if(!o){go('menu');return;}
-    $('#doneNum').textContent='#'+o.num; $('#doneReady').textContent=fmtTime(o.readyAt);
-    $('#doneSub').textContent=`Thanks, ${o.name}! We'll text ${fmtPhone(o.phone)} when it's ready.`;
-    $('#doneLines').innerHTML=o.items.map(i=>`<div class="line"><div class="line__name">${i.name}${i.note?`<small>${i.note}</small>`:''}</div><span>&times;${i.q}</span><div class="line__amt">${money(i.price*i.q)}</div></div>`).join('')
-      +`<div class="totals"><div class="trow trow--big"><span>Paid (demo)</span><span>${money(o.total)}</span></div></div>`;
-  }
-  $('#newOrder').addEventListener('click',()=>{renderWelcome();go('menu');window.scrollTo(0,0);});
-
-  // usual = most frequent basket among recent orders (falls back to last)
-  function usualOf(c){
-    if(!c||!c.orders||!c.orders.length)return null;
-    const cnt={}; c.orders.forEach(o=>{const k=JSON.stringify(Object.keys(o.items).sort().map(id=>[id,o.items[id]]));cnt[k]=(cnt[k]||0)+1;});
-    const best=Object.entries(cnt).sort((a,b)=>b[1]-a[1]||0)[0][0];
-    const items={}; JSON.parse(best).forEach(([id,q])=>{if(ITEMS[id])items[id]=q;}); return Object.keys(items).length?items:null;
-  }
-  function renderWelcome(){
-    const c=currentCustomer(), w=$('#welcome');
-    if(!c){w.classList.add('hidden');return;}
-    const u=usualOf(c);
-    $('#welcomeName').textContent='Hey, '+c.name+'!';
-    $('#welcomeUsual').innerHTML=u?'Your usual: '+Object.entries(u).map(([id,q])=>`${q>1?q+'&times; ':''}${ITEMS[id].name}${ITEMS[id].note?' ('+ITEMS[id].note+')':''}`).join(', '):'';
-    $('#reorderBtn').classList.toggle('hidden',!u);
-    w.classList.remove('hidden');
-  }
-  $('#reorderBtn').addEventListener('click',()=>{
-    const u=usualOf(currentCustomer()); if(!u)return; cart=Object.assign({},u); saveCart();
-    $$('[data-row]').forEach(r=>refreshRow(r.dataset.row)); go('checkout');
-  });
-  $('#notYou').addEventListener('click',()=>{localStorage.removeItem('hfgb_oo_me');$('#phone').value='';$('#name').value='';renderWelcome();});
-
-  // ---------- routing ----------
-  const VIEWS=['menu','checkout','pay','done'];
-  function currentView(){const h=location.hash.slice(1);return VIEWS.includes(h)?h:'menu';}
-  function go(v){if(location.hash!=='#'+v)location.hash=v;else route();}
-  function route(){
-    if(!MENU)return; const v=currentView();
-    VIEWS.forEach(x=>$('#v-'+x).classList.toggle('hidden',x!==v));
-    if(v==='checkout')renderCheckout(); if(v==='pay')renderPay(); if(v==='done')renderDone();
-    if(v!=='menu')window.scrollTo(0,0);
-    renderCartBar();
-  }
-  window.addEventListener('hashchange',route);
-  $$('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
-})();
+// ---------- routing ----------
+const VIEWS = ['menu', 'checkout', 'done'];
+const view = () => { const h = location.hash.slice(1); return VIEWS.includes(h) ? h : 'menu'; };
+function go(v) { if (location.hash !== '#' + v) location.hash = v; else route(); }
+async function route() {
+  if (!MENU) return; let v = view();
+  if (v === 'done') { const lo = LS.get('hfgb_last_order'); if (!lo) v = 'menu'; else if (!$('#doneNum').textContent) { try { showDone(await api(`/order/${lo.id}?k=${lo.key}`)); } catch { v = 'menu'; } } }
+  VIEWS.forEach(x => $('#v-' + x).classList.toggle('hidden', x !== v));
+  if (v === 'checkout') renderCheckout();
+  if (v !== 'menu') window.scrollTo(0, 0);
+  renderCartBar();
+}
+window.addEventListener('hashchange', route);
+$$('[data-go]').forEach(b => b.addEventListener('click', () => go(b.dataset.go)));
+boot();

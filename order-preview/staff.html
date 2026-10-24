@@ -4,34 +4,44 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Staff Orders (Preview) | High Flyers Golf Bar</title>
+<title>Staff Orders | High Flyers Golf Bar</title>
 <meta name="theme-color" content="#181510">
 <link rel="icon" href="/assets/logo-color.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700;900&family=Oswald:wght@500;600;700&family=Barlow:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="staff.css">
+<link rel="stylesheet" href="staff.css?v=2">
+<script src="config.js?v=2"></script>
 </head>
 <body class="st">
 <header class="st-hdr">
   <img src="/assets/logo-knockout.png" alt="High Flyers Golf Bar">
   <div class="st-hdr__t"><span class="label">Online Orders</span><b id="clock">--</b></div>
-  <button class="st-btn st-btn--ghost" id="testOrder">+ Test Order</button>
+  <div class="st-hdr__btns"><button class="st-btn st-btn--ghost" id="soldBtn">Sold Out</button></div>
 </header>
-<div class="st-demo">Demo screen. Orders here come from the preview page in this same browser, or the Test Order button.</div>
+<div class="st-sub">
+  <span class="pill" id="conn">Connecting...</span>
+  <span id="schedTxt"></span>
+  <label class="switch"><input type="checkbox" id="pause"> Pause online orders</label>
+</div>
 <div class="alert hidden" id="alert"><span id="alertTxt">New order!</span></div>
 <main class="board">
   <section class="col"><h2>New <span id="nNew">0</span></h2><div id="colNew"></div></section>
   <section class="col"><h2>Making <span id="nMaking">0</span></h2><div id="colMaking"></div></section>
   <section class="col"><h2>Ready <span id="nReady">0</span></h2><div id="colReady"></div></section>
 </main>
-<div class="gate" id="gate">
-  <div class="gate__box">
-    <img src="/assets/logo-color.png" alt="">
-    <h1 class="disp">Staff Orders</h1>
-    <p>Tap once so the tablet is allowed to play the new order chime.</p>
-    <button class="btn btn--brass btn--lg" id="start">Start Shift</button>
-  </div>
-</div>
-<script src="staff.js"></script>
+<div class="drawer2 hidden" id="soldDrawer"><div class="drawer2__in">
+  <button class="st-btn st-btn--ghost" id="soldClose" style="float:right">Done</button>
+  <h3>Sold out</h3><p>Tap to mark an item sold out. It disappears from online ordering right away. Tap again when it's back.</p>
+  <div id="soldList"></div>
+</div></div>
+<div class="gate" id="gate"><div class="gate__box">
+  <img src="/assets/logo-color.png" alt="">
+  <h1 class="disp">Staff Orders</h1>
+  <p>Keep this screen open at the bar. It chimes and flashes for every new online order until someone taps Accept.</p>
+  <input id="key" type="password" placeholder="Staff key" autocomplete="off">
+  <div class="gate__err hidden" id="keyErr">That key didn't work.</div>
+  <button class="btn btn--brass btn--lg" id="start">Start Shift</button>
+</div></div>
+<script type="module" src="staff.js?v=2"></script>
 </body>
 </html>
