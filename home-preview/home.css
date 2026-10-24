@@ -20,7 +20,7 @@
 .hp-hero h1 .g{color:var(--brass);display:block;}
 .hp-hero__tag{font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:15px;margin-top:14px;color:var(--parch);}
 .hp-hero__cta{display:grid;gap:12px;margin-top:24px;}
-.hp-hero__cta .btn{width:100%;font-size:15px;}
+.hp-hero__cta .btn{width:100%;font-size:15px;text-shadow:none;}
 .hp-cta{border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);}
 .hp-hero__small{margin-top:14px;font-family:var(--font-label);font-weight:500;letter-spacing:.06em;font-size:14px;color:var(--brass-300);}
 .hp-status{margin-top:10px;display:inline-flex;align-items:center;gap:8px;background:rgba(240,231,208,.10);border:1px solid rgba(240,231,208,.28);
