@@ -31,7 +31,7 @@ function tix(o) {
   const pr = o.print ? (o.print.ok ? 'Ticket sent to Clover printer' : 'Clover print failed: read it here') : '';
   return `<div class="tix ${o.status === 'new' ? 'tix--new' : ''}"><div class="tix__top"><span class="tix__num">#${o.no}</span><span class="tix__name">${esc(o.name)}</span><span class="tix__when">${o.asap ? 'ASAP' : 'At ' + fmtTime(o.slot)}</span></div>
     <ul>${items}</ul>${o.notes ? `<div class="tix__notes">${esc(o.notes)}</div>` : ''}
-    <div class="tix__meta"><span>${fmtPhone(o.phone)} · in ${fmtTime(o.created)}</span><span>Paid ${money(o.total)}</span></div>
+    <div class="tix__meta"><span>${fmtPhone(o.phone)} · ordered ${fmtTime(o.created)}</span><span>Paid ${money(o.total)}</span></div>
     <div class="tix__print">${pr}${o.repeat ? ' · Repeat customer' : ' · First online order'}</div><div class="tix__act">${act}</div></div>`;
 }
 function render() {
