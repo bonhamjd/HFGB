@@ -1,42 +1,37 @@
-// Home preview: menu straight from the ordering Worker (same Clover data the order page uses), so prices match Clover.
+// Home preview v2: menu straight from the ordering Worker (same Clover data the order page uses), so prices match Clover.
 (() => {
   const API = 'https://hfgb-orders.highflyersgolfbar.workers.dev/api';
-  const ORDER = '/order-preview/';
   const $ = s => document.querySelector(s);
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const money = c => '$' + (c / 100).toFixed(2);
+  const money = c => '$' + (c % 100 ? (c / 100).toFixed(2) : String(c / 100));
+  const note = n => (/^\d+$/.test(n || '') ? `Order of ${n}` : n);
   const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const SUB = { 'Front 9': 'To start, or to share' };
 
-  function itemRow(i) {
-    return `<div class="item${i.soldOut ? ' out' : ''}"><div class="item__main"><div class="item__name">${esc(i.name)}</div>`
-      + `${i.note ? `<div class="item__note">${esc(i.note)}</div>` : ''}${i.soldOut ? '<div class="item__note">Sold out today</div>' : ''}</div>`
-      + `<div class="item__price">${money(i.price)}</div></div>`;
+  const line = (name, price, note, out, cls = '') =>
+    `<div class="mline${out ? ' out' : ''}${cls}"><div class="mline__top"><span class="mline__name">${esc(name)}</span><span class="mline__dots"></span>`
+    + `<span class="mline__price">${money(price)}</span></div>${note ? `<div class="mline__note">${esc(note)}</div>` : ''}</div>`;
+
+  function groupHtml(g) {
+    let rows;
+    if (g.name === 'Pop') {
+      const by = new Map();
+      g.items.filter(i => !i.soldOut).forEach(i => { if (!by.has(i.price)) by.set(i.price, []); by.get(i.price).push(i.name); });
+      rows = [...by.entries()].sort((a, b) => a[0] - b[0]).map(([p, n]) => line(n.join(', '), p, '', false, ' mline--pop')).join('');
+    } else {
+      rows = g.items.map(i => line(i.name, i.price, [note(i.note), i.soldOut ? 'Sold out today' : ''].filter(Boolean).join(' · '), i.soldOut)).join('');
+    }
+    return `<section class="mgroup" id="m-${slug(g.name)}"><div class="mgroup__head"><h3>${esc(g.name)}</h3></div>`
+      + `${SUB[g.name] ? `<p class="mgroup__sub">${SUB[g.name]}</p>` : ''}${rows}</section>`;
   }
-  // Pop: one row per price so the list stays short on a phone.
-  function popRows(items) {
-    const by = new Map();
-    items.filter(i => !i.soldOut).forEach(i => { if (!by.has(i.price)) by.set(i.price, []); by.get(i.price).push(i.name); });
-    return [...by.entries()].sort((a, b) => a[0] - b[0]).map(([p, names]) =>
-      `<div class="item item--pop"><div class="item__main"><div class="item__name">${esc(names.join(', '))}</div></div><div class="item__price">${money(p)}</div></div>`).join('');
-  }
-  function render(data) {
-    const groups = (data.groups || []).filter(g => g.items && g.items.length);
+  function render(d) {
+    const groups = (d.groups || []).filter(g => g.items && g.items.length);
     if (!groups.length) throw new Error('empty menu');
-    $('#tabs').innerHTML = groups.map((g, n) => `<a href="#c-${slug(g.name)}"${n ? '' : ' class="on"'}>${esc(g.name)}</a>`).join('');
-    $('#menuList').innerHTML = groups.map(g => `<section class="cat" id="c-${slug(g.name)}"><div class="cat__head"><span class="cat__title">${esc(g.name)}</span>`
-      + `<img src="/assets/logo-color.png" alt=""></div><div class="cat__body">${g.name === 'Pop' ? popRows(g.items) : g.items.map(itemRow).join('')}`
-      + `<a class="cat__order" href="${ORDER}">Order ${esc(g.name)} for pickup &rarr;</a></div></section>`).join('');
-    watchTabs();
-  }
-  function watchTabs() {
-    const tabs = [...document.querySelectorAll('#tabs a')];
-    if (!('IntersectionObserver' in window)) return;
-    const io = new IntersectionObserver(es => es.forEach(e => {
-      if (!e.isIntersecting) return;
-      tabs.forEach(t => t.classList.toggle('on', t.getAttribute('href') === '#' + e.target.id));
-      const on = tabs.find(t => t.classList.contains('on')); if (on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
-    }), { rootMargin: '-150px 0px -60% 0px' });
-    document.querySelectorAll('.cat').forEach(c => io.observe(c));
+    $('#tabs').innerHTML = groups.map(g => `<a href="#m-${slug(g.name)}">${esc(g.name)}</a>`).join('');
+    const html = groups.map(groupHtml);
+    // pizza photo after the first group breaks up the list on a phone
+    html.splice(1, 0, '<div class="hp-photo"><img src="pizza.webp" width="900" height="1164" alt="A High Flyers flatbread" loading="lazy"></div>');
+    $('#menuList').innerHTML = html.join('');
   }
   function status(s) {
     if (!s) return;
@@ -59,8 +54,16 @@
         + '<a class="btn btn--brass" href="tel:+14029230160">Call (402) 923-0160</a></div>';
     }
   }
-  // Hide the sticky order bar while the big hero button is on screen.
-  const bar = $('.hp-bar'), cta = $('.hp-cta');
-  if (bar && cta && 'IntersectionObserver' in window) new IntersectionObserver(es => bar.classList.toggle('away', es[0].isIntersecting)).observe(cta);
+  // Sticky order button: hidden while a big order button is on screen, shown otherwise (after the hero).
+  const sticky = $('#sticky'), watched = [...document.querySelectorAll('.hp-cta,.hp-wide')], seen = new Set();
+  if (sticky && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => {
+      es.forEach(e => e.isIntersecting ? seen.add(e.target) : seen.delete(e.target));
+      const pastHero = $('.hp-cta').getBoundingClientRect().bottom < 0;
+      sticky.classList.toggle('away', seen.size > 0 || !pastHero);
+    });
+    watched.forEach(w => io.observe(w));
+    addEventListener('scroll', () => { const past = $('.hp-cta').getBoundingClientRect().bottom < 0; sticky.classList.toggle('away', seen.size > 0 || !past); }, { passive: true });
+  }
   load();
 })();
