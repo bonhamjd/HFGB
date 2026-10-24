@@ -1,5 +1,6 @@
 // Mock Clover that answers the same URLs and JSON shapes as the real APIs, so the real client code is exercised.
 // State is a plain object; the caller supplies load/save (memory, a JSON file, or browser localStorage).
+import { itemTaxRates, cartTax } from './tax.js';
 const rid = (n = 13) => { const a = 'ABCDEFGHJKMNPQRSTVWXYZ0123456789'; let s = ''; const r = crypto.getRandomValues(new Uint8Array(n)); for (const x of r) s += a[x % a.length]; return s; };
 const J = (status, obj) => new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json' } });
 const brandOf = n => /^4/.test(n) ? 'VISA' : /^5[1-5]/.test(n) ? 'MC' : /^3[47]/.test(n) ? 'AMEX' : /^6/.test(n) ? 'DISCOVER' : 'UNKNOWN';
@@ -9,7 +10,6 @@ export function createMockClover({ seed, load, save, cfg }) {
   const init = () => ({ items: seed.items, categories: seed.categories, tax_rates: seed.tax_rates, order_types: seed.order_types,
     orders: {}, payments: {}, customers: {}, tokens: {}, prints: [], multiPay: true });
   const state = () => { let s = load(); if (!s) { s = init(); save(s); } return s; };
-  const taxRate = s => s.tax_rates.filter(t => t.isDefault).reduce((a, t) => a + t.rate, 0) / 1e7;
 
   return async function mockFetch(url, init = {}) {
     const u = new URL(url), method = (init.method || 'GET').toUpperCase(), path = u.pathname;
@@ -53,8 +53,9 @@ export function createMockClover({ seed, load, save, cfg }) {
         else { const c = s.customers[body.source]; if (!c) return J(400, { error: { code: 'invalid_source', message: 'unknown source' } }); number = Object.values(c.cards)[0];
           if (!body.stored_credentials) return J(400, { error: { message: 'stored_credentials required for card on file' } }); }
         if (number === TEST_CARDS.decline) return done(402, { error: { type: 'card_error', code: 'card_declined', message: 'Card was declined.' } });
+        if (body.amount !== undefined && body.amount !== o.total) return J(400, { error: { message: `amount ${body.amount} does not match order total ${o.total}` } });
         const pid = rid(); o.paymentState = 'PAID'; o.state = 'locked';
-        s.payments[pid] = { id: pid, order: o.id, amount: o.total, created: Date.now() };
+        s.payments[pid] = { id: pid, order: o.id, amount: o.total, created: Date.now() }; s.lastPayBody = body;
         return done(200, { id: o.id, object: 'order', amount: o.total, currency: 'usd', status: 'paid', charge: pid,
           source: { last4: number.slice(-4), brand: brandOf(number) }, created: o.createdTime });
       }
@@ -72,9 +73,10 @@ export function createMockClover({ seed, load, save, cfg }) {
       if (method === 'POST' && p === '/order_types') { const ot = { id: rid(), label: body.label, taxable: body.taxable !== false, isDefault: false, isHidden: !!body.isHidden }; s.order_types.push(ot); return done(200, ot); }
       if (method === 'POST' && p === '/atomic_order/orders') {
         const cart = body.orderCart || {}; const byId = Object.fromEntries(s.items.map(i => [i.id, i]));
-        const lines = []; for (const li of cart.lineItems || []) { const it = byId[li.item?.id]; if (!it) return J(400, { message: `item ${li.item?.id} not found` }); lines.push({ id: rid(), item: { id: it.id }, name: it.name, price: it.price, note: li.note || null }); }
+        const defaults = s.tax_rates.filter(t => t.isDefault);
+        const lines = []; for (const li of cart.lineItems || []) { const it = byId[li.item?.id]; if (!it) return J(400, { message: `item ${li.item?.id} not found` }); lines.push({ id: rid(), item: { id: it.id }, name: it.name, price: it.price, note: li.note || null, taxRates: { elements: itemTaxRates(it, defaults) } }); }
         if (cart.orderType?.id && !s.order_types.find(t => t.id === cart.orderType.id)) return J(400, { message: 'order type not found' });
-        const sub = lines.reduce((a, l) => a + l.price, 0), tax = Math.round(sub * taxRate(s));
+        const sub = lines.reduce((a, l) => a + l.price, 0), tax = cartTax(lines.map(l => ({ price: l.price, qty: 1, taxRates: l.taxRates.elements })));
         const o = { id: rid(), currency: 'USD', title: cart.title || null, note: cart.note || null, orderType: cart.orderType || null, state: 'open', paymentState: 'OPEN',
           total: sub + tax, taxAmount: tax, createdTime: Date.now(), lineItems: { elements: lines } };
         s.orders[o.id] = o; return done(200, o);

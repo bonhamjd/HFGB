@@ -1,5 +1,6 @@
 // High Flyers online ordering: menu, cart, checkout, pay, confirmation. Prices and availability come from the backend (Clover).
 import { api, isDemo, money, fmtPhone, digits, fmtTime, esc } from './api.js';
+import { cartTax } from './engine/tax.js?v=3';
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const LS = { get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } }, set: (k, v) => localStorage.setItem(k, JSON.stringify(v)), del: k => localStorage.removeItem(k) };
 const UPSELL_GROUPS = ['Front 9', 'Sweets', 'Pop'];
@@ -24,6 +25,7 @@ async function boot() {
   renderWelcome(); route();
   setInterval(refreshSchedule, 60000);
 }
+async function refreshPrices() { try { const m = await api('/menu'); MENU = m; SCHED = m.schedule; m.groups.forEach(g => g.items.forEach(i => { if (ITEMS[i.id]) Object.assign(ITEMS[i.id], { price: i.price, taxRates: i.taxRates, soldOut: i.soldOut }); })); Object.keys(ITEMS).forEach(refreshRow); if (view() === 'checkout') renderCheckout(); } catch {} }
 async function refreshSchedule() { try { const m = await api('/menu'); SCHED = m.schedule; m.groups.forEach(g => g.items.forEach(i => { if (ITEMS[i.id]) ITEMS[i.id].soldOut = i.soldOut; })); renderStatus(); if (view() === 'checkout') renderCheckout(); } catch {} }
 function statusText(s) {
   if (s.open) return `Open for pickup today. Ready in about ${s.prepMin} min.`;
@@ -85,7 +87,8 @@ let spyT; function spy() { clearTimeout(spyT); spyT = setTimeout(() => { let cur
 
 // ---------- cart ----------
 function saveCart() { LS.set('hfgb_cart', cart); }
-function sums() { let n = 0, sub = 0; for (const [id, q] of Object.entries(cart)) { n += q; sub += ITEMS[id].price * q; } const tax = Math.round(sub * MENU.taxRate); return { n, sub, tax, total: sub + tax }; }
+// tax per item, the same way the Worker and Clover do it (pop is not taxed, food is)
+function sums() { let n = 0, sub = 0; const lines = []; for (const [id, q] of Object.entries(cart)) { n += q; sub += ITEMS[id].price * q; lines.push({ price: ITEMS[id].price, qty: q, taxRates: ITEMS[id].taxRates || [] }); } const tax = cartTax(lines); return { n, sub, tax, total: sub + tax }; }
 function renderCartBar(bump) {
   const s = sums(), bar = $('#cartbar'); $('#cartCount').textContent = s.n; $('#cartAmt').textContent = money(s.sub);
   bar.classList.toggle('hidden', !s.n || view() !== 'menu');
@@ -123,7 +126,7 @@ function renderCheckout() {
   const ids = Object.keys(cart); if (!ids.length) { go('menu'); return; }
   $('#cartLines').innerHTML = ids.map(id => lineHTML(id, cart[id])).join('') + cartUpsell();
   const s = sums();
-  $('#totals').innerHTML = `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div><div class="trow"><span>Tax (${(MENU.taxRate * 100).toFixed(1)}%)</span><span>${money(s.tax)}</span></div><div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`;
+  $('#totals').innerHTML = `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div><div class="trow"><span>Tax</span><span>${money(s.tax)}</span></div><div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`;
   // pickup
   const asapBtn = $('#whenSeg [data-when="asap"]'), sel = $('#pickupTime'), keep = sel.value;
   sel.innerHTML = SCHED.slots.map(x => `<option value="${x.t}" ${x.left < 1 ? 'disabled' : ''}>${x.label}${x.left < 1 ? ' (full)' : ''}</option>`).join('');
@@ -226,7 +229,7 @@ async function submitOrder(wallet) {
     else { const t = await getToken(); payment = { type: 'token', token: t.token, card: t.card }; }
     if (email) LS.set('hfgb_email', email);
     const d = device();
-    const r = await api('/order', { method: 'POST', body: { idem, items: Object.entries(cart).map(([id, qty]) => ({ id, qty })), phone, name, email: email || undefined,
+    const r = await api('/order', { method: 'POST', body: { idem, items: Object.entries(cart).map(([id, qty]) => ({ id, qty })), phone, name, email: email || undefined, expectedTotal: sums().total,
       slot, notes: $('#notes').value, payment, deviceToken: d && d.phone === phone ? d.deviceToken : undefined, upsell: { shown: [...ups.shown], added: [...ups.added] } } });
     LS.set('hfgb_device', { phone, deviceToken: r.deviceToken, firstName: name });
     me = { known: true, firstName: name, phone, usual: me?.usual };
@@ -240,6 +243,7 @@ async function submitOrder(wallet) {
     err(e.message || 'Something went wrong. Nothing was charged.');
     if (['slot', 'slot_full', 'sold_out'].includes(e.code)) refreshSchedule();
     if (e.code === 'declined') idem = null;
+    if (e.code === 'price_changed') { idem = null; refreshPrices(); }
     return false;
   } finally { busy = false; b.disabled = !SCHED.open || payOff(); b.textContent = payOff() ? 'Payments off (preview)' : payLabel(); }
 }

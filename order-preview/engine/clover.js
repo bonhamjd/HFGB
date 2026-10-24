@@ -29,7 +29,7 @@ export class CloverClient {
 
   async listItems() {
     const out = []; for (let off = 0; off < 20000; off += 1000) {
-      const r = await this.v3(`/items?expand=categories&limit=1000&offset=${off}`); const el = r.elements || [];
+      const r = await this.v3(`/items?expand=categories,taxRates&limit=1000&offset=${off}`); const el = r.elements || [];
       out.push(...el); if (el.length < 1000) break;
     } return out;
   }

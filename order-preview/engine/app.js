@@ -4,6 +4,8 @@ import { schedule, parts, zoned, label, dayKey } from './time.js';
 import { publicConfig } from './config.js';
 import { computeStats } from './stats.js';
 import { sendSms } from './sms.js';
+import { itemTaxRates, cartTax, ratePct } from './tax.js';
+const MENU_CACHE_V = 2; // v2: items carry their own Clover tax rates
 
 const GROUP_ORDER = ['Flatbreads', 'Wings', 'Burgers', 'Front 9', 'Sweets', 'More Food', 'Pop'];
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, '0')).join('');
@@ -21,14 +23,15 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
   // ---------- menu (synced from Clover) ----------
   async function syncMenu() {
     const [items, taxes] = await Promise.all([clover.listItems(), clover.taxRates()]);
-    const cache = { ts: Date.now(), taxRate: taxes.filter(t => t.isDefault).reduce((a, t) => a + t.rate, 0) / 1e7,
+    const defaults = taxes.filter(t => t.isDefault);
+    const cache = { v: MENU_CACHE_V, ts: Date.now(), taxRate: defaults.reduce((a, t) => a + t.rate, 0) / 1e7,
       items: items.map(i => ({ id: i.id, name: i.name, price: i.price || 0, priceType: i.priceType, hidden: !!i.hidden, available: i.available !== false,
-        cats: (i.categories?.elements || []).map(c => c.name) })) };
+        cats: (i.categories?.elements || []).map(c => c.name), taxRates: itemTaxRates(i, defaults) })) };
     await store.setSetting('menu_cache', cache); return cache;
   }
   async function menuCache(force = false) {
     let c = await store.getSetting('menu_cache');
-    if (force || !c || Date.now() - c.ts > cfg.menuSyncMin * 60000) {
+    if (force || !c || c.v !== MENU_CACHE_V || Date.now() - c.ts > cfg.menuSyncMin * 60000) {
       try { c = await syncMenu(); } catch (e) { log('menu sync failed', e.message); if (!c) throw new HttpError(503, 'Menu is not available right now. Please call the bar.'); }
     }
     return c;
@@ -40,7 +43,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     const all = c.items.filter(eligible).map(i => {
       const o = overrides[i.id] || {}, sales = pairings.sales90?.[i.id] ?? null;
       const on = online[i.id] !== undefined ? online[i.id] : (sales === null ? true : sales > 0);
-      return { id: i.id, name: o.name || cleanName(i.name), note: o.note || '', cloverName: i.name, price: i.price,
+      return { id: i.id, name: o.name || cleanName(i.name), note: o.note || '', cloverName: i.name, price: i.price, taxRates: i.taxRates || [],
         group: o.group || (i.cats.includes('Pop') ? 'Pop' : 'More Food'), online: on, soldOut: !!sold[i.id], sales90: sales || 0 };
     });
     return { cache: c, all, items: all.filter(i => i.online) };
@@ -51,7 +54,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     const pairs = {}; for (const [k, v] of Object.entries(pairings.pairs || {})) if (ids.has(k)) { const f = v.filter(x => ids.has(x.id)); if (f.length) pairs[k] = f.map(x => x.id); }
     return { updated: m.cache.ts, taxRate: m.cache.taxRate, pairs,
       groups: GROUP_ORDER.filter(g => groups[g]).map(g => ({ name: g, items: groups[g].sort((a, b) => b.sales90 - a.sales90 || b.price - a.price)
-        .map(({ id, name, note, price, soldOut }) => ({ id, name, note, price, soldOut })) })) };
+        .map(({ id, name, note, price, soldOut, taxRates }) => ({ id, name, note, price, soldOut, taxRates, taxPct: ratePct(taxRates) })) })) };
   }
 
   // ---------- schedule ----------
@@ -81,11 +84,11 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
       const qty = Math.floor(+x.qty || 0); if (qty < 1) continue; const i = byId[x.id];
       if (!i) { problems.push({ id: x.id, why: 'not_available' }); continue; }
       if (i.soldOut) { problems.push({ id: x.id, name: i.name, why: 'sold_out' }); continue; }
-      qtyTotal += qty; lines.push({ id: i.id, name: i.name, note: i.note, price: i.price, qty });
+      qtyTotal += qty; lines.push({ id: i.id, name: i.name, note: i.note, price: i.price, qty, taxRates: i.taxRates || [] });
     }
     if (qtyTotal > cfg.maxItems) throw new HttpError(400, `For orders over ${cfg.maxItems} items please call the bar.`, 'too_many');
-    const subtotal = lines.reduce((a, l) => a + l.price * l.qty, 0), tax = Math.round(subtotal * m.cache.taxRate);
-    return { lines, problems, subtotal, tax, total: subtotal + tax };
+    const subtotal = lines.reduce((a, l) => a + l.price * l.qty, 0), tax = cartTax(lines);
+    return { lines: lines.map(({ taxRates, ...l }) => ({ ...l, taxPct: ratePct(taxRates) })), problems, subtotal, tax, total: subtotal + tax };
   }
 
   // ---------- place order ----------
@@ -103,6 +106,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     if (q.problems.length) throw new HttpError(409, 'Some items just sold out: ' + q.problems.map(p => p.name || 'an item').join(', '), 'sold_out');
     if (!q.lines.length) throw new HttpError(400, 'Your order is empty.', 'empty');
     if (cfg.maxTotal && q.total > cfg.maxTotal) throw new HttpError(400, `Online orders are limited to ${money(cfg.maxTotal)} right now. Please call the bar for bigger orders.`, 'over_cap');
+    if (b.expectedTotal !== undefined && +b.expectedTotal !== q.total) throw new HttpError(409, `Your total is now ${money(q.total)}. Please check your order and tap Pay again.`, 'price_changed');
     const pay = b.payment || {}; const cust = await store.getCustomer(phone);
     const devHash = b.deviceToken ? await sha(String(b.deviceToken)) : '';
     if (pay.type !== 'token' || !String(pay.token || '').startsWith('clv_')) throw new HttpError(400, 'Card info is missing.', 'card');
@@ -115,19 +119,32 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
       lineItems: q.lines.flatMap(l => Array.from({ length: l.qty }, () => ({ item: { id: l.id } }))) };
     const otId = cfg.orderTypeId || await store.getSetting('order_type_id'); if (otId) orderCart.orderType = { id: otId };
     const co = await clover.createAtomicOrder(orderCart);
-    const total = co.total ?? q.total; if (Math.abs(total - q.total) > 1) log('total mismatch, using Clover total', { ours: q.total, clover: total });
+    // Clover is the authority on the amount. The customer must be charged exactly Clover's order total, and that must be
+    // the total they were shown. If they differ (price or tax changed in Clover), drop the unpaid order and ask again.
+    let full = co; if (typeof co.total !== 'number' || !co.lineItems?.elements) { try { full = await clover.getOrder(co.id); } catch (e) { log('could not read order back', e.message); } }
+    const total = typeof full.total === 'number' ? full.total : co.total;
+    const cloverLines = full.lineItems?.elements, cloverSub = cloverLines ? cloverLines.reduce((a, l) => a + (l.price || 0), 0) : q.subtotal;
+    const cloverTax = typeof full.taxAmount === 'number' ? full.taxAmount : total - cloverSub;
+    if (typeof total !== 'number' || total !== q.total) {
+      log('total mismatch, not charging', { ours: q.total, clover: total });
+      try { await clover.deleteOrder(co.id); } catch (e2) { log('could not delete unpaid order', co.id, e2.message); }
+      await syncMenu().catch(() => {});
+      throw new HttpError(409, 'Prices just updated. Please check your total and tap Pay again. Nothing was charged.', 'price_changed');
+    }
 
     let paid; // one-time card token only. No Clover customers, no stored credentials, no card on file.
     try {
-      paid = await clover.payOrder(co.id, { source: pay.token, ...(email ? { email } : {}) });
+      paid = await clover.payOrder(co.id, { source: pay.token, amount: total, ...(email ? { email } : {}) });
     } catch (e) {
       try { await clover.deleteOrder(co.id); } catch (e2) { log('could not delete unpaid order', co.id, e2.message); }
       const declined = e.status === 402 || /declin/i.test(JSON.stringify(e.body || ''));
       throw new HttpError(402, declined ? 'Your card was declined. Please try another card.' : 'Payment did not go through. Nothing was charged. Please try again.', declined ? 'declined' : 'payment');
     }
+    if (typeof paid?.amount === 'number' && paid.amount !== total) log('charged amount differs from Clover order total', { total, charged: paid.amount });
     const card = { brand: pay.card?.brand || paid?.source?.brand || 'CARD', last4: pay.card?.last4 || paid?.source?.last4 || '' };
     const o = { id: 'o' + hex(8), no, idem: b.idem ? String(b.idem) : null, created: now, status: 'new', slot: slot.t, asap: isAsap, pickLabel,
-      readyAt: isAsap ? slot.readyAt : slot.t, name, phone, email: email || null, notes, items: q.lines, subtotal: total - (co.taxAmount ?? q.tax), tax: co.taxAmount ?? q.tax, total,
+      readyAt: isAsap ? slot.readyAt : slot.t, name, phone, email: email || null, notes, items: q.lines, subtotal: cloverSub, tax: cloverTax, total, taxSource: 'clover',
+      paidAmount: typeof paid?.amount === 'number' ? paid.amount : total,
       cloverOrderId: co.id, payment: { brand: card.brand, last4: card.last4, charge: paid?.charge || paid?.id || null },
       repeat: !!(cust && cust.orderCount > 0), upsell: { shown: (b.upsell?.shown || []).slice(0, 10), added: (b.upsell?.added || []).filter(id => q.lines.some(l => l.id === id)) },
       key: hex(12), mode: cfg.mode, history: [{ s: 'new', at: now }], print: null, sms: null };
