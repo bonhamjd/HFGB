@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Staff Orders (Preview) | High Flyers Golf Bar</title>
+<meta name="theme-color" content="#181510">
+<link rel="icon" href="/assets/logo-color.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@700;900&family=Oswald:wght@500;600;700&family=Barlow:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="staff.css">
+</head>
+<body class="st">
+<header class="st-hdr">
+  <img src="/assets/logo-knockout.png" alt="High Flyers Golf Bar">
+  <div class="st-hdr__t"><span class="label">Online Orders</span><b id="clock">--</b></div>
+  <button class="st-btn st-btn--ghost" id="testOrder">+ Test Order</button>
+</header>
+<div class="st-demo">Demo screen. Orders here come from the preview page in this same browser, or the Test Order button.</div>
+<div class="alert hidden" id="alert"><span id="alertTxt">New order!</span></div>
+<main class="board">
+  <section class="col"><h2>New <span id="nNew">0</span></h2><div id="colNew"></div></section>
+  <section class="col"><h2>Making <span id="nMaking">0</span></h2><div id="colMaking"></div></section>
+  <section class="col"><h2>Ready <span id="nReady">0</span></h2><div id="colReady"></div></section>
+</main>
+<div class="gate" id="gate">
+  <div class="gate__box">
+    <img src="/assets/logo-color.png" alt="">
+    <h1 class="disp">Staff Orders</h1>
+    <p>Tap once so the tablet is allowed to play the new order chime.</p>
+    <button class="btn btn--brass btn--lg" id="start">Start Shift</button>
+  </div>
+</div>
+<script src="staff.js"></script>
+</body>
+</html>

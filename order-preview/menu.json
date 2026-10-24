@@ -1,0 +1,269 @@
+{
+ "source": "Clover menu snapshot (read-only), 10/24/2026. Preview only.",
+ "pulled": "2026-10-24T09:36:57.764578-05:00",
+ "taxRate": 0.075,
+ "currency": "USD",
+ "categories": [
+  {
+   "id": "flatbreads",
+   "name": "Flatbreads",
+   "items": [
+    {
+     "id": "NETRVSWPPN4XP",
+     "name": "All Meat Flatbread",
+     "note": "",
+     "price": 1400,
+     "cloverName": "Pizza, Flatbread All Meat"
+    },
+    {
+     "id": "TXFT91V742RN4",
+     "name": "Hot Honey Pepperoni Flatbread",
+     "note": "",
+     "price": 1300,
+     "cloverName": "Pizza, Flatbread Pepperoni, hot honey"
+    },
+    {
+     "id": "G4S8MDT7W7B4T",
+     "name": "One Topping Pizza",
+     "note": "Tell us the topping in notes",
+     "price": 1200,
+     "cloverName": "Pizza, One Topping"
+    },
+    {
+     "id": "SZZQCE9HAYYXM",
+     "name": "Cheese Flatbread",
+     "note": "",
+     "price": 1000,
+     "cloverName": "Pizza, Flatbread Cheese"
+    }
+   ]
+  },
+  {
+   "id": "wings",
+   "name": "Wings",
+   "items": [
+    {
+     "id": "2R4RZ4R701V6G",
+     "name": "Wings",
+     "note": "12 piece",
+     "price": 1600,
+     "cloverName": "Wings X 12"
+    },
+    {
+     "id": "K62THAKJNS9BW",
+     "name": "Wings",
+     "note": "6 piece",
+     "price": 900,
+     "cloverName": "Wings X 6"
+    },
+    {
+     "id": "QX5PVE7HBAEDM",
+     "name": "Boneless Bites",
+     "note": "12 piece",
+     "price": 1400,
+     "cloverName": "Boneless Balls X 12"
+    },
+    {
+     "id": "FGJAFMMZTBHBY",
+     "name": "Boneless Bites",
+     "note": "6 piece",
+     "price": 800,
+     "cloverName": "Boneless Balls X 6"
+    }
+   ]
+  },
+  {
+   "id": "burgers",
+   "name": "Burgers",
+   "items": [
+    {
+     "id": "3ZX33E5G6R7GE",
+     "name": "Cheeseburger",
+     "note": "",
+     "price": 800,
+     "cloverName": "Cheeseburger"
+    },
+    {
+     "id": "QP9JY185RJJ0E",
+     "name": "Burger",
+     "note": "",
+     "price": 700,
+     "cloverName": "Burger"
+    },
+    {
+     "id": "HZJTB424E3PQJ",
+     "name": "Chicken Sandwich",
+     "note": "",
+     "price": 600,
+     "cloverName": "Chicken Sandwich"
+    }
+   ]
+  },
+  {
+   "id": "apps",
+   "name": "Front 9",
+   "items": [
+    {
+     "id": "A7BHBXAD6HV5W",
+     "name": "Pretzel Bites",
+     "note": "15, w/ cheese",
+     "price": 900,
+     "cloverName": "Pretzel Bites X 15"
+    },
+    {
+     "id": "6BVRZ13F73RGT",
+     "name": "Cheese Balls",
+     "note": "Bucket of 18",
+     "price": 1100,
+     "cloverName": "Bucket of Balls - Cheese balls- 18"
+    },
+    {
+     "id": "YRC7MZ0BG5NS2",
+     "name": "Pickle Chips",
+     "note": "15",
+     "price": 800,
+     "cloverName": "Pickle Chipsx15"
+    },
+    {
+     "id": "MBKHC77MKZZ5T",
+     "name": "Jalapeno Poppers",
+     "note": "8",
+     "price": 1100,
+     "cloverName": "Poppers X 8"
+    },
+    {
+     "id": "KRYXE4BXF44R2",
+     "name": "Mac & Cheese Bites",
+     "note": "10",
+     "price": 500,
+     "cloverName": "Mac & Cheese Bites X 10"
+    },
+    {
+     "id": "3K9MPNMEJ9JB8",
+     "name": "Potato Rounds",
+     "note": "Full, 10 oz",
+     "price": 400,
+     "cloverName": "Gems 10oz"
+    },
+    {
+     "id": "DKAPBX21VETCM",
+     "name": "Potato Rounds",
+     "note": "Half, 4 oz",
+     "price": 200,
+     "cloverName": "Gems 4oz"
+    },
+    {
+     "id": "41K6J6DZ5SPVM",
+     "name": "Chips",
+     "note": "Bag",
+     "price": 250,
+     "cloverName": "Chip Bags"
+    }
+   ]
+  },
+  {
+   "id": "sweets",
+   "name": "Sweets",
+   "items": [
+    {
+     "id": "ED4V18T3EN0DM",
+     "name": "Churros",
+     "note": "15, w/ marshmallow",
+     "price": 900,
+     "cloverName": "Churros X 15"
+    }
+   ]
+  },
+  {
+   "id": "pop",
+   "name": "Pop",
+   "items": [
+    {
+     "id": "M2HXN4B1E7WEJ",
+     "name": "Sprite",
+     "note": "",
+     "price": 225,
+     "cloverName": "Sprite"
+    },
+    {
+     "id": "87TDPD6SY483R",
+     "name": "Dr Pepper",
+     "note": "",
+     "price": 225,
+     "cloverName": "Dr Pepper"
+    },
+    {
+     "id": "BRPC405BH7C6C",
+     "name": "Lemonade",
+     "note": "",
+     "price": 225,
+     "cloverName": "Lemonade"
+    },
+    {
+     "id": "A37XJHM9XYXR8",
+     "name": "Diet Coke",
+     "note": "",
+     "price": 225,
+     "cloverName": "Diet Coke"
+    },
+    {
+     "id": "Y2KX8GY6P18TT",
+     "name": "Diet Pepsi",
+     "note": "",
+     "price": 225,
+     "cloverName": "Diet Pepsi"
+    },
+    {
+     "id": "ZWWP4JD4398F8",
+     "name": "Coke",
+     "note": "",
+     "price": 225,
+     "cloverName": "Coke"
+    },
+    {
+     "id": "ABWXWC6ZKRGMW",
+     "name": "Pepsi",
+     "note": "",
+     "price": 225,
+     "cloverName": "Pepsi"
+    },
+    {
+     "id": "4HASAA2CZZDJE",
+     "name": "Mtn Dew",
+     "note": "",
+     "price": 225,
+     "cloverName": "Mtn Dew"
+    },
+    {
+     "id": "83JTZJ41TDK4W",
+     "name": "Tea",
+     "note": "",
+     "price": 225,
+     "cloverName": "Tea"
+    },
+    {
+     "id": "SN3FWHZFMKXRJ",
+     "name": "Root Beer",
+     "note": "",
+     "price": 225,
+     "cloverName": "Root Beer"
+    },
+    {
+     "id": "9Q3EQG3NPXBVT",
+     "name": "Diet Dr Pepper",
+     "note": "",
+     "price": 225,
+     "cloverName": "Diet Dr Pepper"
+    },
+    {
+     "id": "8W0JG9W5WF47W",
+     "name": "Red Bull",
+     "note": "",
+     "price": 300,
+     "cloverName": "Red Bull"
+    }
+   ]
+  }
+ ],
+ "drinksNote": "Beer, seltzers and cocktails for pickup: TBD with JD (Nebraska carry-out alcohol rules and ID check at pickup)."
+}
