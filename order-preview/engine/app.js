@@ -70,8 +70,7 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
   async function lookup(phone, deviceToken) {
     const c = await store.getCustomer(phone); if (!c) return { known: false };
     const h = deviceToken ? await sha(deviceToken) : '', dev = !!h && (c.devices || []).includes(h);
-    const cardOk = dev && c.card && (c.cardDevices || []).includes(h);
-    return { known: true, firstName: c.firstName, usual: usualOf(c), deviceVerified: dev, savedCard: cardOk ? c.card : null, cardOnFileElsewhere: !!c.card && !cardOk };
+    return { known: true, firstName: c.firstName, usual: usualOf(c), deviceVerified: dev }; // no saved cards: Clover card on file is not available
   }
 
   // ---------- pricing ----------
@@ -106,11 +105,9 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     if (cfg.maxTotal && q.total > cfg.maxTotal) throw new HttpError(400, `Online orders are limited to ${money(cfg.maxTotal)} right now. Please call the bar for bigger orders.`, 'over_cap');
     const pay = b.payment || {}; const cust = await store.getCustomer(phone);
     const devHash = b.deviceToken ? await sha(String(b.deviceToken)) : '';
-    if (pay.type === 'saved') {
-      if (!cust || !cust.cloverCustomerId || !(cust.cardDevices || []).includes(devHash)) throw new HttpError(403, 'Please enter your card again on this device.', 'card_device');
-    } else if (pay.type !== 'token' || !String(pay.token || '').startsWith('clv_')) throw new HttpError(400, 'Card info is missing.', 'card');
+    if (pay.type !== 'token' || !String(pay.token || '').startsWith('clv_')) throw new HttpError(400, 'Card info is missing.', 'card');
     const email = String(b.email || '').trim().slice(0, 120);
-    if (pay.type === 'token' && pay.save && !/^\S+@\S+\.\S+$/.test(email)) throw new HttpError(400, 'Add an email to save your card (Clover needs it for card on file).', 'email');
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) throw new HttpError(400, 'That email does not look right. Fix it or leave it blank.', 'email');
 
     const no = await store.nextOrderNo();
     const isAsap = b.slot === 'asap' || !b.slot, pickLabel = isAsap ? `ASAP (~${label(slot.readyAt || slot.t, cfg.tz)})` : label(slot.t, cfg.tz);
@@ -120,27 +117,18 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     const co = await clover.createAtomicOrder(orderCart);
     const total = co.total ?? q.total; if (Math.abs(total - q.total) > 1) log('total mismatch, using Clover total', { ours: q.total, clover: total });
 
-    let cloverCustomerId = cust?.cloverCustomerId || null, paid, savedNow = false;
+    let paid; // one-time card token only. No Clover customers, no stored credentials, no card on file.
     try {
-      if (pay.type === 'saved') {
-        paid = await clover.payOrder(co.id, { source: cloverCustomerId, stored_credentials: { sequence: 'SUBSEQUENT', is_scheduled: false, initiator: 'CARDHOLDER' } });
-      } else if (pay.save) {
-        if (cloverCustomerId) await clover.updateCustomerSource(cloverCustomerId, pay.token);
-        else cloverCustomerId = (await clover.createCustomer({ email, firstName: name, phone, source: pay.token })).id;
-        savedNow = true;
-        paid = await clover.payOrder(co.id, { source: cloverCustomerId, stored_credentials: { sequence: 'FIRST', is_scheduled: false, initiator: 'CARDHOLDER' } });
-      } else {
-        paid = await clover.payOrder(co.id, { source: pay.token, ...(email ? { email } : {}) });
-      }
+      paid = await clover.payOrder(co.id, { source: pay.token, ...(email ? { email } : {}) });
     } catch (e) {
       try { await clover.deleteOrder(co.id); } catch (e2) { log('could not delete unpaid order', co.id, e2.message); }
       const declined = e.status === 402 || /declin/i.test(JSON.stringify(e.body || ''));
       throw new HttpError(402, declined ? 'Your card was declined. Please try another card.' : 'Payment did not go through. Nothing was charged. Please try again.', declined ? 'declined' : 'payment');
     }
-    const card = pay.type === 'saved' ? cust.card : { brand: pay.card?.brand || paid?.source?.brand || 'CARD', last4: pay.card?.last4 || paid?.source?.last4 || '' };
+    const card = { brand: pay.card?.brand || paid?.source?.brand || 'CARD', last4: pay.card?.last4 || paid?.source?.last4 || '' };
     const o = { id: 'o' + hex(8), no, idem: b.idem ? String(b.idem) : null, created: now, status: 'new', slot: slot.t, asap: isAsap, pickLabel,
       readyAt: isAsap ? slot.readyAt : slot.t, name, phone, email: email || null, notes, items: q.lines, subtotal: total - (co.taxAmount ?? q.tax), tax: co.taxAmount ?? q.tax, total,
-      cloverOrderId: co.id, payment: { brand: card.brand, last4: card.last4, saved: pay.type === 'saved', savedNow, charge: paid?.charge || paid?.id || null },
+      cloverOrderId: co.id, payment: { brand: card.brand, last4: card.last4, charge: paid?.charge || paid?.id || null },
       repeat: !!(cust && cust.orderCount > 0), upsell: { shown: (b.upsell?.shown || []).slice(0, 10), added: (b.upsell?.added || []).filter(id => q.lines.some(l => l.id === id)) },
       key: hex(12), mode: cfg.mode, history: [{ s: 'new', at: now }], print: null, sms: null };
     if (cfg.printEnabled) { try { const pe = await clover.printOrder(co.id); o.print = { ok: true, id: pe.id, state: pe.state }; } catch (e) { o.print = { ok: false, error: e.message }; log('print failed', e.message); } }
@@ -151,13 +139,12 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
 
     // remember the customer
     const deviceToken = b.deviceToken && devHash ? String(b.deviceToken) : hex(24), dh = devHash || await sha(deviceToken);
-    const c = cust || { phone, orders: [], devices: [], cardDevices: [], orderCount: 0, firstOrderAt: now, totalSpent: 0 };
-    c.firstName = name; if (email) c.email = email; c.cloverCustomerId = cloverCustomerId;
+    const c = cust || { phone, orders: [], devices: [], orderCount: 0, firstOrderAt: now, totalSpent: 0 };
+    c.firstName = name; if (email) c.email = email; delete c.card; delete c.cardDevices; delete c.cloverCustomerId;
     if (!c.devices.includes(dh)) c.devices = [...c.devices, dh].slice(-8);
-    if (savedNow) { c.card = { brand: card.brand, last4: card.last4 }; c.cardDevices = [dh]; }
     c.orders = [...(c.orders || []), { id: o.id, ts: now, total, items: Object.fromEntries(q.lines.map(l => [l.id, l.qty])) }].slice(-10);
     c.orderCount++; c.lastOrderAt = now; c.totalSpent += total; await store.putCustomer(c);
-    return { ok: true, order: pubOrder(o), deviceToken, savedCard: savedNow ? c.card : (pay.type === 'saved' ? c.card : null) };
+    return { ok: true, order: pubOrder(o), deviceToken };
   }
   const pubOrder = o => ({ id: o.id, no: o.no, key: o.key, status: o.status, readyAt: o.readyAt, pickLabel: o.pickLabel, asap: o.asap, name: o.name,
     items: o.items, subtotal: o.subtotal, tax: o.tax, total: o.total, payment: { brand: o.payment.brand, last4: o.payment.last4 }, created: o.created });

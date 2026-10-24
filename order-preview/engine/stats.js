@@ -18,7 +18,6 @@ export function computeStats(orders, tz, range) {
     range, orders: paid.length, sales, subtotal: sub, avgTicket: paid.length ? Math.round(sales / paid.length) : 0,
     tax: sales - sub, cancelled: orders.length - paid.length,
     customers: { total: phones.length, new: newCust, repeat: repeatCust, repeatOrders: paid.filter(o => o.repeat).length },
-    savedCardOrders: paid.filter(o => o.payment && o.payment.saved).length,
     topItems: Object.values(items).sort((a, b) => b.qty - a.qty || b.revenue - a.revenue).slice(0, 10),
     byHour: Array.from({ length: 24 }, (_, h) => ({ h, n: byHour[h] || 0 })).filter(x => x.h >= 10 && x.h <= 22),
     byDay: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, i) => ({ d, n: byDay[i] })),

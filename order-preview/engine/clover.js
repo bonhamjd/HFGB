@@ -41,8 +41,6 @@ export class CloverClient {
   deleteOrder(id) { return this.v3(`/orders/${id}`, { method: 'DELETE' }); }
   printOrder(id) { return this.v3('/print_event', { method: 'POST', body: { orderRef: { id } } }); }
   // Ecommerce
-  createCustomer(c) { return this.ecom('/v1/customers', { method: 'POST', body: c }); }
-  updateCustomerSource(id, source) { return this.ecom(`/v1/customers/${id}`, { method: 'PUT', body: { source } }); }
   payOrder(id, body) { return this.ecom(`/v1/orders/${id}/pay`, { method: 'POST', body: { ecomind: 'ecom', ...body } }); }
   // Only for mock/sandbox test cards. Real customers type cards into Clover's hosted iframe, never into our page.
   tokenizeTestCard(card) {

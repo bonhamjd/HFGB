@@ -5,7 +5,7 @@ const LS = { get: (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?
 const UPSELL_GROUPS = ['Front 9', 'Sweets', 'Pop'];
 let CFG, MENU, SCHED, ITEMS = {}, cart = LS.get('hfgb_cart', {}), me = null, when = 'asap';
 const ups = { shown: new Set(), added: new Set(), dismissed: new Set(), chipFor: null, cartDone: false };
-let payMode = 'card', testCard = 'approve', saveCard = true, cloverSdk = null, idem = null, busy = false;
+let testCard = 'approve', cloverSdk = null, idem = null, busy = false;
 
 function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1400); }
 const device = () => LS.get('hfgb_device', null);
@@ -100,7 +100,7 @@ function renderWelcome() {
   const u = (me.usual || []).filter(x => ITEMS[x.id] && !ITEMS[x.id].soldOut);
   $('#welcomeName').textContent = 'Hey, ' + me.firstName + '!';
   $('#welcomeUsual').innerHTML = u.length ? 'Your usual: ' + usualText(u) : '';
-  $('#welcomeCard').classList.toggle('hidden', !me.savedCard); if (me.savedCard) $('#welcomeCard').textContent = `Pays with ${me.savedCard.brand} ending ${me.savedCard.last4}`;
+  $('#welcomeCard').classList.add('hidden');
   $('#reorderBtn').classList.toggle('hidden', !u.length); w.classList.remove('hidden');
 }
 $('#reorderBtn').addEventListener('click', () => {
@@ -154,42 +154,44 @@ let lookT; $('#phone').addEventListener('input', e => {
   if (d.length !== 10) { h.textContent = "We'll remember you next time."; h.classList.remove('ok'); return; }
   lookT = setTimeout(async () => {
     try { const r = await api('/customer/lookup', { method: 'POST', body: { phone: d, deviceToken: device()?.phone === d ? device().deviceToken : undefined } });
-      if (r.known) { if (!$('#name').value) $('#name').value = r.firstName; h.textContent = 'Welcome back, ' + r.firstName + '!' + (r.cardOnFileElsewhere ? ' Your saved card works on the phone you saved it on.' : ''); h.classList.add('ok');
-        if (r.savedCard) { me = { ...r, phone: d }; renderPay(); } }
+      if (r.known) { if (!$('#name').value) $('#name').value = r.firstName; h.textContent = 'Welcome back, ' + r.firstName + '!'; h.classList.add('ok'); lockApple(); }
       else { h.textContent = "We'll remember you next time."; h.classList.remove('ok'); } } catch {}
   }, 250);
 });
 
 // ---------- payment ----------
-const payLabel = () => `Pay ${money(sums().total || 0)}` + (payMode === 'saved' && me?.savedCard ? ` · ${me.savedCard.brand} ${me.savedCard.last4}` : '');
+const payLabel = () => `Pay ${money(sums().total || 0)}`;
 const liveCards = () => CFG.mode !== 'mock' && CFG.ecomPublic && CFG.sdk;
 const payOff = () => CFG.paymentsEnabled === false;
-const appleOk = () => { try { return !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()); } catch { return false; } };
+// Clover's iframe Apple Pay needs real Safari (17.5+). iOS Chrome/Firefox/Edge/Opera/Google app and in-app browsers close the sheet.
+const realSafari = () => { const ua = navigator.userAgent || '';
+  return /Safari\//.test(ua) && /Apple/.test(navigator.vendor || '') && !/CriOS|FxiOS|EdgiOS|EdgA|OPiOS|OPT\/|GSA\/|YaBrowser|DuckDuckGo|Brave|FBAN|FBAV|Instagram|Snapchat|Line\/|Twitter|LinkedInApp|Pinterest|TikTok|musical_ly|Messenger|wv\)|Chrome\/|Chromium|Android/i.test(ua); };
+const appleOk = () => { try { return realSafari() && !!(window.ApplePaySession && window.ApplePaySession.canMakePayments()); } catch { return false; } };
+const contactOk = () => digits($('#phone')?.value) .length === 10 && !!($('#name')?.value || '').trim();
+function lockApple() { const w = $('#applePayWrap'); if (!w) return; const ok = contactOk(); w.classList.toggle('locked', !ok); $('#appleHint')?.classList.toggle('hidden', ok); }
+document.addEventListener('input', e => { if (e.target && (e.target.id === 'phone' || e.target.id === 'name')) lockApple(); });
 function renderPay() {
   const box = $('#payBox'), s = sums();
-  const saved = me?.savedCard && digits($('#phone').value || me.phone) === me.phone;
-  if (saved && payMode !== 'newcard') payMode = 'saved'; else if (payMode === 'saved') payMode = 'card';
   let h = '<span class="flabel">Payment</span>';
   if (payOff()) { box.innerHTML = h + '<p class="testnote">Online payments are not turned on yet. This is a preview. Please call the bar at (402) 923-0160 to order.</p>'; $('#payBtn').textContent = 'Payments off (preview)'; $('#payBtn').disabled = true; return; }
-  if (payMode === 'saved') h += `<div class="saved"><span class="chk">&#10003;</span><b>${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</b><button class="linkbtn sm" id="useNew">Use a different card</button></div>`;
-  else {
-    if (liveCards() && appleOk()) h += '<div id="applePayBtn" class="applepay"></div><div class="paysep">or pay with card</div>';
+  if (liveCards() && box.querySelector('#cfNum iframe')) { // card boxes already up: never wipe what the customer typed
+    if (box.dataset.total !== String(s.total) && $('#applePayBtn')) { try { cloverSdk.updateApplePaymentRequest({ amount: s.total, countryCode: 'US', currencyCode: 'USD' }); } catch {} }
+    box.dataset.total = String(s.total); $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy; lockApple(); return;
+  }
+  box.dataset.total = String(s.total);
+  {
+    if (liveCards() && appleOk()) h += '<div id="applePayWrap" class="applewrap locked"><div id="applePayBtn" class="applepay"></div></div><p class="testnote" id="appleHint">Add your phone and name above to use Apple Pay.</p><div class="paysep">or pay with card</div>';
     if (liveCards()) h += `<div class="cf"><div class="fld" id="cfNum"></div><div class="row"><div class="fld" id="cfDate"></div><div class="fld" id="cfCvv"></div><div class="fld" id="cfZip"></div></div><div class="err" id="cfErr"></div></div>`;
     else h += `<div class="testcards" id="testCards">
       <button type="button" data-tc="approve" class="${testCard === 'approve' ? 'on' : ''}"><span>&#128179;</span><span>Test Visa ending 4242<small>Approves</small></span></button>
       <button type="button" data-tc="decline" class="${testCard === 'decline' ? 'on' : ''}"><span>&#128179;</span><span>Test Visa ending 0002<small>Declines, to test the error</small></span></button></div>
       <p class="testnote">Test mode. In the live version Clover's secure card box shows here, so card numbers never touch our site.</p>`;
-    h += `<label class="check"><input type="checkbox" id="saveCard" ${saveCard ? 'checked' : ''}><span>Save my card for faster checkout next time. Clover stores it, not us.</span></label>
-      <div class="field ${saveCard ? '' : 'hidden'}" id="emailField"><label for="email">Email for receipts</label><input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(LS.get('hfgb_email', ''))}"></div>`;
-    if (me?.savedCard) h += `<button class="linkbtn sm" id="useSaved">Use saved ${esc(me.savedCard.brand)} ending ${esc(me.savedCard.last4)}</button>`;
+    h += `<div class="field" id="emailField"><label for="email">Email for receipt (optional)</label><input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(LS.get('hfgb_email', ''))}"></div>`;
   }
   box.innerHTML = h;
   $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy;
-  $('#useNew')?.addEventListener('click', () => { payMode = 'newcard'; renderPay(); });
-  $('#useSaved')?.addEventListener('click', () => { payMode = 'saved'; renderPay(); });
-  $('#saveCard')?.addEventListener('change', e => { saveCard = e.target.checked; $('#emailField').classList.toggle('hidden', !saveCard); });
   $$('#testCards button').forEach(b => b.addEventListener('click', () => { testCard = b.dataset.tc; $$('#testCards button').forEach(x => x.classList.toggle('on', x === b)); }));
-  if (payMode !== 'saved' && liveCards()) mountClover();
+  if (liveCards()) mountClover().then(lockApple, () => {});
 }
 async function mountClover() { // Clover hosted iframe fields (Ecommerce public key). Card data goes straight to Clover.
   if (!window.Clover) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = CFG.sdk; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
@@ -200,7 +202,7 @@ async function mountClover() { // Clover hosted iframe fields (Ecommerce public 
     try {
       const req = cloverSdk.createApplePaymentRequest({ amount: sums().total, countryCode: 'US', currencyCode: 'USD' });
       el.create('PAYMENT_REQUEST_BUTTON_APPLE_PAY', { applePaymentRequest: req, sessionIdentifier: CFG.mid }).mount('#applePayBtn');
-    } catch (e) { $('#applePayBtn')?.remove(); document.querySelector('.paysep')?.remove(); }
+    } catch (e) { $('#applePayWrap')?.remove(); $('#appleHint')?.remove(); document.querySelector('.paysep')?.remove(); }
   }
 }
 async function getToken() {
@@ -215,28 +217,27 @@ async function submitOrder(wallet) {
   const phone = digits($('#phone').value), name = $('#name').value.trim(), email = ($('#email')?.value || '').trim();
   if (phone.length !== 10) { err('Please enter your 10 digit phone number' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
   if (!name) { err('Please add a name for the order' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
-  if (!wallet && payMode !== 'saved' && saveCard && !/^\S+@\S+\.\S+$/.test(email)) { err('Add your email to save the card, or uncheck "Save my card".'); return false; }
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) { err('That email doesn\'t look right. Fix it or leave it blank.'); return false; }
   const slot = when === 'asap' ? 'asap' : $('#pickupTime').value;
   busy = true; idem = idem || ('i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8)); const b = $('#payBtn'); b.disabled = true; b.textContent = 'Paying...';
   try {
     let payment;
-    if (wallet) payment = { type: 'token', token: wallet.token, card: wallet.card, save: false };
-    else if (payMode === 'saved') payment = { type: 'saved' };
-    else { const t = await getToken(); payment = { type: 'token', token: t.token, card: t.card, save: saveCard }; if (saveCard) LS.set('hfgb_email', email); }
+    if (wallet) payment = { type: 'token', token: wallet.token, card: wallet.card };
+    else { const t = await getToken(); payment = { type: 'token', token: t.token, card: t.card }; }
+    if (email) LS.set('hfgb_email', email);
     const d = device();
     const r = await api('/order', { method: 'POST', body: { idem, items: Object.entries(cart).map(([id, qty]) => ({ id, qty })), phone, name, email: email || undefined,
       slot, notes: $('#notes').value, payment, deviceToken: d && d.phone === phone ? d.deviceToken : undefined, upsell: { shown: [...ups.shown], added: [...ups.added] } } });
     LS.set('hfgb_device', { phone, deviceToken: r.deviceToken, firstName: name });
-    me = { known: true, firstName: name, phone, savedCard: r.savedCard || (payMode === 'saved' ? me.savedCard : null), usual: me?.usual };
+    me = { known: true, firstName: name, phone, usual: me?.usual };
     LS.set('hfgb_last_order', { id: r.order.id, key: r.order.key });
-    cart = {}; saveCart(); Object.keys(ITEMS).forEach(refreshRow); idem = null; payMode = 'card';
+    cart = {}; saveCart(); Object.keys(ITEMS).forEach(refreshRow); idem = null;
     ups.shown.clear(); ups.added.clear(); ups.cartDone = false; ups.cartPick = null;
-    showDone(r.order); go('done');
+    $('#payBox').innerHTML = ''; showDone(r.order); go('done');
     try { const m2 = await api('/me', { method: 'POST', body: device() }); if (m2.known) me = { ...m2, phone }; } catch {}
     return true;
   } catch (e) {
     err(e.message || 'Something went wrong. Nothing was charged.');
-    if (e.code === 'card_device') { payMode = 'newcard'; renderPay(); }
     if (['slot', 'slot_full', 'sold_out'].includes(e.code)) refreshSchedule();
     if (e.code === 'declined') idem = null;
     return false;
@@ -244,10 +245,11 @@ async function submitOrder(wallet) {
 }
 // Apple Pay (Clover iframe). Only on Safari/Apple devices that can pay; the card form stays as the fallback.
 window.addEventListener('paymentMethod', async ev => {
-  const t = ev?.detail?.tokenRecieved; if (!t?.id) return;
+  const t = ev?.detail?.tokenRecieved; if (!t?.id) { try { cloverSdk.updateApplePaymentStatus('failed'); } catch {} return; }
   const ok = await submitOrder({ token: t.id, card: { brand: 'Apple Pay', last4: t.wallet?.last4 || t.card?.last4 || '' } });
   try { cloverSdk.updateApplePaymentStatus(ok ? 'success' : 'failed'); } catch {}
 });
+window.addEventListener('paymentMethodEnd', ev => { const d = ev?.detail || {}; if (d.status && d.status !== 'success') console.log('Apple Pay ended:', d.status, d.eventMessage || ''); });
 
 // ---------- confirmation ----------
 let pollT;

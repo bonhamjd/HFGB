@@ -21,7 +21,7 @@ async function show() {
       p.innerHTML = `<h2>Overview</h2><p class="sub">${rangeTxt()} · paid online orders only${s.cancelled ? ` · ${s.cancelled} cancelled not counted` : ''}</p>
       <div class="stats">${stat('Online sales', money(s.sales), `${money(s.subtotal)} food + ${money(s.tax)} tax`)}${stat('Orders', s.orders)}${stat('Average ticket', money(s.avgTicket))}
       ${stat('Repeat customers', `${s.customers.repeat} of ${s.customers.total}`, `${s.customers.new} new · ${s.customers.repeatOrders} repeat orders`)}
-      ${stat('Upsell take rate', pct(s.upsell.rate), `${s.upsell.ordersTook} of ${s.upsell.ordersShown} orders · ${money(s.upsell.revenue)} added`)}${stat('Saved card orders', s.savedCardOrders, 'Paid with a card stored by Clover')}</div>
+      ${stat('Upsell take rate', pct(s.upsell.rate), `${s.upsell.ordersTook} of ${s.upsell.ordersShown} orders · ${money(s.upsell.revenue)} added`)}</div>
       <div class="grid2"><div class="panel"><h3>Orders by hour</h3>${bars(s.byHour, x => hr(x.h), x => x.n)}</div><div class="panel"><h3>Orders by day</h3>${bars(s.byDay, x => x.d, x => x.n)}</div></div>
       <div class="panel" style="margin-bottom:1.2rem"><h3>Daily online sales</h3>${s.byDate.length ? bars(s.byDate, x => x.date, x => Math.round(x.sales / 100)) : '<p class="fine">No orders yet.</p>'}</div>
       <h3 style="font-family:var(--font-label);text-transform:uppercase;letter-spacing:.12em;font-size:13px;margin:0 0 .5rem">Top items</h3>
@@ -53,7 +53,7 @@ async function show() {
       ${row('Max orders per 15 min', c.slotCap)}${row('Default prep time', c.prepMin + ' min')}
       ${row('Clover ticket printing', c.printEnabled ? 'On' : 'Off')}${row('Text backup to bar cell', c.smsEnabled ? 'On' : 'Off (needs Twilio, see GO_LIVE.md)')}
       ${row('Online categories', c.onlineCategories.join(', '))}${row('Clover order type', esc(c.orderTypeLabel) + (c.orderTypeId ? ' (' + esc(c.orderTypeId) + ')' : ' (not set)'))}
-      ${row('Saved customers', c.customers)}</dl></div>`;
+      ${row('Customers remembered', c.customers)}</dl></div>`;
     }
   } catch (e) { p.innerHTML = `<p class="sub">Could not load: ${esc(e.message)}</p>`; }
 }

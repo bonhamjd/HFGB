@@ -172,3 +172,5 @@
 .envstrip{background:var(--brick);}
 .applepay{width:100%;height:48px;margin-bottom:6px;}
 .paysep{text-align:center;font-size:13px;opacity:.7;margin:4px 0 8px;}
+.applewrap{position:relative;}
+.applewrap.locked{opacity:.35;pointer-events:none;}
