@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /order-preview/
-Disallow: /home-preview/
 
 Sitemap: https://highflyersgolfbar.com/sitemap.xml

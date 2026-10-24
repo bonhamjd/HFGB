@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>High Flyers Golf Bar | Humphrey, NE | Food, Drinks & Every Game</title>
 <meta name="description" content="High Flyers Golf Bar on Main Street in Humphrey, Nebraska. Flatbread pizza, wings, cold beer, and every Husker game on the big screen. Est. 2024. Patio out back.">
-<meta name="theme-color" content="#14523a">
+<meta name="theme-color" content="#0d3b29">
 <link rel="canonical" href="https://highflyersgolfbar.com/">
 <link rel="icon" href="assets/logo-color.png">
 <link rel="apple-touch-icon" href="assets/logo-color.png">
@@ -21,7 +21,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,500;0,700;0,900;1,700&family=Oswald:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<link rel="preconnect" href="https://hfgb-orders.highflyersgolfbar.workers.dev" crossorigin>
+<link rel="preload" as="image" href="assets/photos/bar.webp">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="home.css?v=5">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -88,223 +91,124 @@
 }
 </script>
 </head>
-<body>
-
-<!-- ============================ HEADER ============================ -->
+<body class="hp">
+<!-- Online ordering links are switched on in home.js (ORDERING_LIVE). Elements with data-order stay hidden until then;
+     elements with data-soon show while ordering is not public yet. -->
 <header class="hdr">
   <div class="wrap hdr__in">
-    <a class="hdr__logo" href="#top" aria-label="High Flyers Golf Bar home">
-      <img src="assets/logo-color.png" alt="High Flyers Golf Bar">
-    </a>
-    <nav class="nav" aria-label="Primary">
-      <a href="#menu">Menu</a>
-      <a href="#lineup">The Lineup</a>
-      <a href="#visit">Visit</a>
-    </nav>
+    <a class="hdr__logo" href="#top" aria-label="High Flyers Golf Bar home"><img src="assets/logo-color.png" alt="High Flyers Golf Bar"></a>
+    <nav class="nav" aria-label="Primary"><a href="#menu">Menu</a><a href="#bar">At The Bar</a><a href="#visit">Visit</a></nav>
     <div class="hdr__right">
-      <span class="hdr__open"><span class="dot"></span>Mon&ndash;Sat till 1 AM &middot; Sun till 10 PM</span>
-      <a class="btn btn--brass btn--sm" href="tel:+14029230160">
-        <svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        Call
-      </a>
-      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+      <a class="btn btn--green btn--sm hp-hdrorder hidden" data-order>Order Online</a>
+      <a class="btn btn--brass btn--sm" href="tel:+14029230160" aria-label="Call (402) 923-0160"><svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call</a>
     </div>
   </div>
 </header>
-
-<div class="drawer" id="drawer">
-  <a href="#menu"><span class="n">01</span>Menu</a>
-  <a href="#lineup"><span class="n">02</span>The Lineup</a>
-  <a href="#visit"><span class="n">03</span>Visit</a>
-  <div class="drawer__cta">
-    <a class="btn btn--brass" href="tel:+14029230160">Call Us</a>
-    <a class="btn btn--ghostLight" href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE" target="_blank" rel="noopener">Directions</a>
-  </div>
-</div>
-
 <span id="top"></span>
 
-<!-- ============================ HERO ============================ -->
-<section class="hero">
-  <img class="hero__photo" src="assets/photos/bar.webp" width="2208" height="1432" alt="Inside High Flyers Golf Bar">
-  <div class="hero__scrim"></div>
-  <div class="hero__frame"></div>
-  <div class="hero__in">
-    <div class="hero__eyebrow">Right on Main Street</div>
-    <div class="hero__stars"><span class="s">★★★★★</span> <b>4.8</b> ON GOOGLE · EST. 2024</div>
-    <h1>Good Food.<br>Cold Beer.<br>Every <span class="g">Game.</span><span class="hero__town">In Humphrey, Nebraska</span></h1>
-    <p class="hero__sub">The best seat in Humphrey to eat, drink, and watch the Huskers. Pull up a stool, the kitchen's hot and the game's on.</p>
-    <div class="hero__cta">
-      <a class="btn btn--brass btn--lg" href="#menu">See The Menu
-        <svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-      <a class="btn btn--ghostLight btn--lg" href="#lineup">This Week's Games</a>
+<section class="hp-hero">
+  <img class="hp-hero__photo" src="assets/photos/bar.webp" width="2208" height="1432" alt="Inside High Flyers Golf Bar">
+  <div class="hp-hero__scrim"></div>
+  <div class="hp-hero__frame"></div>
+  <div class="wrap hp-hero__in">
+    <div class="hp-hero__eyebrow">Right on Main Street in Humphrey</div>
+    <h1>High Flyers <span class="g">Golf Bar</span></h1>
+    <p class="hp-hero__tag">Good food. Cold beer. Every game.</p>
+    <div class="hp-hero__cta">
+      <a class="btn btn--brass btn--lg hp-cta hidden" data-order>Order Online for Pickup</a>
+      <a class="btn btn--brass btn--lg hp-cta" href="#menu" data-soon>View Menu</a>
+      <a class="btn btn--ghostLight btn--lg hidden" href="#menu" data-order-alt>View Menu</a>
+      <a class="btn btn--ghostLight btn--lg" href="tel:+14029230160" data-soon>Call (402) 923-0160</a>
     </div>
-    <div class="hero__meta">
-      <div><span class="k">Where</span><span class="v">302 Main St, Humphrey</span></div>
-      <div><span class="k">Hours</span><span class="v">Mon&ndash;Sat Til 1 AM · Sun Til 10 PM</span></div>
-      <div><span class="k">The Feel</span><span class="v">Sports bar &amp; patio</span></div>
+    <p class="hp-hero__small hidden" data-order-block>Order online 11 AM to 9 PM</p>
+    <p class="hp-hero__small" data-soon>Online ordering for pickup is coming soon</p>
+    <div class="hp-status hidden" id="statusLine"><span class="dot"></span><span id="statusTxt"></span></div>
+  </div>
+</section>
+<div class="stripe"></div>
+
+<section class="hp-menu" id="menu">
+  <div class="wrap">
+    <div class="hp-head">
+      <span class="hp-eyebrow">From the kitchen</span>
+      <h2>The <span class="g">Menu</span></h2>
+      <p class="charm">Flatbreads, wings, burgers and the Front 9.</p>
     </div>
+    <nav class="hp-jump" id="tabs" aria-label="Menu sections"></nav>
+    <div class="hp-menu__grid" id="menuList"><p class="hp-loading">Loading the menu...</p></div>
+    <template id="asideTpl">
+      <aside class="hp-aside">
+        <div class="hp-aside__card hidden" data-order-block>
+          <span class="hp-eyebrow">Order ahead</span>
+          <h3>Order Online for Pickup</h3>
+          <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St.</p>
+          <a class="btn btn--brass btn--lg hp-wide hidden" data-order>Start Your Order</a>
+        </div>
+        <div class="hp-aside__card" data-soon>
+          <span class="hp-eyebrow">Coming soon</span>
+          <h3>Online Ordering for Pickup</h3>
+          <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
+          <a class="btn btn--green btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+        </div>
+        <div class="hp-aside__note"><b>Drinks</b>Beer, cocktails and the full drink list are at the bar. Ask for Chad's Golf Ball Old Fashioned.</div>
+      </aside>
+    </template>
   </div>
 </section>
 
-<!-- ============================ SIGNATURE ============================ -->
-<section class="section">
+<section class="hp-bar" id="bar">
   <div class="wrap">
-    <div class="signature">
-      <div class="signature__l">
-        <span class="eyebrow">The House Pour</span>
+    <div class="hp-head hp-head--light">
+      <span class="hp-eyebrow">Come on in</span>
+      <h2>At The <span class="g">Bar</span></h2>
+      <p>Beer, cocktails and the full drink list are at the bar. Pull up a stool, the kitchen's hot and the game's on.</p>
+    </div>
+    <article class="hp-sig">
+      <img src="assets/photos/backbar.webp" width="800" height="1098" alt="The back bar at High Flyers" loading="lazy">
+      <div class="hp-sig__body">
+        <span class="hp-sig__eyebrow">The House Pour</span>
         <h3>Chad's <span class="g">Golf Ball</span> Old Fashioned</h3>
-        <p>Our unofficial signature. Chad builds an incredible Old Fashioned that folks drive in for. Order one, grab a stool, and settle in. This is that kind of place: fun, a little different, and all the way ours.</p>
-        <div><a class="btn btn--green" href="#menu">See The Menu</a></div>
+        <p>Our unofficial signature. Chad builds an Old Fashioned that folks drive in for. Ask for Chad's when you're in.</p>
+        <div class="hp-sig__price">$10 <small>at the bar</small></div>
       </div>
-      <div class="signature__r">
-        <span class="big">Old Fashioned</span>
-        <div class="plate">
-          <div class="price">$10</div>
-          <div class="by">Ask For Chad's</div>
-        </div>
-      </div>
+    </article>
+    <div class="hp-games" id="lineup">
+      <h3 class="hp-sub">On The Screens</h3>
+      <p class="hp-subtxt">Huskers football, volleyball and basketball, plus the NFL. If there's a game, it's on here.</p>
+      <div class="ev-list" id="evList"></div>
     </div>
   </div>
 </section>
 
-<!-- ============================ MENU / SCORECARD ============================ -->
-<section class="section section--tint" id="menu">
+<section class="hp-visit" id="visit">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-head__l">
-        <span class="sec-head__eyebrow">01 · The Food</span>
-        <h2>The <span class="hl">Score</span>card</h2>
-        <p class="charm">Front 9 to start, Back 9 to finish.</p>
-      </div>
+    <div class="hp-head">
+      <span class="hp-eyebrow">Come by</span>
+      <h2>Find <span class="g">Us</span></h2>
+      <p class="charm">Right on Main Street. Patio's open when the weather plays nice.</p>
     </div>
-    <div class="scorecards">
-      <!-- FRONT 9 -->
-      <div class="scorecard">
-        <div class="scorecard__head">
-          <span class="scorecard__brand"><img src="assets/logo-color.png" alt="High Flyers Golf Bar"></span>
-          <span class="scorecard__title">Front <span class="n">9</span></span>
+    <div class="hp-visit__grid">
+      <div class="hp-info">
+        <div class="hp-row"><span class="k">Hours</span><span class="v">Mon to Sat: 11 AM to 1 AM<br>Sunday: 11 AM to 10 PM</span></div>
+        <div class="hp-row hidden" data-order-block><span class="k">Order online</span><span class="v">11 AM to 9 PM, pickup from 11:30</span></div>
+        <div class="hp-row"><span class="k">Address</span><span class="v"><a href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE+68642" target="_blank" rel="noopener">302 Main St<br>Humphrey, NE 68642</a></span></div>
+        <div class="hp-row"><span class="k">Phone</span><span class="v"><a href="tel:+14029230160">(402) 923-0160</a></span></div>
+        <div class="hp-row"><span class="k">Email</span><span class="v"><a href="mailto:highflyersgolfbar@gmail.com">highflyersgolfbar@gmail.com</a></span></div>
+        <div class="hp-btns">
+          <a class="btn btn--green btn--lg" href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE+68642" target="_blank" rel="noopener">Get Directions</a>
+          <a class="btn btn--outline btn--lg" href="tel:+14029230160">Call Us</a>
         </div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Pickle Chips</span><span class="mrow__price">$9.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Jalapeno Poppers</span><span class="mrow__price">$11.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Cheese Balls</span><span class="mrow__price">$11.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Pretzel Bites <span class="note">w/ Cheese</span></span><span class="mrow__price">$9.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Mac &amp; Cheese Bites</span><span class="mrow__price">$11.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Potato Rounds <span class="note">Full</span></span><span class="mrow__price">$4.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Potato Rounds <span class="note">Half</span></span><span class="mrow__price">$2.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Chips</span><span class="mrow__price">$2.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Hamburger</span><span class="mrow__price">$6.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Cheeseburger</span><span class="mrow__price">$7.00</span></div>
-      </div>
-      <!-- BACK 9 -->
-      <div class="scorecard">
-        <div class="scorecard__head">
-          <span class="scorecard__brand"><img src="assets/logo-color.png" alt="High Flyers Golf Bar"></span>
-          <span class="scorecard__title">Back <span class="n">9</span></span>
+        <div class="hp-social">
+          <a class="icobtn" href="https://www.facebook.com/profile.php?id=61559637320393" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a>
+          <a class="icobtn" href="https://www.instagram.com/highflyersgolfbar" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></a>
+          <span>Follow along for game nights and news</span>
         </div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Flatbread Pizza</span><span class="mrow__price"></span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">All Meat</span><span class="mrow__price">$14.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Hot Honey Pepperoni</span><span class="mrow__price">$13.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Hamburger</span><span class="mrow__price">$12.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Pepperoni</span><span class="mrow__price">$12.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Cheese</span><span class="mrow__price">$10.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Wings <span class="note">12 Piece</span></span><span class="mrow__price">$15.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Wings <span class="note">6 Piece</span></span><span class="mrow__price">$9.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Boneless Bites <span class="note">12</span></span><span class="mrow__price">$14.00</span></div>
-        <div class="mrow mrow--sub"><span class="mrow__box"></span><span class="mrow__name">Boneless Bites <span class="note">6</span></span><span class="mrow__price">$8.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Churros <span class="note">w/ Marshmallow</span></span><span class="mrow__price">$9.00</span></div>
-        <div class="mrow mrow--cat"><span class="mrow__box"></span><span class="mrow__name">Fountain Drinks</span><span class="mrow__price">$1.50</span></div>
       </div>
-    </div>
-    <p class="menu-note">Fill out a scorecard at your table and hand it to the bar, that's how we take orders. Ask about the full drink list and Chad's cocktails when you're in.</p>
-  </div>
-</section>
-
-<!-- ============================ LINEUP / EVENTS ============================ -->
-<section class="section section--dark" id="lineup">
-  <svg class="ev-topo" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#e2ae3f" stroke-width="1.1" aria-hidden="true">
-    <ellipse cx="900" cy="300" rx="110" ry="86"/><ellipse cx="900" cy="300" rx="185" ry="146"/>
-    <ellipse cx="900" cy="300" rx="270" ry="214"/><ellipse cx="900" cy="300" rx="360" ry="286"/>
-    <ellipse cx="900" cy="300" rx="455" ry="362"/><ellipse cx="900" cy="300" rx="555" ry="442"/>
-  </svg>
-  <div class="wrap ev-inner">
-    <div class="sec-head">
-      <div class="sec-head__l">
-        <span class="sec-head__eyebrow">02 · On The Screens</span>
-        <h2>The <span class="hl">Lineup</span></h2>
-        <p>Huskers football, volleyball, and basketball, plus the NFL on Sundays. If there's a game, it's on here.</p>
-      </div>
-      <div class="ev-toggle" id="evToggle" role="tablist" aria-label="Events view">
-        <button class="active" data-view="list" role="tab">Our Lineup</button>
-        <button data-view="cal" role="tab">Full Calendar</button>
-      </div>
-    </div>
-
-    <div id="evListView">
-      <div class="ev-list" id="evList"><!-- rendered by app.js --></div>
-    </div>
-
-    <div id="evCalView" class="hidden">
-      <div class="ev-embed">
-        <iframe id="gcalFrame" title="High Flyers Golf Bar events calendar" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=2d6f7caf4bd53ee8c69b453d2ad3ef0cdf78ccbef8b358b08592e78c9753517e%40group.calendar.google.com&ctz=America/Chicago&mode=AGENDA&bgcolor=%23f7f0dd"></iframe>
-      </div>
+      <img class="hp-visit__photo" src="assets/photos/patio.webp" width="1000" height="651" alt="The patio out back" loading="lazy">
     </div>
   </div>
 </section>
 
-<!-- ============================ VISIT ============================ -->
-<section class="section section--tint" id="visit">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-head__l">
-        <span class="sec-head__eyebrow">03 · Come By</span>
-        <h2>Find <span class="hl">Us</span></h2>
-        <p class="charm">Right on Main Street. Patio's open when the weather plays nice.</p>
-      </div>
-    </div>
-    <div class="visit">
-      <div class="visit__info">
-        <div class="visit__row">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-          <div><div class="k">Address</div><div class="v">302 Main St<br>Humphrey, NE 68642</div></div>
-        </div>
-        <div class="visit__row">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-          <div><div class="k">Hours</div><div class="v visit__hours">Mon&ndash;Sat &nbsp;11 AM <span>to</span> 1 AM<br>Sunday &nbsp;11 AM <span>to</span> 10 PM</div></div>
-        </div>
-        <div class="visit__row">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-          <div><div class="k">Call</div><div class="v"><a href="tel:+14029230160">(402) 923-0160</a></div></div>
-        </div>
-        <div class="visit__row">
-          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
-          <div><div class="k">Email</div><div class="v"><a href="mailto:highflyersgolfbar@gmail.com">highflyersgolfbar@gmail.com</a></div></div>
-        </div>
-        <div>
-          <div class="k" style="font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--n500);margin-bottom:9px;">Follow Along</div>
-          <div class="visit__social">
-            <a class="icobtn" href="https://www.facebook.com/profile.php?id=61559637320393" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg></a>
-            <a class="icobtn" href="https://www.instagram.com/highflyersgolfbar" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/></svg></a>
-          </div>
-        </div>
-        <a class="btn btn--green" href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE+68642" target="_blank" rel="noopener">
-          <svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-          Get Directions
-        </a>
-      </div>
-      <div class="visit__map">
-        <iframe title="Map to High Flyers Golf Bar" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps?q=302+Main+St,+Humphrey,+NE+68642&output=embed"></iframe>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================ FOOTER ============================ -->
 <footer class="footer">
   <div class="wrap footer__in">
     <div class="footer__logo">
@@ -313,30 +217,23 @@
     </div>
     <div>
       <h4>Explore</h4>
-      <ul>
-        <li><a href="#menu">Food Menu</a></li>
-        <li><a href="#lineup">The Lineup</a></li>
-        <li><a href="#visit">Visit Us</a></li>
-      </ul>
+      <ul><li><a href="#menu">Food Menu</a></li><li class="hidden" data-order-block><a data-order>Order Online</a></li><li><a href="#bar">At The Bar</a></li><li><a href="#visit">Visit Us</a></li></ul>
     </div>
     <div>
       <h4>Come By</h4>
-      <ul>
-        <li>302 Main St, Humphrey, NE</li>
-        <li>Mon&ndash;Sat, 11 AM to 1 AM</li>
-        <li>Sunday, 11 AM to 10 PM</li>
-        <li><a href="tel:+14029230160">(402) 923-0160</a></li>
-      </ul>
+      <ul><li>302 Main St, Humphrey, NE</li><li>Mon to Sat, 11 AM to 1 AM</li><li>Sunday, 11 AM to 10 PM</li><li><a href="tel:+14029230160">(402) 923-0160</a></li></ul>
     </div>
   </div>
   <div class="wrap footer__bar">
-    <span>© <span id="year"></span> High Flyers Golf Bar · Humphrey, Nebraska</span>
+    <span>&copy; <span id="year"></span> High Flyers Golf Bar · Humphrey, Nebraska</span>
     <span class="gbr">Go Big Red</span>
   </div>
 </footer>
-
 <div class="stripe"></div>
 
-<script src="app.js"></script>
+<div class="hp-sticky away hidden" id="sticky"><a data-order>Order Online for Pickup <span>&rarr;</span></a></div>
+
+<script src="app.js?v=hp5"></script>
+<script src="home.js?v=5"></script>
 </body>
 </html>

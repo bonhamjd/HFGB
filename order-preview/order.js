@@ -126,12 +126,14 @@ function renderCheckout() {
   const ids = Object.keys(cart); if (!ids.length) { go('menu'); return; }
   $('#cartLines').innerHTML = ids.map(id => lineHTML(id, cart[id])).join('') + cartUpsell();
   const s = sums();
-  $('#totals').innerHTML = `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div><div class="trow"><span>Tax</span><span>${money(s.tax)}</span></div><div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`;
+  $('#totals').innerHTML = `<div class="trow"><span>Subtotal</span><span>${money(s.sub)}</span></div><div class="trow"><span>Tax</span><span>${money(s.tax)}</span></div><div class="trow trow--big"><span>Total</span><span>${money(s.total)}</span></div>`
+    + (overCap() ? `<p class="capnote">${CAP_MSG} <a href="tel:+14029230160">Call now</a></p>` : bigExtra() ? `<p class="capnote capnote--soft">Big order: please allow about ${SCHED.prepMin + bigExtra()} min.</p>` : '');
   // pickup
   const asapBtn = $('#whenSeg [data-when="asap"]'), sel = $('#pickupTime'), keep = sel.value;
-  sel.innerHTML = SCHED.slots.map(x => `<option value="${x.t}" ${x.left < 1 ? 'disabled' : ''}>${x.label}${x.left < 1 ? ' (full)' : ''}</option>`).join('');
-  if (keep) sel.value = keep;
-  if (SCHED.asap) { asapBtn.disabled = false; $('#asapTime').textContent = 'about ' + fmtTime(SCHED.asap.readyAt); } else { asapBtn.disabled = true; $('#asapTime').textContent = 'n/a'; if (when === 'asap' && SCHED.slots.length) setWhen('later'); }
+  const ex = bigExtra(), need = ex ? Math.max(Date.now(), SCHED.now || 0) + (SCHED.prepMin + ex) * 60000 : 0, asap = bigAsap();
+  sel.innerHTML = SCHED.slots.filter(x => x.t >= need).map(x => `<option value="${x.t}" ${x.left < 1 ? 'disabled' : ''}>${x.label}${x.left < 1 ? ' (full)' : ''}</option>`).join('');
+  if (keep && [...sel.options].some(o => o.value === keep)) sel.value = keep;
+  if (asap) { asapBtn.disabled = false; $('#asapTime').textContent = 'about ' + fmtTime(asap.readyAt); } else { asapBtn.disabled = true; $('#asapTime').textContent = 'n/a'; if (when === 'asap' && SCHED.slots.length) setWhen('later'); }
   const cb = $('#closedBox'); cb.classList.toggle('hidden', SCHED.open); cb.textContent = statusText(SCHED);
   // who
   const d = device();
@@ -162,6 +164,16 @@ let lookT; $('#phone').addEventListener('input', e => {
   }, 250);
 });
 
+// ---------- big orders / cap ----------
+const bigExtra = () => (CFG?.bigOrderTotal && sums().total > CFG.bigOrderTotal ? CFG.bigOrderExtraMin || 0 : 0);
+const overCap = () => !!(CFG?.maxTotal && sums().total > CFG.maxTotal);
+const CAP_MSG = "Large order? Call us at (402) 923-0160 and we'll get it ready.";
+function bigAsap() { // same rule as the server: first open slot at or after now + prep + extra
+  if (!SCHED.asap) return null; const ex = bigExtra(); if (!ex) return SCHED.asap;
+  const need = Math.max(Date.now(), SCHED.now || 0) + (SCHED.prepMin + ex) * 60000, x = SCHED.slots.find(z => z.left > 0 && z.t >= need);
+  return x ? { t: x.t, label: x.label, readyAt: Math.max(x.t - 15 * 60000, need) } : null;
+}
+
 // ---------- payment ----------
 const payLabel = () => `Pay ${money(sums().total || 0)}`;
 const liveCards = () => CFG.mode !== 'mock' && CFG.ecomPublic && CFG.sdk;
@@ -179,7 +191,7 @@ function renderPay() {
   if (payOff()) { box.innerHTML = h + '<p class="testnote">Online payments are not turned on yet. This is a preview. Please call the bar at (402) 923-0160 to order.</p>'; $('#payBtn').textContent = 'Payments off (preview)'; $('#payBtn').disabled = true; return; }
   if (liveCards() && box.querySelector('#cfNum iframe')) { // card boxes already up: never wipe what the customer typed
     if (box.dataset.total !== String(s.total) && $('#applePayBtn')) { try { cloverSdk.updateApplePaymentRequest({ amount: s.total, countryCode: 'US', currencyCode: 'USD' }); } catch {} }
-    box.dataset.total = String(s.total); $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy; lockApple(); return;
+    box.dataset.total = String(s.total); $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy || overCap(); lockApple(); return;
   }
   box.dataset.total = String(s.total);
   {
@@ -192,7 +204,7 @@ function renderPay() {
     h += `<div class="field" id="emailField"><label for="email">Email for receipt (optional)</label><input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" value="${esc(LS.get('hfgb_email', ''))}"></div>`;
   }
   box.innerHTML = h;
-  $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy;
+  $('#payBtn').textContent = payLabel(); $('#payBtn').disabled = !SCHED.open || busy || overCap();
   $$('#testCards button').forEach(b => b.addEventListener('click', () => { testCard = b.dataset.tc; $$('#testCards button').forEach(x => x.classList.toggle('on', x === b)); }));
   if (liveCards()) mountClover().then(lockApple, () => {});
 }
@@ -217,6 +229,7 @@ $('#payBtn').addEventListener('click', () => submitOrder(null));
 // wallet = { token, card } from Apple Pay (Clover iframe); null = Pay button. Returns true when the order is paid.
 async function submitOrder(wallet) {
   if (busy || payOff()) return false; err('');
+  if (overCap()) { err(CAP_MSG); return false; }
   const phone = digits($('#phone').value), name = $('#name').value.trim(), email = ($('#email')?.value || '').trim();
   if (phone.length !== 10) { err('Please enter your 10 digit phone number' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
   if (!name) { err('Please add a name for the order' + (wallet ? ', then tap Apple Pay again.' : '.')); return false; }
@@ -245,7 +258,7 @@ async function submitOrder(wallet) {
     if (e.code === 'declined') idem = null;
     if (e.code === 'price_changed') { idem = null; refreshPrices(); }
     return false;
-  } finally { busy = false; b.disabled = !SCHED.open || payOff(); b.textContent = payOff() ? 'Payments off (preview)' : payLabel(); }
+  } finally { busy = false; b.disabled = !SCHED.open || payOff() || overCap(); b.textContent = payOff() ? 'Payments off (preview)' : payLabel(); }
 }
 // Apple Pay (Clover iframe). Only on Safari/Apple devices that can pay; the card form stays as the fallback.
 window.addEventListener('paymentMethod', async ev => {

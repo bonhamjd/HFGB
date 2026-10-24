@@ -174,3 +174,6 @@
 .paysep{text-align:center;font-size:13px;opacity:.7;margin:4px 0 8px;}
 .applewrap{position:relative;}
 .applewrap.locked{opacity:.35;pointer-events:none;}
+.capnote{margin-top:10px;padding:10px 12px;border:2px solid var(--brick);border-radius:8px;background:#f6e3dc;color:var(--ink);font-size:14.5px;font-weight:600;}
+.capnote a{color:var(--brick);text-decoration:underline;}
+.capnote--soft{border-color:var(--brass-700);background:var(--brass-100);font-weight:500;}

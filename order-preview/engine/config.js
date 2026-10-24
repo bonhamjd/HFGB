@@ -24,7 +24,9 @@ export function makeConfig(env = {}) {
     slotCap: +(env.SLOT_CAP || 6),
     prepMin: +(env.PREP_MIN || 20),
     maxItems: +(env.MAX_ITEMS || 40),
-    maxTotal: +(env.MAX_ORDER_TOTAL || 0), // cents, 0 = no cap. Safety cap for the test window.
+    maxTotal: +(env.MAX_ORDER_TOTAL || 0), // cents, 0 = no cap. Over the cap: call the bar.
+    bigOrderTotal: +(env.BIG_ORDER_TOTAL || 10000), // cents. Orders over this get extra prep time.
+    bigOrderExtraMin: +(env.BIG_ORDER_EXTRA_MIN || 15),
     printEnabled: env.PRINT_ENABLED !== 'false',
     smsEnabled: env.SMS_ENABLED === 'true',
     smsTo: env.SMS_TO || '',
@@ -40,5 +42,6 @@ export function makeConfig(env = {}) {
 export function publicConfig(cfg, base) {
   return { mode: cfg.mode, mid: cfg.mid, ecomPublic: cfg.ecomPublic, sdk: base.sdk,
     orderOpen: cfg.orderOpen, firstPickup: cfg.firstPickup, lastOrder: cfg.lastOrder, lastPickup: cfg.lastPickup,
-    slotCap: cfg.slotCap, prepMin: cfg.prepMin, tz: cfg.tz, smsEnabled: cfg.smsEnabled, paymentsEnabled: cfg.paymentsEnabled };
+    slotCap: cfg.slotCap, prepMin: cfg.prepMin, tz: cfg.tz, smsEnabled: cfg.smsEnabled, paymentsEnabled: cfg.paymentsEnabled,
+    maxTotal: cfg.maxTotal, bigOrderTotal: cfg.bigOrderTotal, bigOrderExtraMin: cfg.bigOrderExtraMin };
 }

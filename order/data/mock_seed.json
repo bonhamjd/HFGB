@@ -1,0 +1,1284 @@
+{
+ "merchant": {
+  "name": "HIGH FLYERS GOLF BAR (MOCK)"
+ },
+ "items": [
+  {
+   "id": "1WS22QFSWT30M",
+   "name": "Double Cheeseburger",
+   "price": 900,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "3ZX33E5G6R7GE",
+   "name": "Cheeseburger",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "QP9JY185RJJ0E",
+   "name": "Burger",
+   "price": 700,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "6BWN4P6S8FH1Y",
+   "name": "Nachos",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "HNHX3RC405KHW",
+   "name": "Mini Tacos",
+   "price": 400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "HZJTB424E3PQJ",
+   "name": "Chicken Sandwich",
+   "price": 600,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "28Q1K967KGAWA",
+   "name": "Beef Sticks",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "DKAPBX21VETCM",
+   "name": "Gems 4oz",
+   "price": 200,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "3K9MPNMEJ9JB8",
+   "name": "Gems 10oz",
+   "price": 400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "G87DXS86H5C3E",
+   "name": "Mcrib",
+   "price": 400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "Y2KX8GY6P18TT",
+   "name": "Diet Pepsi",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "CVRCVJ5NFFS12",
+   "name": "Fairway Fries - 1\\2 Order ",
+   "price": 200,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "41K6J6DZ5SPVM",
+   "name": "Chip Bags",
+   "price": 250,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "6YY2S8F5TW7SY",
+      "name": "Snacks"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "FGJAFMMZTBHBY",
+   "name": "Boneless Balls X 6",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "QGPXSPNMKZ7NT",
+   "name": "Gift Card 25",
+   "price": 2500,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "ZD8V9S7BEXTAA",
+      "name": "Retail Items"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "QX5PVE7HBAEDM",
+   "name": "Boneless Balls X 12",
+   "price": 1400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "SGYWZAAKMRH4C",
+   "name": "Liquid Ice",
+   "price": 300,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "8W0JG9W5WF47W",
+   "name": "Red Bull",
+   "price": 300,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "NP4HVQ6BBJX2C",
+   "name": "Pitcher",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "H1DV39M1N1FCT",
+   "name": "Breakfast Pizza",
+   "price": 1200,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "2R4RZ4R701V6G",
+   "name": "Wings X 12",
+   "price": 1600,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "G4S8MDT7W7B4T",
+   "name": "Pizza, One Topping",
+   "price": 1200,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "NKCG35841QP2P",
+   "name": "Weekday",
+   "price": 2000,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "JD9HWGJDR1JSM",
+      "name": "Golf"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "4HASAA2CZZDJE",
+   "name": "Mtn Dew",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "KRYXE4BXF44R2",
+   "name": "Mac & Cheese Bites X 10",
+   "price": 500,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "ABWXWC6ZKRGMW",
+   "name": "Pepsi",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "JRSEZR5Z43SN8",
+   "name": "Busch Light Can",
+   "price": 300,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "D82RD6GCE5PQY",
+      "name": "Beer Cans"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "DGHGG8KFCH4VT",
+   "name": "Titos",
+   "price": 550,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "Q4PSP6HSG1WF4",
+      "name": "Liquor"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "9Q3EQG3NPXBVT",
+   "name": "Diet Dr Pepper",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "83JTZJ41TDK4W",
+   "name": "Tea",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "BRPC405BH7C6C",
+   "name": "Lemonade",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "SN3FWHZFMKXRJ",
+   "name": "Root Beer",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "G2JF9K17X0Y9T",
+   "name": "Mellow Yellow",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "A37XJHM9XYXR8",
+   "name": "Diet Coke",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "ZWWP4JD4398F8",
+   "name": "Coke",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "M2HXN4B1E7WEJ",
+   "name": "Sprite",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "PE8WQ33TAZA76",
+   "name": "Fanta",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "140YQCBYE38M4",
+   "name": "Squirt",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "87TDPD6SY483R",
+   "name": "Dr Pepper",
+   "price": 225,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "4FQKY69G4ZREJ",
+      "name": "Pop"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "TAN981GPJ7F6E",
+   "name": "Old Fashion",
+   "price": 1000,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "CX67DAZWD8ZKC",
+      "name": "Speciality"
+     }
+    ]
+   },
+   "defaultTaxRates": false,
+   "taxRates": {
+    "elements": []
+   }
+  },
+  {
+   "id": "A7BHBXAD6HV5W",
+   "name": "Pretzel Bites X 15",
+   "price": 900,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "ED4V18T3EN0DM",
+   "name": "Churros X 15",
+   "price": 900,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "K62THAKJNS9BW",
+   "name": "Wings X 6",
+   "price": 900,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "MBKHC77MKZZ5T",
+   "name": "Poppers X 8",
+   "price": 1100,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "QM983WNGNTJDR",
+   "name": "Fries 10 Oz",
+   "price": 400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "YRC7MZ0BG5NS2",
+   "name": "Pickle Chipsx15",
+   "price": 800,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "SZZQCE9HAYYXM",
+   "name": "Pizza, Flatbread Cheese",
+   "price": 1000,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "NETRVSWPPN4XP",
+   "name": "Pizza, Flatbread All Meat",
+   "price": 1400,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "TXFT91V742RN4",
+   "name": "Pizza, Flatbread Pepperoni, hot honey",
+   "price": 1300,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  },
+  {
+   "id": "6BVRZ13F73RGT",
+   "name": "Bucket of Balls - Cheese balls- 18",
+   "price": 1100,
+   "priceType": "FIXED",
+   "hidden": false,
+   "available": true,
+   "categories": {
+    "elements": [
+     {
+      "id": "M4JYQG906GP3W",
+      "name": "Food Menu"
+     }
+    ]
+   },
+   "defaultTaxRates": true,
+   "taxRates": {
+    "elements": [
+     {
+      "id": "58TW2FFQF8B54",
+      "name": "Tax",
+      "rate": 750000
+     }
+    ]
+   }
+  }
+ ],
+ "categories": [
+  {
+   "id": "XZV9R1Q8KAFXA",
+   "name": "Bloody Mary Bar",
+   "sortOrder": 17
+  },
+  {
+   "id": "M7FPS4KTM4SKA",
+   "name": "Beer Off Sale",
+   "sortOrder": 16
+  },
+  {
+   "id": "9Y2KXQ5FZ7QW0",
+   "name": "Smokes",
+   "sortOrder": 15
+  },
+  {
+   "id": "JD9HWGJDR1JSM",
+   "name": "Golf",
+   "sortOrder": 14
+  },
+  {
+   "id": "V9VJBZKZD4KJA",
+   "name": "Wine",
+   "sortOrder": 13
+  },
+  {
+   "id": "ZD8V9S7BEXTAA",
+   "name": "Retail Items",
+   "sortOrder": 12
+  },
+  {
+   "id": "6YY2S8F5TW7SY",
+   "name": "Snacks",
+   "sortOrder": 11
+  },
+  {
+   "id": "1TMM2CJ4REMWA",
+   "name": "Off Sale",
+   "sortOrder": 10
+  },
+  {
+   "id": "6JBC3T2SYP1AJ",
+   "name": "Shots",
+   "sortOrder": 9
+  },
+  {
+   "id": "CX67DAZWD8ZKC",
+   "name": "Speciality",
+   "sortOrder": 8
+  },
+  {
+   "id": "8344J9BEE291W",
+   "name": "Add Ons",
+   "sortOrder": 7
+  },
+  {
+   "id": "4FQKY69G4ZREJ",
+   "name": "Pop",
+   "sortOrder": 6
+  },
+  {
+   "id": "M4JYQG906GP3W",
+   "name": "Food Menu",
+   "sortOrder": 5
+  },
+  {
+   "id": "Q4PSP6HSG1WF4",
+   "name": "Liquor",
+   "sortOrder": 4
+  },
+  {
+   "id": "1971KGQDR3176",
+   "name": "Seltzer",
+   "sortOrder": 3
+  },
+  {
+   "id": "R6NKV7E51MWCY",
+   "name": "Beer Draft",
+   "sortOrder": 2
+  },
+  {
+   "id": "D82RD6GCE5PQY",
+   "name": "Beer Cans",
+   "sortOrder": 1
+  },
+  {
+   "id": "BQWX5HWJDG922",
+   "name": "Beer Bottles",
+   "sortOrder": 0
+  }
+ ],
+ "tax_rates": [
+  {
+   "id": "MOCKTAX75",
+   "name": "Tax",
+   "rate": 750000,
+   "isDefault": true
+  },
+  {
+   "id": "MOCKCARD3",
+   "name": "Card",
+   "rate": 300000,
+   "isDefault": false
+  }
+ ],
+ "order_types": [
+  {
+   "id": "MOCKDINEIN",
+   "label": "Dine In",
+   "taxable": true,
+   "isDefault": true
+  }
+ ],
+ "source": "Seeded from production Clover inventory snapshot 10/24/2026 (read-only GET); per-item tax settings (defaultTaxRates/taxRates) added 10/24/2026 from production (read-only GET)"
+}

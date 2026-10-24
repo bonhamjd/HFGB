@@ -124,6 +124,8 @@
   .hp-hero__cta{display:flex;}
   .hp-hero__cta .btn{width:auto;}
   .hp-menu__grid{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;align-items:start;}
+  .hp-aside{margin-top:34px;}
+  .hp-col .hp-photo{aspect-ratio:16/9;}
   .hp-sig{display:grid;grid-template-columns:.8fr 1.2fr;}
   .hp-sig img{height:100%;min-height:260px;}
   .hp-sig__body{padding:34px;align-self:center;}
@@ -131,3 +133,15 @@
   .hp-btns{grid-template-columns:1fr 1fr;}
   .hp .footer{padding-bottom:30px;}
 }
+
+/* menu columns + order card */
+.hp-col{min-width:0;}
+.hp-aside{margin-top:30px;display:grid;gap:16px;}
+.hp-aside__card{background:var(--hg);color:var(--parch);border:2px solid var(--ink);border-radius:var(--radius);padding:22px 20px;box-shadow:5px 5px 0 var(--brass);}
+.hp-aside__card .hp-eyebrow{color:var(--brass);}
+.hp-aside__card h3{font-family:var(--font-disp);font-weight:900;font-size:28px;line-height:1.05;margin-top:6px;}
+.hp-aside__card p{color:rgba(240,231,208,.85);margin-top:8px;font-size:16px;}
+.hp-aside__card .btn{margin-top:16px;width:100%;}
+.hp-aside__card .hp-wide{max-width:none;}
+.hp-aside__note{border:2px dashed var(--n400);border-radius:var(--radius);padding:14px 16px;color:var(--n600);font-size:15px;background:rgba(247,240,221,.6);}
+.hp-aside__note b{font-family:var(--font-label);text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:var(--brick);display:block;margin-bottom:4px;}

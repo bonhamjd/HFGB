@@ -99,13 +99,22 @@ export function createApp({ cfg, store, clover, data = {}, log = () => {}, fetch
     if (phone.length !== 10) throw new HttpError(400, 'Please enter a 10 digit phone number.', 'phone');
     if (!name) throw new HttpError(400, 'Please add a name for the order.', 'name');
     const s = await sched(now); if (!s.open) throw new HttpError(409, closedMsg(s), s.reason);
-    const slot = b.slot === 'asap' || !b.slot ? s.asap : s.slots.find(x => x.t === +b.slot);
-    if (!slot) throw new HttpError(409, 'That pickup time is no longer available. Please pick another.', 'slot');
-    if (b.slot !== 'asap' && slot.left < 1) throw new HttpError(409, 'That pickup time just filled up. Please pick another.', 'slot_full');
     const m = await menu(), q = price(m, b.items);
     if (q.problems.length) throw new HttpError(409, 'Some items just sold out: ' + q.problems.map(p => p.name || 'an item').join(', '), 'sold_out');
     if (!q.lines.length) throw new HttpError(400, 'Your order is empty.', 'empty');
-    if (cfg.maxTotal && q.total > cfg.maxTotal) throw new HttpError(400, `Online orders are limited to ${money(cfg.maxTotal)} right now. Please call the bar for bigger orders.`, 'over_cap');
+    if (cfg.maxTotal && q.total > cfg.maxTotal) throw new HttpError(400, "Large order? Call us at (402) 923-0160 and we'll get it ready.", 'over_cap');
+    // Big orders (over BIG_ORDER_TOTAL) get BIG_ORDER_EXTRA_MIN more prep. Slot cap per 15 min still applies.
+    const extra = cfg.bigOrderTotal && q.total > cfg.bigOrderTotal ? cfg.bigOrderExtraMin : 0, need = now + (cfg.prepMin + extra) * 60000;
+    let slot;
+    if (b.slot === 'asap' || !b.slot) {
+      if (!extra) slot = s.asap;
+      else { const x = s.slots.find(z => z.left > 0 && z.t >= need); slot = x && { t: x.t, label: x.label, readyAt: Math.max(x.t - 15 * 60000, need) }; }
+    } else {
+      slot = s.slots.find(x => x.t === +b.slot);
+      if (slot && extra && slot.t < need) { const nx = s.slots.find(z => z.left > 0 && z.t >= need); throw new HttpError(409, `Big orders need about ${cfg.prepMin + extra} min. Please pick ${nx ? nx.label : 'a later time'} or later.`, 'slot'); }
+    }
+    if (!slot) throw new HttpError(409, 'That pickup time is no longer available. Please pick another.', 'slot');
+    if (b.slot !== 'asap' && slot.left < 1) throw new HttpError(409, 'That pickup time just filled up. Please pick another.', 'slot_full');
     if (b.expectedTotal !== undefined && +b.expectedTotal !== q.total) throw new HttpError(409, `Your total is now ${money(q.total)}. Please check your order and tap Pay again.`, 'price_changed');
     const pay = b.payment || {}; const cust = await store.getCustomer(phone);
     const devHash = b.deviceToken ? await sha(String(b.deviceToken)) : '';
