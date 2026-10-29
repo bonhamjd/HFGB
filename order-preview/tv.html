@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>HFGB Orders TV</title>
+<link rel="icon" href="/assets/logo-color.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0d3b29;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden;cursor:none}
+.top{display:flex;align-items:center;justify-content:space-between;padding:1.2vh 2vw;background:#082a1d;font-size:3.6vh;font-weight:700}
+.top img{height:5.5vh;vertical-align:middle;margin-right:1vw}
+#clock{font-size:4.2vh}
+#banner{display:none;background:#c0392b;color:#fff;text-align:center;font-size:4vh;font-weight:800;padding:1vh}
+#banner.on{display:block}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;padding:1.4vw;height:calc(100% - 8.5vh)}
+.col{display:flex;flex-direction:column;min-height:0}
+.col h2{font-size:4.4vh;padding:.6vh 1vw;border-radius:1vh;margin-bottom:1vh;text-align:center}
+.c-new h2{background:#f1c40f;color:#222}.c-acc h2{background:#2e86de}.c-rdy h2{background:#27ae60}
+.list{overflow:hidden;display:flex;flex-direction:column;gap:1.2vh}
+.t{background:#fff;color:#111;border-radius:1.2vh;padding:1.2vh 1vw;border-left:1.2vh solid #999}
+.c-new .t{border-color:#f1c40f;animation:pulse 1.6s infinite}.c-acc .t{border-color:#2e86de}.c-rdy .t{border-color:#27ae60}
+@keyframes pulse{50%{background:#fff7d1}}
+.hd{display:flex;justify-content:space-between;align-items:baseline;gap:1vw}
+.no{font-size:5.2vh;font-weight:900}.nm{font-size:4.4vh;font-weight:700;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tm{font-size:3.6vh;font-weight:800;white-space:nowrap}
+ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{display:block;font-size:2.6vh;color:#555;margin-left:3vw}
+.nt{font-size:2.8vh;background:#fdecc8;border-radius:.6vh;padding:.4vh .6vw;margin-top:.6vh}
+.empty{font-size:3.2vh;opacity:.6;text-align:center;margin-top:3vh}
+.more{font-size:3vh;text-align:center;opacity:.85}
+</style></head><body>
+<div class="top"><div><img src="/assets/logo-color.png" alt="">Online Orders</div><div id="status">Starting</div><div id="clock"></div></div>
+<div id="banner">Reconnecting...</div>
+<div class="board">
+ <div class="col c-new"><h2>New <span id="nNew">0</span></h2><div class="list" id="colNew"></div></div>
+ <div class="col c-acc"><h2>Accepted <span id="nAcc">0</span></h2><div class="list" id="colAcc"></div></div>
+ <div class="col c-rdy"><h2>Ready <span id="nRdy">0</span></h2><div class="list" id="colRdy"></div></div>
+</div>
+<script>window.HFGB_ORDER = { apiBase: 'https://hfgb-orders.highflyersgolfbar.workers.dev' };</script>
+<script type="module">
+// Read-only TV board. No buttons, no sound, no phone numbers, no prices. Code comes from ?code= once, then localStorage.
+const $ = s => document.querySelector(s);
+const q = new URLSearchParams(location.search);
+if (q.get('code')) localStorage.setItem('hfgb_tv_code', q.get('code').trim());
+const code = localStorage.getItem('hfgb_tv_code') || '';
+const MOCK = q.get('mock') === '1';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const tm = t => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
+const first = n => String(n || '').trim().split(/\s+/)[0];
+let lastOk = 0;
+async function fetchOrders() {
+  if (MOCK) { const n = Date.now(), m = 60000; return { now: n, orders: [
+    { no: 41, name: 'Kyle Test', status: 'new', asap: true, items: [{ qty: 2, name: 'Wings 12', note: 'Buffalo, ranch' }, { qty: 1, name: 'Potato Rounds' }], notes: 'Extra napkins' },
+    { no: 40, name: 'Amy Sample', status: 'making', readyAt: n + 12 * m, items: [{ qty: 1, name: 'Double Cheeseburger', note: 'No onion' }, { qty: 1, name: 'Fries' }] },
+    { no: 39, name: 'Dan Demo', status: 'making', readyAt: n + 20 * m, slot: n + 20 * m, items: [{ qty: 1, name: 'Pepperoni Flatbread' }] },
+    { no: 38, name: 'Sue Example', status: 'ready', readyTs: n - 3 * m, items: [{ qty: 3, name: 'Burger' }, { qty: 3, name: 'Pop' }] } ] }; }
+  const r = await fetch(window.HFGB_ORDER.apiBase + '/api/staff/orders', { headers: { 'x-staff-key': code }, cache: 'no-store' });
+  if (r.status === 401) throw Object.assign(new Error('code'), { code: 401 });
+  if (!r.ok) throw new Error('http ' + r.status);
+  return r.json();
+}
+function card(o) {
+  const when = o.status === 'ready' ? 'Ready ' + tm(o.readyTs) : o.status === 'making' ? 'Ready by ' + tm(o.readyAt) : (o.asap ? 'ASAP' : 'Pickup ' + tm(o.slot));
+  const items = (o.items || []).map(i => `<li><b>${+i.qty}&times;</b> ${esc(i.name)}${i.note ? `<small>${esc(i.note)}</small>` : ''}</li>`).join('');
+  return `<div class="t"><div class="hd"><span class="no">#${+o.no}</span><span class="nm">${esc(first(o.name))}</span><span class="tm">${when}</span></div><ul>${items}</ul>${o.notes ? `<div class="nt">${esc(o.notes)}</div>` : ''}</div>`;
+}
+function fill(id, nid, arr) {
+  const el = $('#' + id); $('#' + nid).textContent = arr.length;
+  el.innerHTML = arr.map(card).join('') || '<div class="empty">None right now</div>';
+  // drop cards that don't fit and say how many more
+  let hidden = 0; const max = el.parentElement.getBoundingClientRect().bottom;
+  while (el.lastElementChild && el.lastElementChild.getBoundingClientRect().bottom > max && el.children.length > 1) { el.lastElementChild.remove(); hidden++; }
+  if (hidden) { el.lastElementChild.remove(); hidden++; el.insertAdjacentHTML('beforeend', `<div class="more">+ ${hidden} more</div>`); }
+}
+async function poll() {
+  try {
+    const d = await fetchOrders(); lastOk = Date.now();
+    const live = d.orders.filter(o => ['new', 'making', 'ready'].includes(o.status));
+    fill('colNew', 'nNew', live.filter(o => o.status === 'new'));
+    fill('colAcc', 'nAcc', live.filter(o => o.status === 'making'));
+    fill('colRdy', 'nRdy', live.filter(o => o.status === 'ready'));
+    $('#status').textContent = 'Live'; $('#banner').classList.remove('on');
+  } catch (e) {
+    $('#banner').textContent = e.code === 401 ? 'Screen code missing or wrong. Open the TV link with ?code= again.' : 'Reconnecting...';
+    if (e.code === 401 || Date.now() - lastOk > 12000) $('#banner').classList.add('on');
+  }
+}
+setInterval(() => { $('#clock').textContent = tm(Date.now()); }, 1000);
+async function wake() { try { await navigator.wakeLock?.request('screen'); } catch {} }
+document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+wake(); poll(); setInterval(poll, 5000);
+setTimeout(() => location.reload(), 6 * 3600000);   // fresh page every 6 hours
+</script></body></html>
