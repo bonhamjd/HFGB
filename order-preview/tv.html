@@ -33,6 +33,7 @@ ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{
 <div class="top"><div><img src="/assets/logo-color.png" alt="">Online Orders</div><div id="status">Starting</div><div id="clock"></div></div>
 <div id="banner">Reconnecting...</div>
 <div id="snd">Tap to enable sound</div>
+<audio id="orderUp" src="/order-preview/sounds/order-up.mp3" preload="auto"></audio>
 <div class="board">
  <div class="col c-new"><h2>New <span id="nNew">0</span></h2><div class="list" id="colNew"></div></div>
  <div class="col c-acc"><h2>Accepted <span id="nAcc">0</span></h2><div class="list" id="colAcc"></div></div>
@@ -51,7 +52,7 @@ const tm = t => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/Chi
 const first = n => String(n || '').trim().split(/\s+/)[0];
 let lastOk = 0;
 // Sound: bell + "ORDER UP!" + bell, once per order id first seen after page load.
-const snd = new Audio('/order-preview/sounds/order-up.mp3'); snd.preload = 'auto'; snd.volume = 1;
+const snd = $('#orderUp'); snd.volume = 1;
 let seen = null;
 const hideHint = () => $('#snd').classList.add('off');
 function say() { try { const u = new SpeechSynthesisUtterance('Order up!'); u.rate = 1; u.volume = 1; speechSynthesis.speak(u); } catch {} }
