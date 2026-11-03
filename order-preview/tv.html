@@ -12,6 +12,8 @@ html,body{height:100%;background:#0d3b29;color:#fff;font-family:Arial,Helvetica,
 #clock{font-size:4.2vh}
 #banner{display:none;background:#c0392b;color:#fff;text-align:center;font-size:4vh;font-weight:800;padding:1vh}
 #banner.on{display:block}
+#snd{position:fixed;right:1.2vw;bottom:1.2vh;font-size:2.2vh;background:rgba(0,0,0,.45);color:#fff;padding:.5vh .9vw;border-radius:.8vh;opacity:.8}
+#snd.off{display:none}
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;padding:1.4vw;height:calc(100% - 8.5vh)}
 .col{display:flex;flex-direction:column;min-height:0}
 .col h2{font-size:4.4vh;padding:.6vh 1vw;border-radius:1vh;margin-bottom:1vh;text-align:center}
@@ -30,6 +32,7 @@ ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{
 </style></head><body>
 <div class="top"><div><img src="/assets/logo-color.png" alt="">Online Orders</div><div id="status">Starting</div><div id="clock"></div></div>
 <div id="banner">Reconnecting...</div>
+<div id="snd">Tap to enable sound</div>
 <div class="board">
  <div class="col c-new"><h2>New <span id="nNew">0</span></h2><div class="list" id="colNew"></div></div>
  <div class="col c-acc"><h2>Accepted <span id="nAcc">0</span></h2><div class="list" id="colAcc"></div></div>
@@ -37,7 +40,7 @@ ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{
 </div>
 <script>window.HFGB_ORDER = { apiBase: 'https://hfgb-orders.highflyersgolfbar.workers.dev' };</script>
 <script type="module">
-// Read-only TV board. No buttons, no sound, no phone numbers, no prices. Code comes from ?code= once, then localStorage.
+// Read-only TV board. No buttons, no phone numbers, no prices. Code comes from ?code= once, then localStorage.
 const $ = s => document.querySelector(s);
 const q = new URLSearchParams(location.search);
 if (q.get('code')) localStorage.setItem('hfgb_tv_code', q.get('code').trim());
@@ -47,6 +50,21 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const tm = t => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
 const first = n => String(n || '').trim().split(/\s+/)[0];
 let lastOk = 0;
+// Sound: bell + "ORDER UP!" + bell, once per order id first seen after page load.
+const snd = new Audio('/order-preview/sounds/order-up.mp3'); snd.preload = 'auto'; snd.volume = 1;
+let seen = null;
+const hideHint = () => $('#snd').classList.add('off');
+function say() { try { const u = new SpeechSynthesisUtterance('Order up!'); u.rate = 1; u.volume = 1; speechSynthesis.speak(u); } catch {} }
+function ding() { try { snd.currentTime = 0; const p = snd.play(); if (p) p.then(hideHint, say); } catch { say(); } }
+function unlock() { hideHint(); snd.muted = true; snd.play().then(() => { snd.pause(); snd.currentTime = 0; snd.muted = false; }, () => { snd.muted = false; }); }
+addEventListener('keydown', unlock, { once: true }); addEventListener('click', unlock, { once: true });
+function checkNew(orders) {
+  const ids = new Set(orders.map(o => String(o.id ?? o.no)));
+  let fresh = 0; if (seen) for (const id of ids) if (!seen.has(id)) fresh++;
+  seen = seen ? new Set([...seen, ...ids]) : ids;
+  return fresh;
+}
+window.__tvTest = { checkNew, reset: () => { seen = null; } };
 async function fetchOrders() {
   if (MOCK) { const n = Date.now(), m = 60000; return { now: n, orders: [
     { no: 41, name: 'Kyle Test', status: 'new', asap: true, items: [{ qty: 2, name: 'Wings 12', note: 'Buffalo, ranch' }, { qty: 1, name: 'Potato Rounds' }], notes: 'Extra napkins' },
@@ -74,6 +92,7 @@ function fill(id, nid, arr) {
 async function poll() {
   try {
     const d = await fetchOrders(); lastOk = Date.now();
+    if (checkNew(d.orders)) ding();
     const live = d.orders.filter(o => ['new', 'making', 'ready'].includes(o.status));
     fill('colNew', 'nNew', live.filter(o => o.status === 'new'));
     fill('colAcc', 'nAcc', live.filter(o => o.status === 'making'));
