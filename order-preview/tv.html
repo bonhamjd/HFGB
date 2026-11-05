@@ -25,6 +25,9 @@ html,body{height:100%;background:#0d3b29;color:#fff;font-family:Arial,Helvetica,
 .hd{display:flex;justify-content:space-between;align-items:baseline;gap:1vw}
 .no{font-size:5.2vh;font-weight:900}.nm{font-size:4.4vh;font-weight:700;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .tm{font-size:3.6vh;font-weight:800;white-space:nowrap}
+.ag{font-size:5.2vh;font-weight:900;white-space:nowrap;background:#e8f5ee;color:#0d3b29;border-radius:.8vh;padding:0 .6vw;font-variant-numeric:tabular-nums}
+.ag.warn{background:#f1c40f;color:#222}.ag.late{background:#c0392b;color:#fff}
+.sub{display:flex;justify-content:space-between;align-items:baseline;gap:1vw;font-size:2.8vh;color:#444;margin-top:.3vh;white-space:nowrap}.sub .tm{font-size:3vh;color:#111}
 ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{display:block;font-size:2.6vh;color:#555;margin-left:3vw}
 .nt{font-size:2.8vh;background:#fdecc8;border-radius:.6vh;padding:.4vh .6vw;margin-top:.6vh}
 .empty{font-size:3.2vh;opacity:.6;text-align:center;margin-top:3vh}
@@ -51,6 +54,11 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const tm = t => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
 const first = n => String(n || '').trim().split(/\s+/)[0];
 let lastOk = 0;
+const CLEAR_MS = 60 * 60000;           // orders leave the board 60 min after they were placed
+const cleared = new Set();            // ids already cleared, so we POST once
+const ageTxt = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}`; };
+const ageCls = ms => ms >= 45 * 60000 ? 'ag late' : ms >= 30 * 60000 ? 'ag warn' : 'ag';
+let last = null;
 // Sound: bell + "ORDER UP!" + bell, once per order id first seen after page load.
 const snd = $('#orderUp'); snd.volume = 1;
 let seen = null;
@@ -68,10 +76,10 @@ function checkNew(orders) {
 window.__tvTest = { checkNew, reset: () => { seen = null; } };
 async function fetchOrders() {
   if (MOCK) { const n = Date.now(), m = 60000; return { now: n, orders: [
-    { no: 41, name: 'Kyle Test', status: 'new', asap: true, items: [{ qty: 2, name: 'Wings 12', note: 'Buffalo, ranch' }, { qty: 1, name: 'Potato Rounds' }], notes: 'Extra napkins' },
-    { no: 40, name: 'Amy Sample', status: 'making', readyAt: n + 12 * m, items: [{ qty: 1, name: 'Double Cheeseburger', note: 'No onion' }, { qty: 1, name: 'Fries' }] },
-    { no: 39, name: 'Dan Demo', status: 'making', readyAt: n + 20 * m, slot: n + 20 * m, items: [{ qty: 1, name: 'Pepperoni Flatbread' }] },
-    { no: 38, name: 'Sue Example', status: 'ready', readyTs: n - 3 * m, items: [{ qty: 3, name: 'Burger' }, { qty: 3, name: 'Pop' }] } ] }; }
+    { id: 'm41', no: 41, created: n - 5 * m, name: 'Kyle Test', status: 'new', asap: true, items: [{ qty: 2, name: 'Wings 12', note: 'Buffalo, ranch' }, { qty: 1, name: 'Potato Rounds' }], notes: 'Extra napkins' },
+    { id: 'm40', no: 40, created: n - 25 * m, name: 'Amy Sample', status: 'making', readyAt: n + 12 * m, items: [{ qty: 1, name: 'Double Cheeseburger', note: 'No onion' }, { qty: 1, name: 'Fries' }] },
+    { id: 'm39', no: 39, created: n - 50 * m, name: 'Dan Demo', status: 'making', readyAt: n + 20 * m, slot: n + 20 * m, items: [{ qty: 1, name: 'Pepperoni Flatbread' }] },
+    { id: 'm38', no: 38, created: n - 65 * m, name: 'Sue Example', status: 'ready', readyTs: n - 3 * m, items: [{ qty: 3, name: 'Burger' }, { qty: 3, name: 'Pop' }] } ] }; }
   const r = await fetch(window.HFGB_ORDER.apiBase + '/api/staff/orders', { headers: { 'x-staff-key': code }, cache: 'no-store' });
   if (r.status === 401) throw Object.assign(new Error('code'), { code: 401 });
   if (!r.ok) throw new Error('http ' + r.status);
@@ -80,7 +88,9 @@ async function fetchOrders() {
 function card(o) {
   const when = o.status === 'ready' ? 'Ready ' + tm(o.readyTs) : o.status === 'making' ? 'Ready by ' + tm(o.readyAt) : (o.asap ? 'ASAP' : 'Pickup ' + tm(o.slot));
   const items = (o.items || []).map(i => `<li><b>${+i.qty}&times;</b> ${esc(i.name)}${i.note ? `<small>${esc(i.note)}</small>` : ''}</li>`).join('');
-  return `<div class="t"><div class="hd"><span class="no">#${+o.no}</span><span class="nm">${esc(first(o.name))}</span><span class="tm">${when}</span></div><ul>${items}</ul>${o.notes ? `<div class="nt">${esc(o.notes)}</div>` : ''}</div>`;
+  const age = o.created ? `<span class="${ageCls(Date.now() - o.created)}" data-c="${+o.created}">${ageTxt(Date.now() - o.created)}</span>` : '';
+  const sub = `<div class="sub"><span>${o.created ? 'Ordered ' + tm(o.created) : ''}</span><span class="tm">${when}</span></div>`;
+  return `<div class="t"><div class="hd"><span class="no">#${+o.no}</span><span class="nm">${esc(first(o.name))}</span>${age}</div>${sub}<ul>${items}</ul>${o.notes ? `<div class="nt">${esc(o.notes)}</div>` : ''}</div>`;
 }
 function fill(id, nid, arr) {
   const el = $('#' + id); $('#' + nid).textContent = arr.length;
@@ -90,21 +100,42 @@ function fill(id, nid, arr) {
   while (el.lastElementChild && el.lastElementChild.getBoundingClientRect().bottom > max && el.children.length > 1) { el.lastElementChild.remove(); hidden++; }
   if (hidden) { el.lastElementChild.remove(); hidden++; el.insertAdjacentHTML('beforeend', `<div class="more">+ ${hidden} more</div>`); }
 }
+// 60-minute clear: hide now, and mark picked on the server once (not in mock mode)
+function clearOld(orders) {
+  const now = Date.now();
+  for (const o of orders) {
+    if (!o.created || now - o.created < CLEAR_MS) continue;
+    const id = String(o.id ?? o.no); if (cleared.has(id)) continue;
+    cleared.add(id);
+    if (!MOCK && o.id) fetch(window.HFGB_ORDER.apiBase + '/api/staff/order/' + encodeURIComponent(o.id), { method: 'POST', headers: { 'x-staff-key': code, 'content-type': 'application/json' }, body: JSON.stringify({ action: 'picked' }) })
+      .then(r => { if (!r.ok && r.status !== 404) cleared.delete(id); }, () => cleared.delete(id));   // retry next tick on network error
+  }
+  return orders.filter(o => !(o.created && now - o.created >= CLEAR_MS));
+}
+function render() {
+  if (!last) return;
+  const live = clearOld(last.filter(o => ['new', 'making', 'ready'].includes(o.status)));
+  fill('colNew', 'nNew', live.filter(o => o.status === 'new'));
+  fill('colAcc', 'nAcc', live.filter(o => o.status === 'making'));
+  fill('colRdy', 'nRdy', live.filter(o => o.status === 'ready'));
+}
+function tick() {
+  if (last && last.some(o => o.created && Date.now() - o.created >= CLEAR_MS && !cleared.has(String(o.id ?? o.no)) && ['new', 'making', 'ready'].includes(o.status))) return render();
+  document.querySelectorAll('.ag[data-c]').forEach(el => { const ms = Date.now() - +el.dataset.c; el.textContent = ageTxt(ms); el.className = ageCls(ms); });
+}
+window.__tvTest.ageTxt = ageTxt; window.__tvTest.clearOld = clearOld;
 async function poll() {
   try {
     const d = await fetchOrders(); lastOk = Date.now();
     if (checkNew(d.orders)) ding();
-    const live = d.orders.filter(o => ['new', 'making', 'ready'].includes(o.status));
-    fill('colNew', 'nNew', live.filter(o => o.status === 'new'));
-    fill('colAcc', 'nAcc', live.filter(o => o.status === 'making'));
-    fill('colRdy', 'nRdy', live.filter(o => o.status === 'ready'));
+    last = d.orders; render();
     $('#status').textContent = 'Live'; $('#banner').classList.remove('on');
   } catch (e) {
     $('#banner').textContent = e.code === 401 ? 'Screen code missing or wrong. Open the TV link with ?code= again.' : 'Reconnecting...';
     if (e.code === 401 || Date.now() - lastOk > 12000) $('#banner').classList.add('on');
   }
 }
-setInterval(() => { $('#clock').textContent = tm(Date.now()); }, 1000);
+setInterval(() => { $('#clock').textContent = tm(Date.now()); tick(); }, 1000);
 async function wake() { try { await navigator.wakeLock?.request('screen'); } catch {} }
 document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
 wake(); poll(); setInterval(poll, 5000);
