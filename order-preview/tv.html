@@ -59,12 +59,11 @@ const cleared = new Set();            // ids already cleared, so we POST once
 const ageTxt = ms => { const t = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}`; };
 const ageCls = ms => ms >= 45 * 60000 ? 'ag late' : ms >= 30 * 60000 ? 'ag warn' : 'ag';
 let last = null;
-// Sound: bell + "ORDER UP!" + bell, once per order id first seen after page load.
+// Sound: triangle dinner-bell + deep "ORDER UP!" (baked into mp3), once per new order id.
 const snd = $('#orderUp'); snd.volume = 1;
 let seen = null;
 const hideHint = () => $('#snd').classList.add('off');
-function say() { try { const u = new SpeechSynthesisUtterance('Order up!'); u.rate = 1; u.volume = 1; speechSynthesis.speak(u); } catch {} }
-function ding() { try { snd.currentTime = 0; const p = snd.play(); if (p) p.then(hideHint, say); } catch { say(); } }
+function ding() { try { snd.currentTime = 0; const p = snd.play(); if (p) p.then(hideHint, hideHint); } catch {} }
 function unlock() { hideHint(); snd.muted = true; snd.play().then(() => { snd.pause(); snd.currentTime = 0; snd.muted = false; }, () => { snd.muted = false; }); }
 addEventListener('keydown', unlock, { once: true }); addEventListener('click', unlock, { once: true });
 function checkNew(orders) {
