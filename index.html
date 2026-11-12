@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://hfgb-orders.highflyersgolfbar.workers.dev" crossorigin>
 <link rel="preload" as="image" href="assets/photos/bar.webp">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="home.css?v=5">
+<link rel="stylesheet" href="home.css?v=6">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -86,8 +86,8 @@
     "Wings",
     "Bar Food"
   ],
-  "hasMenu": "https://highflyersgolfbar.com/#menu",
-  "menu": "https://highflyersgolfbar.com/#menu",
+  "hasMenu": "https://highflyersgolfbar.com/menu/",
+  "menu": "https://highflyersgolfbar.com/menu/",
   "priceRange": "$",
   "sameAs": [
     "https://www.facebook.com/profile.php?id=61559637320393",
@@ -95,16 +95,57 @@
   ]
 }
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I order pickup online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Order online for pickup at 302 Main St, Humphrey, NE. Online ordering is open 11 AM to 9 PM, with pickup from 11:30. On Mondays, ordering starts at 3 PM and pickup starts at 3:30. Go to https://highflyersgolfbar.com/order/."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are your hours?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is High Flyers Golf Bar?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "302 Main St, Humphrey, NE 68642."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is your phone number?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "(402) 923-0160. You can also email highflyersgolfbar@gmail.com."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="hp">
-<!-- Online ordering links are switched on in home.js (ORDERING_LIVE). Elements with data-order stay hidden until then;
-     elements with data-soon show while ordering is not public yet. -->
+<!-- Online ordering is live. home.js (ORDERING_LIVE) can hide Order Online links and show "coming soon" if it is turned off.
+     The HTML defaults match the live state so crawlers that skip JavaScript still see the right wording. -->
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="hdr__logo" href="#top" aria-label="High Flyers Golf Bar home"><img src="assets/logo-color.png" alt="High Flyers Golf Bar"></a>
     <nav class="nav" aria-label="Primary"><a href="#menu">Menu</a><a href="#bar">At The Bar</a><a href="#visit">Visit</a></nav>
     <div class="hdr__right">
-      <a class="btn btn--green btn--sm hp-hdrorder hidden" data-order>Order Online</a>
+      <a class="btn btn--green btn--sm hp-hdrorder" data-order href="/order/">Order Online</a>
       <a class="btn btn--brass btn--sm" href="tel:+14029230160" aria-label="Call (402) 923-0160"><svg class="btn__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call</a>
     </div>
   </div>
@@ -116,17 +157,17 @@
   <div class="hp-hero__scrim"></div>
   <div class="hp-hero__frame"></div>
   <div class="wrap hp-hero__in">
-    <div class="hp-hero__eyebrow">Right on Main Street in Humphrey</div>
-    <h1>High Flyers <span class="g">Golf Bar</span></h1>
+    <div class="hp-hero__eyebrow">Right on Main Street</div>
+    <h1>High Flyers <span class="g">Golf Bar</span> <span class="place">in Humphrey, Nebraska</span></h1>
     <p class="hp-hero__tag">Good food. Cold beer. Every game.</p>
     <div class="hp-hero__cta">
-      <a class="btn btn--brass btn--lg hp-cta hidden" data-order>Order Online for Pickup</a>
-      <a class="btn btn--brass btn--lg hp-cta" href="#menu" data-soon>View Menu</a>
-      <a class="btn btn--ghostLight btn--lg hidden" href="#menu" data-order-alt>View Menu</a>
-      <a class="btn btn--ghostLight btn--lg" href="tel:+14029230160" data-soon>Call (402) 923-0160</a>
+      <a class="btn btn--brass btn--lg hp-cta" data-order href="/order/">Order Online for Pickup</a>
+      <a class="btn btn--ghostLight btn--lg" href="#menu" data-order-alt>View Menu</a>
+      <a class="btn btn--brass btn--lg hp-cta hidden" href="#menu" data-soon>View Menu</a>
+      <a class="btn btn--ghostLight btn--lg hidden" href="tel:+14029230160" data-soon>Call (402) 923-0160</a>
     </div>
-    <p class="hp-hero__small hidden" data-order-block>Order online 11 AM to 9 PM (Mon from 3 PM)</p>
-    <p class="hp-hero__small" data-soon>Online ordering for pickup is coming soon</p>
+    <p class="hp-hero__small" data-order-block>Order online 11 AM to 9 PM (Mon from 3 PM)</p>
+    <p class="hp-hero__small hidden" data-soon>Online ordering for pickup is coming soon</p>
     <div class="hp-status hidden" id="statusLine"><span class="dot"></span><span id="statusTxt"></span></div>
   </div>
 </section>
@@ -139,17 +180,39 @@
       <h2>The <span class="g">Menu</span></h2>
       <p class="charm">Flatbreads, wings, burgers and the Front 9.</p>
     </div>
-    <nav class="hp-jump" id="tabs" aria-label="Menu sections"></nav>
-    <div class="hp-menu__grid" id="menuList"><p class="hp-loading">Loading the menu...</p></div>
-    <template id="asideTpl">
-      <aside class="hp-aside">
-        <div class="hp-aside__card hidden" data-order-block>
+    <nav class="hp-jump" id="tabs" aria-label="Menu sections">
+<!-- menu:tabs:start -->
+    <a href="#m-flatbreads">Flatbreads</a><a href="#m-wings">Wings</a><a href="#m-burgers">Burgers</a><a href="#m-front-9">Front 9</a><a href="#m-sweets">Sweets</a><a href="#m-pop">Pop</a>
+<!-- menu:tabs:end -->
+    </nav>
+    <div class="hp-menu__grid" id="menuList">
+<!-- menu:static:start -->
+    <div class="hp-col"><section class="mgroup" id="m-flatbreads"><div class="mgroup__head"><h3>Flatbreads</h3></div><div class="mline"><div class="mline__top"><span class="mline__name">All Meat Flatbread</span><span class="mline__dots"></span><span class="mline__price">$14</span></div></div><div class="mline"><div class="mline__top"><span class="mline__name">Hot Honey Pepperoni Flatbread</span><span class="mline__dots"></span><span class="mline__price">$13</span></div></div><div class="mline"><div class="mline__top"><span class="mline__name">One Topping Pizza</span><span class="mline__dots"></span><span class="mline__price">$12</span></div><div class="mline__note">Tell us the topping in notes</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Cheese Flatbread</span><span class="mline__dots"></span><span class="mline__price">$10</span></div></div></section><div class="hp-photo"><img src="/assets/photos/pizza.webp" width="900" height="1164" alt="A High Flyers flatbread" loading="lazy"></div><section class="mgroup" id="m-wings"><div class="mgroup__head"><h3>Wings</h3></div><div class="mline"><div class="mline__top"><span class="mline__name">Wings</span><span class="mline__dots"></span><span class="mline__price">$16</span></div><div class="mline__note">12 piece</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Wings</span><span class="mline__dots"></span><span class="mline__price">$9</span></div><div class="mline__note">6 piece</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Boneless Bites</span><span class="mline__dots"></span><span class="mline__price">$14</span></div><div class="mline__note">12 piece</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Boneless Bites</span><span class="mline__dots"></span><span class="mline__price">$8</span></div><div class="mline__note">6 piece</div></div></section><section class="mgroup" id="m-burgers"><div class="mgroup__head"><h3>Burgers</h3></div><div class="mline"><div class="mline__top"><span class="mline__name">Cheeseburger</span><span class="mline__dots"></span><span class="mline__price">$8</span></div></div><div class="mline"><div class="mline__top"><span class="mline__name">Chicken Sandwich</span><span class="mline__dots"></span><span class="mline__price">$6</span></div></div><div class="mline"><div class="mline__top"><span class="mline__name">Burger</span><span class="mline__dots"></span><span class="mline__price">$7</span></div></div><div class="mline"><div class="mline__top"><span class="mline__name">Double Cheeseburger</span><span class="mline__dots"></span><span class="mline__price">$9</span></div></div></section></div><div class="hp-col"><section class="mgroup" id="m-front-9"><div class="mgroup__head"><h3>Front 9</h3></div><p class="mgroup__sub">To start, or to share</p><div class="mline"><div class="mline__top"><span class="mline__name">Pretzel Bites</span><span class="mline__dots"></span><span class="mline__price">$9</span></div><div class="mline__note">15, w/ cheese</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Cheese Balls</span><span class="mline__dots"></span><span class="mline__price">$11</span></div><div class="mline__note">Bucket of 18</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Pickle Chips</span><span class="mline__dots"></span><span class="mline__price">$8</span></div><div class="mline__note">Order of 15</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Jalapeno Poppers</span><span class="mline__dots"></span><span class="mline__price">$11</span></div><div class="mline__note">Order of 8</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Potato Rounds</span><span class="mline__dots"></span><span class="mline__price">$2</span></div><div class="mline__note">Half, 4 oz</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Potato Rounds</span><span class="mline__dots"></span><span class="mline__price">$4</span></div><div class="mline__note">Full, 10 oz</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Mac &amp; Cheese Bites</span><span class="mline__dots"></span><span class="mline__price">$5</span></div><div class="mline__note">Order of 10</div></div><div class="mline"><div class="mline__top"><span class="mline__name">Fries</span><span class="mline__dots"></span><span class="mline__price">$4</span></div><div class="mline__note">10 oz</div></div></section><section class="mgroup" id="m-sweets"><div class="mgroup__head"><h3>Sweets</h3></div><div class="mline"><div class="mline__top"><span class="mline__name">Churros</span><span class="mline__dots"></span><span class="mline__price">$9</span></div><div class="mline__note">15, w/ marshmallow</div></div></section><section class="mgroup" id="m-pop"><div class="mgroup__head"><h3>Pop</h3></div><div class="mline mline--pop"><div class="mline__top"><span class="mline__name">Dr Pepper, Sprite, Lemonade, Diet Coke, Diet Pepsi, Mtn Dew, Tea, Pepsi, Coke, Root Beer, Diet Dr Pepper, Squirt, Fanta</span><span class="mline__dots"></span><span class="mline__price">$2.25</span></div></div><div class="mline mline--pop"><div class="mline__top"><span class="mline__name">Red Bull</span><span class="mline__dots"></span><span class="mline__price">$3</span></div></div></section>      <aside class="hp-aside">
+        <div class="hp-aside__card" data-order-block>
           <span class="hp-eyebrow">Order ahead</span>
           <h3>Order Online for Pickup</h3>
           <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St. Mondays: order from 3 PM, pickup from 3:30.</p>
-          <a class="btn btn--brass btn--lg hp-wide hidden" data-order>Start Your Order</a>
+          <a class="btn btn--brass btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
         </div>
-        <div class="hp-aside__card" data-soon>
+        <div class="hp-aside__card hidden" data-soon>
+          <span class="hp-eyebrow">Coming soon</span>
+          <h3>Online Ordering for Pickup</h3>
+          <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
+          <a class="btn btn--green btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+        </div>
+        <div class="hp-aside__note"><b>Drinks</b>Beer, cocktails and the full drink list are at the bar. Ask for Chad's Golf Ball Old Fashioned.</div>
+      </aside></div>
+<!-- menu:static:end -->
+    </div>
+    <template id="asideTpl">
+      <aside class="hp-aside">
+        <div class="hp-aside__card" data-order-block>
+          <span class="hp-eyebrow">Order ahead</span>
+          <h3>Order Online for Pickup</h3>
+          <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St. Mondays: order from 3 PM, pickup from 3:30.</p>
+          <a class="btn btn--brass btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
+        </div>
+        <div class="hp-aside__card hidden" data-soon>
           <span class="hp-eyebrow">Coming soon</span>
           <h3>Online Ordering for Pickup</h3>
           <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
@@ -195,7 +258,7 @@
     <div class="hp-visit__grid">
       <div class="hp-info">
         <div class="hp-row"><span class="k">Hours</span><span class="v">Monday: 3 PM to 1 AM<br>Tue to Sat: 11 AM to 1 AM<br>Sunday: 11 AM to 10 PM</span></div>
-        <div class="hp-row hidden" data-order-block><span class="k">Order online</span><span class="v">11 AM to 9 PM, pickup from 11:30<br>Monday: 3 PM to 9 PM, pickup from 3:30</span></div>
+        <div class="hp-row" data-order-block><span class="k">Order online</span><span class="v">11 AM to 9 PM, pickup from 11:30<br>Monday: 3 PM to 9 PM, pickup from 3:30</span></div>
         <div class="hp-row"><span class="k">Address</span><span class="v"><a href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE+68642" target="_blank" rel="noopener">302 Main St<br>Humphrey, NE 68642</a></span></div>
         <div class="hp-row"><span class="k">Phone</span><span class="v"><a href="tel:+14029230160">(402) 923-0160</a></span></div>
         <div class="hp-row"><span class="k">Email</span><span class="v"><a href="mailto:highflyersgolfbar@gmail.com">highflyersgolfbar@gmail.com</a></span></div>
@@ -214,6 +277,42 @@
   </div>
 </section>
 
+
+<section class="hp-faq" id="faq">
+  <div class="wrap">
+    <div class="hp-head">
+      <span class="hp-eyebrow">Quick answers</span>
+      <h2>Questions <span class="g">People Ask</span></h2>
+      <p>A few short answers about High Flyers Golf Bar in Humphrey, Nebraska.</p>
+    </div>
+    <div class="hp-faq__list">
+      <div class="hp-faq__item">
+        <h3>Can I order pickup online?</h3>
+        <p>Yes. <a href="/order/">Order online</a> for pickup at 302 Main St. Online ordering is open 11 AM to 9 PM, with pickup from 11:30. On Mondays, ordering starts at 3 PM and pickup starts at 3:30.</p>
+      </div>
+      <div class="hp-faq__item">
+        <h3>What are your hours?</h3>
+        <p>Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM.</p>
+      </div>
+      <div class="hp-faq__item">
+        <h3>Where is High Flyers Golf Bar?</h3>
+        <p>302 Main St, Humphrey, NE 68642.</p>
+      </div>
+      <div class="hp-faq__item">
+        <h3>What is your phone number?</h3>
+        <p><a href="tel:+14029230160">(402) 923-0160</a>. You can also email <a href="mailto:highflyersgolfbar@gmail.com">highflyersgolfbar@gmail.com</a>.</p>
+      </div>
+      <!-- Unverified, left out of the public FAQ and schema until Chad confirms:
+           Do you serve food late? (kitchen close time is not confirmed; online orders end at 9 PM)
+           Do you have a patio? (the site already has a patio photo, but confirm wording)
+           Do you show Husker football and other games? (the site already says so, but confirm which games)
+           Do you take reservations or private parties?
+           Is Chad's Golf Ball Old Fashioned still $10, and is there a photo we can use?
+      -->
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="wrap footer__in">
     <div class="footer__logo">
@@ -222,7 +321,7 @@
     </div>
     <div>
       <h4>Explore</h4>
-      <ul><li><a href="#menu">Food Menu</a></li><li class="hidden" data-order-block><a data-order>Order Online</a></li><li><a href="#bar">At The Bar</a></li><li><a href="#visit">Visit Us</a></li></ul>
+      <ul><li><a href="/menu/">Food Menu</a></li><li data-order-block><a data-order href="/order/">Order Online</a></li><li><a href="#bar">At The Bar</a></li><li><a href="#visit">Visit Us</a></li><li><a href="#faq">Questions</a></li></ul>
     </div>
     <div>
       <h4>Come By</h4>
@@ -236,10 +335,10 @@
 </footer>
 <div class="stripe"></div>
 
-<div class="hp-sticky away hidden" id="sticky"><a data-order>Order Online for Pickup <span>&rarr;</span></a></div>
+<div class="hp-sticky away hidden" id="sticky"><a data-order href="/order/">Order Online for Pickup <span>&rarr;</span></a></div>
 
 <script src="app.js?v=hp5"></script>
-<script src="home.js?v=5"></script>
+<script src="home.js?v=6"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "477c9749eb024f018ec797bb7353d0c5"}'></script>
 </body>
 </html>
