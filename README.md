@@ -8,7 +8,10 @@ It's a single, fast-loading page with **no build step** — just plain HTML, CSS
 
 | File | What it is |
 |------|-----------|
-| `index.html` | The whole page — menus, events, visit info. |
+| `index.html` | The home page — menus, events, visit info, and the FAQ. |
+| `menu/` | A standalone food menu page, with the same items in static HTML. |
+| `data/menu.json` | Snapshot of the Clover menu used to generate the static HTML. |
+| `scripts/build_menu.py` | Rebuilds the static menu HTML from `data/menu.json`. |
 | `styles.css` | All the styling. Brand colors and fonts live at the top. |
 | `app.js` | Menus filter, events, mobile nav, and Google Calendar sync. **The events list you edit is here.** |
 | `assets/` | Logo files. |
@@ -18,7 +21,7 @@ It's a single, fast-loading page with **no build step** — just plain HTML, CSS
 
 ## How to make edits (the common ones)
 
-**Change a menu price or item** → open `index.html`, find the item (search for its name), edit the text. Save.
+**Change a menu price or item** → prices come from Clover through the ordering Worker, and a snapshot is saved in `data/menu.json`. After a Clover change, run `python3 scripts/build_menu.py --fetch` and commit the updated `data/menu.json`, `index.html`, and `menu/index.html`. The homepage still refreshes from the Worker in the browser, so guests see today's prices even before a rebuild.
 
 **Add or change an event / game** → open `app.js`, edit the `EVENTS` list near the top. Each event looks like:
 ```js
@@ -82,8 +85,8 @@ Removed (2026-06-30) — the Gift Cards / Hats / T-Shirts section and its nav li
 
 ## Notes & things to confirm
 
-- **Hours** are set to Monday 3 PM to 1 AM, Tue through Sat 11 AM to 1 AM, and Sunday 11 AM to 10 PM. To change them, search `11 AM` in `index.html`.
-- **Social links** point to `facebook.com/highflyersgolfbar` and `instagram.com/highflyersgolfbar`. Update in `index.html` (search `facebook.com`) if your handles differ.
+- **Hours** are set to Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM. To change them, search `3 PM` and `11 AM` in `index.html` (and the matching hours in the JSON-LD block at the top).
+- **Social links** point to the real Facebook page `https://www.facebook.com/profile.php?id=61559637320393` and `instagram.com/highflyersgolfbar`. Update in `index.html` (search `facebook.com`) if the handles change.
 - **Photos** live in `assets/photos/`. The hero uses `bar.png`. To swap any photo, drop a new file in that folder with the same name, or point the `src` at your new file. Bigger, brighter shots of wings, the patio, and a packed game day will only make it better.
 - **Fonts** are Zilla Slab, Oswald, DM Serif Display, and Barlow from Google Fonts, chosen for a warm vintage feel. If you ever get the real logo font, we can swap it in.
 - **Drink menu:** the full drink list is intentionally kept off the site for now (menu points people to ask at the bar). Say the word and we'll add a styled drink section back.

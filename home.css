@@ -18,6 +18,7 @@
 .hp-hero__eyebrow{font-family:var(--font-serif);font-style:italic;color:var(--brass);font-size:19px;}
 .hp-hero h1{font-family:var(--font-disp);font-weight:900;font-size:50px;line-height:.95;letter-spacing:-.01em;margin-top:8px;}
 .hp-hero h1 .g{color:var(--brass);display:block;}
+.hp-hero h1 .place{display:block;font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:22px;letter-spacing:0;color:var(--brass);margin-top:10px;line-height:1.2;}
 .hp-hero__tag{font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:15px;margin-top:14px;color:var(--parch);}
 .hp-hero__cta{display:grid;gap:12px;margin-top:24px;}
 .hp-hero__cta .btn{width:100%;font-size:15px;text-shadow:none;}
@@ -121,6 +122,7 @@
   .hp-hero__frame{inset:20px;}
   .hp-hero__scrim{background:linear-gradient(90deg,rgba(13,59,41,.95) 0%,rgba(13,59,41,.80) 50%,rgba(13,59,41,.45) 100%);}
   .hp-hero h1{font-size:88px;}
+  .hp-hero h1 .place{font-size:28px;margin-top:14px;}
   .hp-hero__cta{display:flex;}
   .hp-hero__cta .btn{width:auto;}
   .hp-menu__grid{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;align-items:start;}
@@ -145,3 +147,17 @@
 .hp-aside__card .hp-wide{max-width:none;}
 .hp-aside__note{border:2px dashed var(--n400);border-radius:var(--radius);padding:14px 16px;color:var(--n600);font-size:15px;background:rgba(247,240,221,.6);}
 .hp-aside__note b{font-family:var(--font-label);text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:var(--brick);display:block;margin-bottom:4px;}
+
+/* FAQ */
+.hp-faq{padding:44px 0 50px;background:var(--paper);}
+.hp-faq__list{margin-top:22px;}
+.hp-faq__item{border-top:1px solid var(--n400);padding:16px 0;}
+.hp-faq__item:last-child{border-bottom:1px solid var(--n400);}
+.hp-faq__item h3{font-family:var(--font-disp);font-weight:900;font-size:22px;color:var(--hg);line-height:1.15;}
+.hp-faq__item p{color:var(--n600);margin-top:6px;font-size:16px;max-width:60ch;}
+.hp-faq__item a{color:var(--hg);text-decoration:underline;text-underline-offset:3px;}
+.hp-head h1{font-family:var(--font-disp);font-weight:900;font-size:40px;line-height:1;letter-spacing:-.01em;}
+.hp-head h1 .g{color:var(--hg);}
+@media (min-width:761px){
+  .hp-head h1{font-size:56px;}
+}

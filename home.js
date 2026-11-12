@@ -32,7 +32,7 @@ const ORDER_URL = '/order/';
     return `<section class="mgroup" id="m-${slug(g.name)}"><div class="mgroup__head"><h3>${esc(g.name)}</h3></div>`
       + `${SUB[g.name] ? `<p class="mgroup__sub">${SUB[g.name]}</p>` : ''}${rows}</section>`;
   }
-  const PHOTO = '<div class="hp-photo"><img src="assets/photos/pizza.webp" width="900" height="1164" alt="A High Flyers flatbread" loading="lazy"></div>';
+  const PHOTO = '<div class="hp-photo"><img src="/assets/photos/pizza.webp" width="900" height="1164" alt="A High Flyers flatbread" loading="lazy"></div>';
   function render(d) {
     const groups = (d.groups || []).filter(g => g.items && g.items.length);
     if (!groups.length) throw new Error('empty menu');
@@ -49,7 +49,7 @@ const ORDER_URL = '/order/';
       : ({ not_yet: `Online ordering opens at ${s.opensLabel} today.`, done_for_day: 'Online orders are done for today. Come see us at the bar!',
         closed_today: 'Online ordering is closed today.', paused: 'Online ordering is paused for a bit. Please call the bar.',
         full: 'All pickup times are full for today. Please call the bar.' })[s.reason] || '';
-    if (!txt) return;
+    if (!txt || !$('#statusTxt') || !$('#statusLine')) return;
     $('#statusTxt').textContent = txt; $('#statusLine').classList.remove('hidden'); $('#statusLine').classList.toggle('closed', !s.open);
   }
   async function load() {
@@ -59,9 +59,16 @@ const ORDER_URL = '/order/';
       const d = await r.json();
       render(d); status(d.schedule);
     } catch (e) {
-      $('#tabs').classList.add('hidden');
-      $('#menuList').innerHTML = '<div class="hp-err"><b>The menu did not load.</b> Please try again in a minute, or give us a call and we will read it to you.'
-        + '<a class="btn btn--brass" href="tel:+14029230160">Call (402) 923-0160</a></div>';
+      // Keep the static HTML menu already in the page so crawlers and visitors still see items and prices.
+      const list = $('#menuList');
+      const hasStatic = list && list.querySelector('.mline');
+      if (!hasStatic) {
+        if ($('#tabs')) $('#tabs').classList.add('hidden');
+        if (list) list.innerHTML = '<div class="hp-err"><b>The menu did not load.</b> Please try again in a minute, or give us a call and we will read it to you.'
+          + '<a class="btn btn--brass" href="tel:+14029230160">Call (402) 923-0160</a></div>';
+      } else {
+        applyOrdering(list);
+      }
     }
   }
   applyOrdering();

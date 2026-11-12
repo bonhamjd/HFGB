@@ -1,0 +1,282 @@
+{
+  "source": "https://hfgb-orders.highflyersgolfbar.workers.dev/api/menu",
+  "fetched": "2026-11-12",
+  "taxRate": 0.075,
+  "groups": [
+    {
+      "name": "Flatbreads",
+      "items": [
+        {
+          "id": "NETRVSWPPN4XP",
+          "name": "All Meat Flatbread",
+          "note": "",
+          "price": 1400,
+          "soldOut": false
+        },
+        {
+          "id": "TXFT91V742RN4",
+          "name": "Hot Honey Pepperoni Flatbread",
+          "note": "",
+          "price": 1300,
+          "soldOut": false
+        },
+        {
+          "id": "G4S8MDT7W7B4T",
+          "name": "One Topping Pizza",
+          "note": "Tell us the topping in notes",
+          "price": 1200,
+          "soldOut": false
+        },
+        {
+          "id": "SZZQCE9HAYYXM",
+          "name": "Cheese Flatbread",
+          "note": "",
+          "price": 1000,
+          "soldOut": false
+        }
+      ]
+    },
+    {
+      "name": "Wings",
+      "items": [
+        {
+          "id": "2R4RZ4R701V6G",
+          "name": "Wings",
+          "note": "12 piece",
+          "price": 1600,
+          "soldOut": false
+        },
+        {
+          "id": "K62THAKJNS9BW",
+          "name": "Wings",
+          "note": "6 piece",
+          "price": 900,
+          "soldOut": false
+        },
+        {
+          "id": "QX5PVE7HBAEDM",
+          "name": "Boneless Bites",
+          "note": "12 piece",
+          "price": 1400,
+          "soldOut": false
+        },
+        {
+          "id": "FGJAFMMZTBHBY",
+          "name": "Boneless Bites",
+          "note": "6 piece",
+          "price": 800,
+          "soldOut": false
+        }
+      ]
+    },
+    {
+      "name": "Burgers",
+      "items": [
+        {
+          "id": "3ZX33E5G6R7GE",
+          "name": "Cheeseburger",
+          "note": "",
+          "price": 800,
+          "soldOut": false
+        },
+        {
+          "id": "HZJTB424E3PQJ",
+          "name": "Chicken Sandwich",
+          "note": "",
+          "price": 600,
+          "soldOut": false
+        },
+        {
+          "id": "QP9JY185RJJ0E",
+          "name": "Burger",
+          "note": "",
+          "price": 700,
+          "soldOut": false
+        },
+        {
+          "id": "1WS22QFSWT30M",
+          "name": "Double Cheeseburger",
+          "note": "",
+          "price": 900,
+          "soldOut": false
+        }
+      ]
+    },
+    {
+      "name": "Front 9",
+      "items": [
+        {
+          "id": "A7BHBXAD6HV5W",
+          "name": "Pretzel Bites",
+          "note": "15, w/ cheese",
+          "price": 900,
+          "soldOut": false
+        },
+        {
+          "id": "6BVRZ13F73RGT",
+          "name": "Cheese Balls",
+          "note": "Bucket of 18",
+          "price": 1100,
+          "soldOut": false
+        },
+        {
+          "id": "YRC7MZ0BG5NS2",
+          "name": "Pickle Chips",
+          "note": "15",
+          "price": 800,
+          "soldOut": false
+        },
+        {
+          "id": "MBKHC77MKZZ5T",
+          "name": "Jalapeno Poppers",
+          "note": "8",
+          "price": 1100,
+          "soldOut": false
+        },
+        {
+          "id": "DKAPBX21VETCM",
+          "name": "Potato Rounds",
+          "note": "Half, 4 oz",
+          "price": 200,
+          "soldOut": false
+        },
+        {
+          "id": "3K9MPNMEJ9JB8",
+          "name": "Potato Rounds",
+          "note": "Full, 10 oz",
+          "price": 400,
+          "soldOut": false
+        },
+        {
+          "id": "KRYXE4BXF44R2",
+          "name": "Mac & Cheese Bites",
+          "note": "10",
+          "price": 500,
+          "soldOut": false
+        },
+        {
+          "id": "QM983WNGNTJDR",
+          "name": "Fries",
+          "note": "10 oz",
+          "price": 400,
+          "soldOut": false
+        }
+      ]
+    },
+    {
+      "name": "Sweets",
+      "items": [
+        {
+          "id": "ED4V18T3EN0DM",
+          "name": "Churros",
+          "note": "15, w/ marshmallow",
+          "price": 900,
+          "soldOut": false
+        }
+      ]
+    },
+    {
+      "name": "Pop",
+      "items": [
+        {
+          "id": "87TDPD6SY483R",
+          "name": "Dr Pepper",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "M2HXN4B1E7WEJ",
+          "name": "Sprite",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "BRPC405BH7C6C",
+          "name": "Lemonade",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "A37XJHM9XYXR8",
+          "name": "Diet Coke",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "Y2KX8GY6P18TT",
+          "name": "Diet Pepsi",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "4HASAA2CZZDJE",
+          "name": "Mtn Dew",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "83JTZJ41TDK4W",
+          "name": "Tea",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "ABWXWC6ZKRGMW",
+          "name": "Pepsi",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "ZWWP4JD4398F8",
+          "name": "Coke",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "SN3FWHZFMKXRJ",
+          "name": "Root Beer",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "9Q3EQG3NPXBVT",
+          "name": "Diet Dr Pepper",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "8W0JG9W5WF47W",
+          "name": "Red Bull",
+          "note": "",
+          "price": 300,
+          "soldOut": false
+        },
+        {
+          "id": "140YQCBYE38M4",
+          "name": "Squirt",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        },
+        {
+          "id": "PE8WQ33TAZA76",
+          "name": "Fanta",
+          "note": "",
+          "price": 225,
+          "soldOut": false
+        }
+      ]
+    }
+  ]
+}
