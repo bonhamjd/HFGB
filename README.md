@@ -86,7 +86,7 @@ Removed (2026-06-30) — the Gift Cards / Hats / T-Shirts section and its nav li
 ## Notes & things to confirm
 
 - **Hours** are set to Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM. To change them, search `3 PM` and `11 AM` in `index.html` (and the matching hours in the JSON-LD block at the top).
-- **Social links** point to `facebook.com/highflyersgolfbar` and `instagram.com/highflyersgolfbar`. Update in `index.html` (search `facebook.com`) if your handles differ.
+- **Social links** point to the real Facebook page `https://www.facebook.com/profile.php?id=61559637320393` and `instagram.com/highflyersgolfbar`. Update in `index.html` (search `facebook.com`) if the handles change.
 - **Photos** live in `assets/photos/`. The hero uses `bar.png`. To swap any photo, drop a new file in that folder with the same name, or point the `src` at your new file. Bigger, brighter shots of wings, the patio, and a packed game day will only make it better.
 - **Fonts** are Zilla Slab, Oswald, DM Serif Display, and Barlow from Google Fonts, chosen for a warm vintage feel. If you ever get the real logo font, we can swap it in.
 - **Drink menu:** the full drink list is intentionally kept off the site for now (menu points people to ask at the bar). Say the word and we'll add a styled drink section back.
