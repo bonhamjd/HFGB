@@ -2,13 +2,15 @@
    HIGH FLYERS GOLF BAR — highflyersgolfbar.com
    Self-contained production stylesheet. No build step, no framework.
    Vintage clubhouse: hunter green + brass gold on warm parchment,
-   tin-black sections, slab-serif headlines. Red lives only on the logo flag.
+   tin-black sections, slab-serif headlines. Flag red (#C70000) is used
+   on the logo pin flag and on the Order buttons.
    ========================================================================= */
 
 :root {
   --green:#14523a; --green-700:#0f3f2c; --green-900:#0d3b29; --green-soft:#1d6b4b; --green-100:#dbe7de;
   --brass:#e2ae3f; --brass-700:#c08f26; --brass-900:#7a5a12; --brass-100:#f6ead0; --brass-300:#eecb7e;
   --brick:#7c3b2b;
+  --flag:#C70000; --flag-700:#A80000;
   --parch:#f0e7d0; --parch-2:#e7dcbf; --paper:#f7f0dd;
   --ink:#181510; --ink-2:#241f18;
   --n300:#cdbf9c; --n400:#a89c7c; --n500:#7c7256; --n600:#565040;
@@ -65,6 +67,8 @@ p{margin:0;text-wrap:pretty;}
 .btn--green:hover{background:var(--green-900);border-color:var(--green-900);}
 .btn--brass{background:var(--brass);color:var(--ink);border-color:var(--brass);}
 .btn--brass:hover{background:var(--brass-700);border-color:var(--brass-700);color:var(--ink);}
+.btn--flag{background:var(--flag);color:#fff;border-color:var(--flag);}
+.btn--flag:hover{background:var(--flag-700);border-color:var(--flag-700);color:#fff;}
 .btn--outline{background:transparent;color:var(--ink);border-color:var(--ink);}
 .btn--outline:hover{background:var(--ink);color:var(--parch);}
 .btn--ghostLight{background:transparent;color:var(--parch);border-color:rgba(240,231,208,.55);}
@@ -98,7 +102,12 @@ p{margin:0;text-wrap:pretty;}
   transition:background .12s var(--ease),color .12s var(--ease);
 }
 .nav a:hover{background:var(--parch-2);}
-.hdr__right{display:flex;align-items:center;gap:12px;}
+.hdr__right{display:flex;align-items:center;gap:8px;}
+.hdr__order{box-shadow:3px 3px 0 var(--ink);border-color:var(--ink);padding:12px 20px;font-size:13px;}
+.hdr__order:hover{border-color:var(--ink);color:#fff;}
+.hdr__call{background:transparent;color:var(--n600);border-color:transparent;padding:10px 10px;font-size:12px;}
+.hdr__call:hover{background:var(--parch-2);color:var(--ink);border-color:transparent;}
+.hdr__call .btn__ico{width:15px;height:15px;}
 .hdr__open{display:none;align-items:center;gap:7px;font-family:var(--font-label);font-weight:600;
   text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:var(--green);}
 .hdr__open .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-100);}

@@ -4,8 +4,6 @@
 .hp .btn--green{background:var(--hg);border-color:var(--hg);}
 .hp .btn--green:hover{background:var(--ink);border-color:var(--ink);}
 .hp .btn--lg{min-height:56px;}
-.hp-hdrorder{display:none;}
-@media (min-width:761px){.hp-hdrorder{display:inline-flex;}}
 
 /* HERO */
 .hp-hero{position:relative;color:var(--parch);overflow:hidden;background:var(--hg);}
@@ -113,8 +111,9 @@
   transition:transform .22s var(--ease);pointer-events:none;}
 .hp-sticky.away{transform:translateY(120%);}
 .hp-sticky a{pointer-events:auto;max-width:520px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;min-height:56px;
-  background:var(--brass);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:0 20px;box-shadow:4px 4px 0 var(--ink);
+  background:var(--flag);color:#fff;border:2px solid var(--ink);border-radius:12px;padding:0 20px;box-shadow:4px 4px 0 var(--ink);
   font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:15px;}
+.hp-sticky a:hover{background:var(--flag-700);color:#fff;}
 .hp-sticky a span{font-size:20px;}
 
 @media (min-width:761px){
