@@ -14,7 +14,7 @@ html,body{height:100%;background:#0d3b29;color:#fff;font-family:Arial,Helvetica,
 #banner.on{display:block}
 #snd{position:fixed;right:1.2vw;bottom:1.2vh;font-size:2.2vh;background:rgba(0,0,0,.45);color:#fff;padding:.5vh .9vw;border-radius:.8vh;opacity:.8}
 #snd.off{display:none}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;padding:1.4vw;height:calc(100% - 8.5vh)}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;padding:1.4vw;height:calc(100% - 8.5vh - 27vh)}
 .col{display:flex;flex-direction:column;min-height:0}
 .col h2{font-size:4.4vh;padding:.6vh 1vw;border-radius:1vh;margin-bottom:1vh;text-align:center}
 .c-new h2{background:#f1c40f;color:#222}.c-acc h2{background:#2e86de}.c-rdy h2{background:#27ae60}
@@ -32,6 +32,16 @@ ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{
 .nt{font-size:2.8vh;background:#fdecc8;border-radius:.6vh;padding:.4vh .6vw;margin-top:.6vh}
 .empty{font-size:3.2vh;opacity:.6;text-align:center;margin-top:3vh}
 .more{font-size:3vh;text-align:center;opacity:.85}
+/* TODAY'S GAMES: bottom strip on the orders view + full-screen view when no orders are open */
+#games{position:fixed;left:0;right:0;bottom:0;height:27vh;background:#082a1d;border-top:.6vh solid #e2ae3f;padding:1.2vh 2vw}
+#games h3,#full h3{font-size:3.2vh;letter-spacing:.3vw;color:#e2ae3f;margin-bottom:.6vh}
+#gl{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:6.4vh;column-gap:3vw}
+.gr{display:grid;grid-template-columns:8.5vw 1fr auto;align-items:center;font-size:3.6vh;font-weight:700;border-bottom:.2vh solid rgba(255,255,255,.15);white-space:nowrap;overflow:hidden}
+.gr .gm{overflow:hidden;text-overflow:ellipsis;padding-right:1vw}.gr .ch{color:#cfe8da}.gr .ch b{color:#fff;font-size:1.17em;margin-left:.6vw}
+#full{display:none;position:fixed;left:0;right:0;top:8.5vh;bottom:0;background:#f0e7d0;color:#181510;padding:2.5vh 4vw}
+#full h3{font-size:4.6vh;color:#14523a}#full .gr{grid-template-columns:14.5vw 1fr auto;border-color:#d8cba8;border-width:.3vh}
+#full .gr .ch{color:#181510}#full .gr .ch b{color:#14523a}
+body.gv .board,body.gv #games{display:none}body.gv #full{display:block}
 </style></head><body>
 <div class="top"><div><img src="/assets/logo-color.png" alt="">Online Orders</div><div id="status">Starting</div><div id="clock"></div></div>
 <div id="banner">Reconnecting...</div>
@@ -42,6 +52,8 @@ ul{list-style:none;margin-top:.6vh}li{font-size:3.4vh;line-height:1.25}li small{
  <div class="col c-acc"><h2>Accepted <span id="nAcc">0</span></h2><div class="list" id="colAcc"></div></div>
  <div class="col c-rdy"><h2>Ready <span id="nRdy">0</span></h2><div class="list" id="colRdy"></div></div>
 </div>
+<div id="games"><h3>TODAY'S GAMES</h3><div id="gl"></div></div>
+<div id="full"><h3>TODAY'S GAMES &middot; TIMES CT</h3><div id="fl"></div></div>
 <script>window.HFGB_ORDER = { apiBase: 'https://hfgb-orders.highflyersgolfbar.workers.dev' };</script>
 <script type="module">
 // Read-only TV board. No buttons, no phone numbers, no prices. Code comes from ?code= once, then localStorage.
@@ -49,7 +61,7 @@ const $ = s => document.querySelector(s);
 const q = new URLSearchParams(location.search);
 if (q.get('code')) localStorage.setItem('hfgb_tv_code', q.get('code').trim());
 const code = localStorage.getItem('hfgb_tv_code') || '';
-const MOCK = q.get('mock') === '1';
+const MOCK = q.get('mock') === '1' || q.get('mock') === 'empty';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const tm = t => new Date(t).toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit' });
 const first = n => String(n || '').trim().split(/\s+/)[0];
@@ -74,6 +86,7 @@ function checkNew(orders) {
 }
 window.__tvTest = { checkNew, reset: () => { seen = null; } };
 async function fetchOrders() {
+  if (q.get('mock') === 'empty') return { now: Date.now(), orders: [] };
   if (MOCK) { const n = Date.now(), m = 60000; return { now: n, orders: [
     { id: 'm41', no: 41, created: n - 5 * m, name: 'Kyle Test', status: 'new', asap: true, items: [{ qty: 2, name: 'Wings 12', note: 'Buffalo, ranch' }, { qty: 1, name: 'Potato Rounds' }], notes: 'Extra napkins' },
     { id: 'm40', no: 40, created: n - 25 * m, name: 'Amy Sample', status: 'making', readyAt: n + 12 * m, items: [{ qty: 1, name: 'Double Cheeseburger', note: 'No onion' }, { qty: 1, name: 'Fries' }] },
@@ -114,6 +127,7 @@ function clearOld(orders) {
 function render() {
   if (!last) return;
   const live = clearOld(last.filter(o => ['new', 'making', 'ready'].includes(o.status)));
+  openN = live.length; view();
   fill('colNew', 'nNew', live.filter(o => o.status === 'new'));
   fill('colAcc', 'nAcc', live.filter(o => o.status === 'making'));
   fill('colRdy', 'nRdy', live.filter(o => o.status === 'ready'));
@@ -139,4 +153,36 @@ async function wake() { try { await navigator.wakeLock?.request('screen'); } cat
 document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
 wake(); poll(); setInterval(poll, 5000);
 setTimeout(() => location.reload(), 6 * 3600000);   // fresh page every 6 hours
+
+// TODAY'S GAMES. Feed: GET /api/staff/tv/games (uploaded each morning). Only today's list is shown; games that
+// started 3+ hours ago drop off. No open orders: rotate 15 s orders / 15 s full schedule. Any open order stops it.
+let GAMES = [], openN = 0, rot0 = Date.now();
+const NOW = () => q.get('now') ? Date.parse(q.get('now')) : Date.now();
+const today = () => new Date(NOW()).toLocaleDateString('en-CA', { timeZone: 'America/Chicago' });
+const SHORT = c => String(c).replace(/\s*\(.*?\)/g, '').replace('Big Ten Network', 'BTN').replace('SEC Network', 'SECN').replace('ACC Network', 'ACCN');
+const row = (x, short) => `<div class="gr"><span>${esc(x.time)}</span><span class="gm">${esc(x.game)}</span><span class="ch">${esc(short ? SHORT(x.channel) : x.channel)}<b>${esc(x.dtv)}</b></span></div>`;
+async function loadGames() {
+  try {
+    const r = MOCK ? await fetch(q.get('games') || 'games_today.json', { cache: 'no-store' })
+                   : await fetch(window.HFGB_ORDER.apiBase + '/api/staff/tv/games', { headers: { 'x-staff-key': code }, cache: 'no-store' });
+    const d = await r.json(); GAMES = d.date === today() && Array.isArray(d.games) ? d.games.filter(x => x.dtv) : [];
+  } catch { /* keep the last list */ }
+  showGames();
+}
+function showGames() {
+  const g = GAMES.filter(x => x.allday || Date.parse(x.start) > NOW() - 3 * 3600e3);
+  $('#games').style.display = g.length ? '' : 'none';
+  $('.board').style.height = g.length ? '' : 'calc(100% - 8.5vh)';
+  $('#gl').innerHTML = g.slice(0, 6).map(x => row(x, true)).join('');
+  const n = Math.min(g.length, 12), rh = Math.min(9, 76 / Math.max(n, 1)), fs = rh * 0.6;
+  $('#fl').innerHTML = g.slice(0, 12).map(x => row(x, false).replace('class="gr"', `class="gr" style="font-size:${fs}vh;height:${rh}vh"`)).join('');
+  view();
+}
+function view() {
+  const has = $('#fl').children.length > 0;
+  if (openN || !has) rot0 = Date.now();
+  const games = q.get('view') === 'games' ? has : (!openN && has && Math.floor((Date.now() - rot0) / 15000) % 2 === 1);
+  document.body.classList.toggle('gv', games);
+}
+loadGames(); setInterval(loadGames, 5 * 60000); setInterval(view, 1000);
 </script></body></html>
