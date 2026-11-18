@@ -1,5 +1,5 @@
 // Homepage: menu straight from the ordering Worker (same Clover data the order page uses), so prices match Clover.
-// ONLINE ORDERING SWITCH: set ORDERING_LIVE to false to hide every Order Online button and show "coming soon" instead.
+// ONLINE ORDERING SWITCH: set ORDERING_LIVE to false to hide every Order Online button (hero then shows View Menu and Call).
 const ORDERING_LIVE = true;
 const ORDER_URL = '/order/';
 (() => {

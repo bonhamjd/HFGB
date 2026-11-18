@@ -170,7 +170,7 @@
 </script>
 </head>
 <body class="hp">
-<!-- Online ordering is live. home.js (ORDERING_LIVE) can hide Order Online links and show "coming soon" if it is turned off.
+<!-- Online ordering is live. home.js (ORDERING_LIVE) can hide Order Online links if it is turned off (View Menu and Call buttons show instead).
      The HTML defaults match the live state so crawlers that skip JavaScript still see the right wording. -->
 <header class="hdr">
   <div class="wrap hdr__in">
@@ -193,13 +193,12 @@
     <h1>High Flyers <span class="g">Golf Bar</span> <span class="place">in Humphrey, Nebraska</span></h1>
     <p class="hp-hero__tag">Good food. Cold beer. Every game.</p>
     <div class="hp-hero__cta">
-      <a class="btn btn--brass btn--lg hp-cta" data-order href="/order/">Order Online for Pickup</a>
+      <a class="btn btn--flag btn--lg hp-cta" data-order href="/order/">Order Online for Pickup</a>
       <a class="btn btn--ghostLight btn--lg" href="#menu" data-order-alt>View Menu</a>
       <a class="btn btn--brass btn--lg hp-cta hidden" href="#menu" data-soon>View Menu</a>
       <a class="btn btn--ghostLight btn--lg hidden" href="tel:+14029230160" data-soon>Call (402) 923-0160</a>
     </div>
     <p class="hp-hero__small" data-order-block>Order online 11 AM to 9 PM (Mon from 3 PM)</p>
-    <p class="hp-hero__small hidden" data-soon>Online ordering for pickup is coming soon</p>
     <div class="hp-status hidden" id="statusLine"><span class="dot"></span><span id="statusTxt"></span></div>
   </div>
 </section>
@@ -224,13 +223,7 @@
           <span class="hp-eyebrow">Order ahead</span>
           <h3>Order Online for Pickup</h3>
           <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St. Mondays: order from 3 PM, pickup from 3:30.</p>
-          <a class="btn btn--brass btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
-        </div>
-        <div class="hp-aside__card hidden" data-soon>
-          <span class="hp-eyebrow">Coming soon</span>
-          <h3>Online Ordering for Pickup</h3>
-          <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
-          <a class="btn btn--green btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+          <a class="btn btn--flag btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
         </div>
         <div class="hp-aside__note"><b>Drinks</b>Beer, cocktails and the full drink list are at the bar. Ask for Chad's Golf Ball Old Fashioned.</div>
       </aside></div>
@@ -242,13 +235,7 @@
           <span class="hp-eyebrow">Order ahead</span>
           <h3>Order Online for Pickup</h3>
           <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St. Mondays: order from 3 PM, pickup from 3:30.</p>
-          <a class="btn btn--brass btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
-        </div>
-        <div class="hp-aside__card hidden" data-soon>
-          <span class="hp-eyebrow">Coming soon</span>
-          <h3>Online Ordering for Pickup</h3>
-          <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
-          <a class="btn btn--green btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+          <a class="btn btn--flag btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
         </div>
         <div class="hp-aside__note"><b>Drinks</b>Beer, cocktails and the full drink list are at the bar. Ask for Chad's Golf Ball Old Fashioned.</div>
       </aside>
@@ -274,7 +261,7 @@
     </article>
     <div class="hp-games" id="lineup">
       <h3 class="hp-sub">On The Screens</h3>
-      <p class="hp-subtxt">Huskers football, volleyball and basketball, plus the NFL. If there's a game, it's on here.</p>
+      <p class="hp-subtxt">Huskers, Creighton hoops, Humphrey Bulldogs and Defenders, the NFL and golf's biggest events. If there's a game, it's on here.</p>
       <div class="ev-list" id="evList"></div>
     </div>
   </div>
@@ -378,7 +365,7 @@
 
 <div class="hp-sticky away hidden" id="sticky"><a data-order href="/order/">Order Online for Pickup <span>&rarr;</span></a></div>
 
-<script src="app.js?v=hp5"></script>
+<script src="app.js?v=hp6"></script>
 <script src="home.js?v=6"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "477c9749eb024f018ec797bb7353d0c5"}'></script>
 </body>

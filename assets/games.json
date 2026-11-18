@@ -1,0 +1,741 @@
+{
+ "built": "2026-11-18 09:58 CT",
+ "games": [
+  {
+   "id": "401926064",
+   "date": "2026-11-18",
+   "title": "Husker Men's Hoops vs South Dakota",
+   "time": "Wed · 7:30 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-11-18T19:30:00-06:00"
+  },
+  {
+   "id": "401909494",
+   "date": "2026-11-18",
+   "title": "Creighton Hoops vs Bethune-Cookman",
+   "time": "Wed · 8 PM · truTV",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-11-18T20:00:00-06:00"
+  },
+  {
+   "id": "401858531",
+   "date": "2026-11-21",
+   "title": "Husker Football vs Ohio State",
+   "time": "Sat · 11 AM · Fox",
+   "note": "",
+   "feed": "neb_fb",
+   "sort": "2026-11-21T11:00:00-06:00"
+  },
+  {
+   "id": "401931739",
+   "date": "2026-11-22",
+   "title": "Husker Volleyball: Big Ten Tournament Quarterfinal",
+   "time": "Sun · 11 AM",
+   "note": "",
+   "feed": "neb_vb",
+   "sort": "2026-11-22T11:00:00-06:00"
+  },
+  {
+   "id": "401902281",
+   "date": "2026-11-22",
+   "title": "Husker Men's Hoops vs Butler",
+   "time": "Sun · 11 AM · FS1",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-11-22T11:00:00-06:00"
+  },
+  {
+   "id": "401911795",
+   "date": "2026-11-22",
+   "title": "Husker Women's Hoops at Creighton",
+   "time": "Sun · 1 PM · FS1",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-11-22T13:00:00-06:00"
+  },
+  {
+   "id": "401909495",
+   "date": "2026-11-24",
+   "title": "Creighton Hoops vs Michigan",
+   "time": "Tue · 4:30 PM · ESPN",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-11-24T16:30:00-06:00"
+  },
+  {
+   "id": "401921437",
+   "date": "2026-11-24",
+   "title": "Husker Women's Hoops vs Kansas City",
+   "time": "Tue · 7 PM · B1G+",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-11-24T19:00:00-06:00"
+  },
+  {
+   "id": "401926065",
+   "date": "2026-11-25",
+   "title": "Husker Men's Hoops vs Southern",
+   "time": "Wed · 4 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-11-25T16:00:00-06:00"
+  },
+  {
+   "id": "401858536",
+   "date": "2026-11-27",
+   "title": "Husker Football at Iowa",
+   "time": "Fri · 11 AM · CBS",
+   "note": "",
+   "feed": "neb_fb",
+   "sort": "2026-11-27T11:00:00-06:00"
+  },
+  {
+   "id": "401918787",
+   "date": "2026-12-01",
+   "title": "Husker Women's Hoops vs Omaha",
+   "time": "Tue · 7 PM · B1G+",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-01T19:00:00-06:00"
+  },
+  {
+   "id": "401909496",
+   "date": "2026-12-01",
+   "title": "Creighton Hoops vs Oral Roberts",
+   "time": "Tue · 7 PM · ESPN+",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-01T19:00:00-06:00"
+  },
+  {
+   "id": "401921878",
+   "date": "2026-12-02",
+   "title": "Husker Men's Hoops vs Ohio State",
+   "time": "Wed · 7:30 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-02T19:30:00-06:00"
+  },
+  {
+   "id": "401909497",
+   "date": "2026-12-05",
+   "title": "Husker Men's Hoops at Creighton",
+   "time": "Sat · Noon · TNT",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-05T12:00:00-06:00"
+  },
+  {
+   "id": "401921848",
+   "date": "2026-12-05",
+   "title": "Husker Women's Hoops at Iowa",
+   "time": "Sat · 5 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-05T17:00:00-06:00"
+  },
+  {
+   "id": "401921884",
+   "date": "2026-12-08",
+   "title": "Husker Men's Hoops at Penn State",
+   "time": "Tue · 7 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-08T19:00:00-06:00"
+  },
+  {
+   "id": "401918811",
+   "date": "2026-12-08",
+   "title": "Husker Women's Hoops vs North Dakota",
+   "time": "Tue · 7 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-08T19:00:00-06:00"
+  },
+  {
+   "date": "2026-12-10",
+   "title": "Archangels Catholic Boys Hoops at Riverside",
+   "time": "Thu · Time TBA",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-10T19:00"
+  },
+  {
+   "id": "401921438",
+   "date": "2026-12-12",
+   "title": "Husker Women's Hoops vs Texas A&M",
+   "time": "Sat · 11 AM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-12T11:00:00-06:00"
+  },
+  {
+   "id": "401921690",
+   "date": "2026-12-12",
+   "title": "Husker Men's Hoops vs Missouri",
+   "time": "Sat · 6 PM · ESPNU",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-12T18:00:00-06:00"
+  },
+  {
+   "id": "401909498",
+   "date": "2026-12-12",
+   "title": "Creighton Hoops vs Gonzaga",
+   "time": "Sat · 9 PM · Fox",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-12T21:00:00-06:00"
+  },
+  {
+   "id": "401909499",
+   "date": "2026-12-15",
+   "title": "Creighton Hoops vs Mount St. Mary's",
+   "time": "Tue · 7 PM · ESPN+",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-15T19:00:00-06:00"
+  },
+  {
+   "id": "401920927",
+   "date": "2026-12-17",
+   "title": "Husker Men's Hoops vs Mount St. Mary's",
+   "time": "Thu · 6 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-17T18:00:00-06:00"
+  },
+  {
+   "id": "401920572",
+   "date": "2026-12-19",
+   "title": "Creighton Hoops vs Villanova",
+   "time": "Sat · 7 PM · Fox",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-19T19:00:00-06:00"
+  },
+  {
+   "id": "401919766",
+   "date": "2026-12-20",
+   "title": "Husker Men's Hoops vs Fairleigh Dickinson",
+   "time": "Sun · 3 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-20T15:00:00-06:00"
+  },
+  {
+   "id": "401906071",
+   "date": "2026-12-20",
+   "title": "Husker Women's Hoops vs California",
+   "time": "Sun · 5 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-20T17:00:00-06:00"
+  },
+  {
+   "id": "401920574",
+   "date": "2026-12-22",
+   "title": "Creighton Hoops at Xavier",
+   "time": "Tue · 7:30 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-22T19:30:00-06:00"
+  },
+  {
+   "id": "401922063",
+   "date": "2026-12-29",
+   "title": "Husker Women's Hoops vs Washington",
+   "time": "Tue · 7 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2026-12-29T19:00:00-06:00"
+  },
+  {
+   "id": "401926066",
+   "date": "2026-12-30",
+   "title": "Husker Men's Hoops vs New Haven",
+   "time": "Wed · 1 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2026-12-30T13:00:00-06:00"
+  },
+  {
+   "id": "401920582",
+   "date": "2026-12-31",
+   "title": "Creighton Hoops vs Marquette",
+   "time": "Thu · 4 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-12-31T16:00:00-06:00"
+  },
+  {
+   "id": "401921896",
+   "date": "2027-01-02",
+   "title": "Husker Men's Hoops vs Michigan State",
+   "time": "Sat · 2:45 PM · CBS",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-02T14:45:00-06:00"
+  },
+  {
+   "id": "401922072",
+   "date": "2027-01-02",
+   "title": "Husker Women's Hoops at UCLA",
+   "time": "Sat · 7 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-02T19:00:00-06:00"
+  },
+  {
+   "id": "401920586",
+   "date": "2027-01-03",
+   "title": "Creighton Hoops vs UConn",
+   "time": "Sun · 1 PM · NBC",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-03T13:00:00-06:00"
+  },
+  {
+   "id": "401921903",
+   "date": "2027-01-05",
+   "title": "Husker Men's Hoops vs Michigan",
+   "time": "Tue · 6 PM · Peacock",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-05T18:00:00-06:00"
+  },
+  {
+   "id": "401922076",
+   "date": "2027-01-05",
+   "title": "Husker Women's Hoops at USC",
+   "time": "Tue · 9 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-05T21:00:00-06:00"
+  },
+  {
+   "id": "401920590",
+   "date": "2027-01-06",
+   "title": "Creighton Hoops at Seton Hall",
+   "time": "Wed · 5 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-06T17:00:00-06:00"
+  },
+  {
+   "id": "401920596",
+   "date": "2027-01-09",
+   "title": "Creighton Hoops at Georgetown",
+   "time": "Sat · 11 AM · TNT",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-09T11:00:00-06:00"
+  },
+  {
+   "id": "401922088",
+   "date": "2027-01-10",
+   "title": "Husker Women's Hoops vs Michigan State",
+   "time": "Sun · 3:30 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-10T15:30:00-06:00"
+  },
+  {
+   "id": "401921912",
+   "date": "2027-01-10",
+   "title": "Husker Men's Hoops at Oregon",
+   "time": "Sun · 5:30 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-10T17:30:00-06:00"
+  },
+  {
+   "id": "401922097",
+   "date": "2027-01-13",
+   "title": "Husker Women's Hoops vs Michigan",
+   "time": "Wed · 6 PM · FS1",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-13T18:00:00-06:00"
+  },
+  {
+   "id": "401920603",
+   "date": "2027-01-13",
+   "title": "Creighton Hoops vs DePaul",
+   "time": "Wed · 8 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-13T20:00:00-06:00"
+  },
+  {
+   "id": "401921919",
+   "date": "2027-01-13",
+   "title": "Husker Men's Hoops at Washington",
+   "time": "Wed · 10 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-13T22:00:00-06:00"
+  },
+  {
+   "id": "401920607",
+   "date": "2027-01-16",
+   "title": "Creighton Hoops vs St. John's",
+   "time": "Sat · 2:30 PM · TNT",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-16T14:30:00-06:00"
+  },
+  {
+   "id": "401921922",
+   "date": "2027-01-16",
+   "title": "Husker Men's Hoops vs Iowa",
+   "time": "Sat · 7 PM",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-16T19:00:00-06:00"
+  },
+  {
+   "id": "401922108",
+   "date": "2027-01-16",
+   "title": "Husker Women's Hoops vs Ohio State",
+   "time": "Sat · Time TBA · Fox",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-16T23:00:00-06:00"
+  },
+  {
+   "id": "401921927",
+   "date": "2027-01-19",
+   "title": "Husker Men's Hoops at Illinois",
+   "time": "Tue · 8 PM · Peacock",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-19T20:00:00-06:00"
+  },
+  {
+   "id": "401920612",
+   "date": "2027-01-20",
+   "title": "Creighton Hoops at Marquette",
+   "time": "Wed · 6 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-20T18:00:00-06:00"
+  },
+  {
+   "id": "401922113",
+   "date": "2027-01-20",
+   "title": "Husker Women's Hoops at Northwestern",
+   "time": "Wed · 7 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-20T19:00:00-06:00"
+  },
+  {
+   "id": "401921932",
+   "date": "2027-01-22",
+   "title": "Husker Men's Hoops vs UCLA",
+   "time": "Fri · 8 PM · FS1",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-22T20:00:00-06:00"
+  },
+  {
+   "id": "401921942",
+   "date": "2027-01-26",
+   "title": "Husker Men's Hoops at Purdue",
+   "time": "Tue · 5 PM · Peacock",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-26T17:00:00-06:00"
+  },
+  {
+   "id": "401922127",
+   "date": "2027-01-26",
+   "title": "Husker Women's Hoops at Illinois",
+   "time": "Tue · 6 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-26T18:00:00-06:00"
+  },
+  {
+   "id": "401920621",
+   "date": "2027-01-27",
+   "title": "Creighton Hoops at Villanova",
+   "time": "Wed · 6 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-27T18:00:00-06:00"
+  },
+  {
+   "id": "401920626",
+   "date": "2027-01-30",
+   "title": "Creighton Hoops vs Georgetown",
+   "time": "Sat · 2:30 PM · TNT",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-01-30T14:30:00-06:00"
+  },
+  {
+   "id": "401921946",
+   "date": "2027-01-30",
+   "title": "Husker Men's Hoops at Iowa",
+   "time": "Sat · 4 PM · Peacock",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-01-30T16:00:00-06:00"
+  },
+  {
+   "id": "401922138",
+   "date": "2027-01-31",
+   "title": "Husker Women's Hoops vs Oregon",
+   "time": "Sun · 1 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-01-31T13:00:00-06:00"
+  },
+  {
+   "id": "401920630",
+   "date": "2027-02-03",
+   "title": "Creighton Hoops vs Providence",
+   "time": "Wed · 8 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-03T20:00:00-06:00"
+  },
+  {
+   "id": "401922146",
+   "date": "2027-02-04",
+   "title": "Husker Women's Hoops vs Iowa",
+   "time": "Thu · 7:30 PM · Peacock",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-04T19:30:00-06:00"
+  },
+  {
+   "id": "401921792",
+   "date": "2027-02-05",
+   "title": "Husker Men's Hoops vs Indiana",
+   "time": "Fri · Time TBA · Fox",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-05T23:00:00-06:00"
+  },
+  {
+   "id": "401922155",
+   "date": "2027-02-07",
+   "title": "Husker Women's Hoops at Purdue",
+   "time": "Sun · 11 AM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-07T11:00:00-06:00"
+  },
+  {
+   "id": "401920637",
+   "date": "2027-02-07",
+   "title": "Creighton Hoops at UConn",
+   "time": "Sun · 3:30 PM · Fox",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-07T15:30:00-06:00"
+  },
+  {
+   "id": "401921962",
+   "date": "2027-02-09",
+   "title": "Husker Men's Hoops at Maryland",
+   "time": "Tue · 5:30 PM · FS1",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-09T17:30:00-06:00"
+  },
+  {
+   "id": "401920641",
+   "date": "2027-02-10",
+   "title": "Creighton Hoops at St. John's",
+   "time": "Wed · 5:30 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-10T17:30:00-06:00"
+  },
+  {
+   "id": "401922162",
+   "date": "2027-02-11",
+   "title": "Husker Women's Hoops vs Minnesota",
+   "time": "Thu · 7 PM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-11T19:00:00-06:00"
+  },
+  {
+   "id": "401921968",
+   "date": "2027-02-12",
+   "title": "Husker Men's Hoops vs Penn State",
+   "time": "Fri · 8:30 PM · FS1",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-12T20:30:00-06:00"
+  },
+  {
+   "id": "401922170",
+   "date": "2027-02-14",
+   "title": "Husker Women's Hoops at Maryland",
+   "time": "Sun · 11 AM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-14T11:00:00-06:00"
+  },
+  {
+   "id": "401920648",
+   "date": "2027-02-14",
+   "title": "Creighton Hoops vs Seton Hall",
+   "time": "Sun · 2 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-14T14:00:00-06:00"
+  },
+  {
+   "id": "401921978",
+   "date": "2027-02-16",
+   "title": "Husker Men's Hoops vs Rutgers",
+   "time": "Tue · 6 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-16T18:00:00-06:00"
+  },
+  {
+   "id": "401922179",
+   "date": "2027-02-17",
+   "title": "Husker Women's Hoops vs Wisconsin",
+   "time": "Wed · 7 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-17T19:00:00-06:00"
+  },
+  {
+   "id": "401920650",
+   "date": "2027-02-17",
+   "title": "Creighton Hoops at Butler",
+   "time": "Wed · 7:30 PM · truTV",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-17T19:30:00-06:00"
+  },
+  {
+   "id": "401921983",
+   "date": "2027-02-20",
+   "title": "Husker Men's Hoops at Michigan State",
+   "time": "Sat · 7 PM · Fox",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-20T19:00:00-06:00"
+  },
+  {
+   "id": "401922190",
+   "date": "2027-02-21",
+   "title": "Husker Women's Hoops vs Penn State",
+   "time": "Sun · 2 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-21T14:00:00-06:00"
+  },
+  {
+   "id": "401921990",
+   "date": "2027-02-23",
+   "title": "Husker Men's Hoops vs USC",
+   "time": "Tue · 8 PM · Peacock",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-23T20:00:00-06:00"
+  },
+  {
+   "id": "401922193",
+   "date": "2027-02-24",
+   "title": "Husker Women's Hoops at Rutgers",
+   "time": "Wed · 6 PM",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-24T18:00:00-06:00"
+  },
+  {
+   "id": "401920663",
+   "date": "2027-02-24",
+   "title": "Creighton Hoops vs Xavier",
+   "time": "Wed · 7:30 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-24T19:30:00-06:00"
+  },
+  {
+   "id": "401922201",
+   "date": "2027-02-27",
+   "title": "Husker Women's Hoops at Indiana",
+   "time": "Sat · 11 AM · BTN",
+   "note": "",
+   "feed": "neb_wbb",
+   "sort": "2027-02-27T11:00:00-06:00"
+  },
+  {
+   "id": "401921999",
+   "date": "2027-02-27",
+   "title": "Husker Men's Hoops at Northwestern",
+   "time": "Sat · 2 PM · Fox",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-02-27T14:00:00-06:00"
+  },
+  {
+   "id": "401920666",
+   "date": "2027-02-27",
+   "title": "Creighton Hoops at DePaul",
+   "time": "Sat · 6 PM · Peacock",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-02-27T18:00:00-06:00"
+  },
+  {
+   "id": "401920671",
+   "date": "2027-03-02",
+   "title": "Creighton Hoops vs Butler",
+   "time": "Tue · 8:30 PM · TNT",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-03-02T20:30:00-06:00"
+  },
+  {
+   "id": "401921871",
+   "date": "2027-03-03",
+   "title": "Husker Men's Hoops at Wisconsin",
+   "time": "Wed · 7:30 PM · BTN",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-03-03T19:30:00-06:00"
+  },
+  {
+   "id": "401920675",
+   "date": "2027-03-06",
+   "title": "Creighton Hoops at Providence",
+   "time": "Sat · 7 PM · FS1",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2027-03-06T19:00:00-06:00"
+  },
+  {
+   "id": "401922015",
+   "date": "2027-03-07",
+   "title": "Husker Men's Hoops vs Minnesota",
+   "time": "Sun · 6 PM · FS1",
+   "note": "",
+   "feed": "neb_mbb",
+   "sort": "2027-03-07T18:00:00-06:00"
+  },
+  {
+   "date": "2027-03-11",
+   "title": "THE PLAYERS Championship",
+   "time": "Thu to Sun · Golf",
+   "note": "",
+   "feed": "golf",
+   "sort": "2027-03-11T12:00"
+  }
+ ]
+}

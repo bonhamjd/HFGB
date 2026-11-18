@@ -30,13 +30,7 @@ ASIDE = """\
           <span class="hp-eyebrow">Order ahead</span>
           <h3>Order Online for Pickup</h3>
           <p>Order 11 AM to 9 PM, pickup from 11:30 at 302 Main St. Mondays: order from 3 PM, pickup from 3:30.</p>
-          <a class="btn btn--brass btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
-        </div>
-        <div class="hp-aside__card hidden" data-soon>
-          <span class="hp-eyebrow">Coming soon</span>
-          <h3>Online Ordering for Pickup</h3>
-          <p>Soon you'll be able to order on your phone and pick up at 302 Main St. Until then, give us a call or come on in.</p>
-          <a class="btn btn--green btn--lg" href="tel:+14029230160">Call (402) 923-0160</a>
+          <a class="btn btn--flag btn--lg hp-wide" data-order href="/order/">Start Your Order</a>
         </div>
         <div class="hp-aside__note"><b>Drinks</b>Beer, cocktails and the full drink list are at the bar. Ask for Chad's Golf Ball Old Fashioned.</div>
       </aside>"""
