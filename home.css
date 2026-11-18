@@ -84,7 +84,7 @@
 .hp-sub{font-family:var(--font-disp);font-weight:900;font-size:28px;color:var(--brass);}
 .hp-subtxt{color:rgba(240,231,208,.78);margin-top:6px;font-size:16px;}
 .hp .ev-list{margin-top:18px;gap:12px;}
-.hp .ev-list .ev-card:nth-child(n+5){display:none;}
+.hp .ev-list .ev-card:nth-child(n+9){display:none;}
 .hp .ev-card{background:rgba(0,0,0,.18);border:1px solid rgba(240,231,208,.16);padding:14px;gap:14px;}
 .hp .ev-card::before{background:var(--brass);}
 .hp .ev-card__cal{width:60px;}

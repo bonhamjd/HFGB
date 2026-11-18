@@ -70,7 +70,7 @@ const GCAL = {
 };
 
 /* ========================================================================= */
-const SHOW = 10; let ALL = EVENTS.slice();
+const SHOW = 8; let ALL = EVENTS.slice();
 // Add events from another source, drop exact repeats, re-render the soonest SHOW.
 function addEvents(list) {
   const seen = new Set(ALL.map(e => e.date + '|' + e.title));
