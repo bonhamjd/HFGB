@@ -1,24 +1,6 @@
 {
- "built": "2026-11-18 09:58 CT",
+ "built": "2026-11-19 09:21 CT",
  "games": [
-  {
-   "id": "401926064",
-   "date": "2026-11-18",
-   "title": "Husker Men's Hoops vs South Dakota",
-   "time": "Wed · 7:30 PM · BTN",
-   "note": "",
-   "feed": "neb_mbb",
-   "sort": "2026-11-18T19:30:00-06:00"
-  },
-  {
-   "id": "401909494",
-   "date": "2026-11-18",
-   "title": "Creighton Hoops vs Bethune-Cookman",
-   "time": "Wed · 8 PM · truTV",
-   "note": "",
-   "feed": "cu_mbb",
-   "sort": "2026-11-18T20:00:00-06:00"
-  },
   {
    "id": "401858531",
    "date": "2026-11-21",
@@ -41,10 +23,10 @@
    "id": "401902281",
    "date": "2026-11-22",
    "title": "Husker Men's Hoops vs Butler",
-   "time": "Sun · 11 AM · FS1",
+   "time": "Sun · Noon · FS1",
    "note": "",
    "feed": "neb_mbb",
-   "sort": "2026-11-22T11:00:00-06:00"
+   "sort": "2026-11-22T12:00:00-06:00"
   },
   {
    "id": "401911795",
@@ -119,6 +101,14 @@
    "sort": "2026-12-02T19:30:00-06:00"
   },
   {
+   "date": "2026-12-04",
+   "title": "Archangels Catholic Girls Hoops vs Palmer",
+   "time": "Fri · 4:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-04T16:00"
+  },
+  {
    "id": "401909497",
    "date": "2026-12-05",
    "title": "Husker Men's Hoops at Creighton",
@@ -128,6 +118,22 @@
    "sort": "2026-12-05T12:00:00-06:00"
   },
   {
+   "date": "2026-12-05",
+   "title": "Humphrey-Lindsay Girls Hoops vs Battle Creek",
+   "time": "Sat · 3:30 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-05T15:30"
+  },
+  {
+   "date": "2026-12-05",
+   "title": "Archangels Catholic Girls Hoops vs GI Lutheran",
+   "time": "Sat · 4:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-05T16:00"
+  },
+  {
    "id": "401921848",
    "date": "2026-12-05",
    "title": "Husker Women's Hoops at Iowa",
@@ -135,6 +141,30 @@
    "note": "",
    "feed": "neb_wbb",
    "sort": "2026-12-05T17:00:00-06:00"
+  },
+  {
+   "date": "2026-12-05",
+   "title": "Humphrey-Lindsay Boys Hoops vs Battle Creek",
+   "time": "Sat · 5:15 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-05T17:15"
+  },
+  {
+   "date": "2026-12-08",
+   "title": "Archangels Catholic Girls Hoops vs Nebraska Christian",
+   "time": "Tue · 3:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-08T15:00"
+  },
+  {
+   "date": "2026-12-08",
+   "title": "Humphrey-Lindsay Bowling vs Plainview",
+   "time": "Tue · 3:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-08T15:00"
   },
   {
    "id": "401921884",
@@ -163,6 +193,22 @@
    "sort": "2026-12-10T19:00"
   },
   {
+   "date": "2026-12-11",
+   "title": "Humphrey-Lindsay Girls Hoops vs Howells-Dodge",
+   "time": "Fri · 6:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-11T18:00"
+  },
+  {
+   "date": "2026-12-11",
+   "title": "Humphrey-Lindsay Boys Hoops vs Howells-Dodge",
+   "time": "Fri · 7:30 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-11T19:30"
+  },
+  {
    "id": "401921438",
    "date": "2026-12-12",
    "title": "Husker Women's Hoops vs Texas A&M",
@@ -170,6 +216,14 @@
    "note": "",
    "feed": "neb_wbb",
    "sort": "2026-12-12T11:00:00-06:00"
+  },
+  {
+   "date": "2026-12-12",
+   "title": "Archangels Catholic Girls Hoops vs Scotus",
+   "time": "Sat · 3:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-12T15:00"
   },
   {
    "id": "401921690",
@@ -190,6 +244,14 @@
    "sort": "2026-12-12T21:00:00-06:00"
   },
   {
+   "date": "2026-12-15",
+   "title": "Archangels Catholic Girls Hoops vs Fullerton",
+   "time": "Tue · 3:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-15T15:00"
+  },
+  {
    "id": "401909499",
    "date": "2026-12-15",
    "title": "Creighton Hoops vs Mount St. Mary's",
@@ -206,6 +268,30 @@
    "note": "",
    "feed": "neb_mbb",
    "sort": "2026-12-17T18:00:00-06:00"
+  },
+  {
+   "date": "2026-12-18",
+   "title": "Humphrey-Lindsay Girls Hoops vs Boys Town",
+   "time": "Fri · 6:15 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-18T18:15"
+  },
+  {
+   "date": "2026-12-18",
+   "title": "Humphrey-Lindsay Boys Hoops vs Boys Town",
+   "time": "Fri · 8:00 PM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-18T20:00"
+  },
+  {
+   "date": "2026-12-19",
+   "title": "Humphrey-Lindsay Bowling vs TC Thunder",
+   "time": "Sat · 10:00 AM",
+   "note": "",
+   "feed": "schools",
+   "sort": "2026-12-19T10:00"
   },
   {
    "id": "401920572",
