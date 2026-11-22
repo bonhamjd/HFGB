@@ -1,19 +1,10 @@
 {
- "built": "2026-11-20 09:26 CT",
+ "built": "2026-11-22 09:21 CT",
  "games": [
-  {
-   "id": "401858531",
-   "date": "2026-11-21",
-   "title": "Husker Football vs Ohio State",
-   "time": "Sat · 11 AM · Fox",
-   "note": "",
-   "feed": "neb_fb",
-   "sort": "2026-11-21T11:00:00-06:00"
-  },
   {
    "id": "401931739",
    "date": "2026-11-22",
-   "title": "Husker Volleyball: Big Ten Tournament Quarterfinal",
+   "title": "Husker Volleyball vs Indiana",
    "time": "Sun · 11 AM",
    "note": "",
    "feed": "neb_vb",
