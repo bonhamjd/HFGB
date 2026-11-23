@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://hfgb-orders.highflyersgolfbar.workers.dev" crossorigin>
 <link rel="preload" as="image" href="assets/photos/bar.webp">
 <link rel="stylesheet" href="styles.css?v=7">
-<link rel="stylesheet" href="home.css?v=8">
+<link rel="stylesheet" href="home.css?v=9">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -80,6 +80,22 @@
       "closes": "22:00"
     }
   ],
+  "specialOpeningHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "validFrom": "2026-11-26",
+      "validThrough": "2026-11-26",
+      "opens": "18:00",
+      "closes": "01:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "validFrom": "2026-12-24",
+      "validThrough": "2026-12-25",
+      "opens": "15:00",
+      "closes": "01:00"
+    }
+  ],
   "servesCuisine": [
     "American",
     "Pizza",
@@ -114,7 +130,7 @@
       "name": "What are your hours?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM."
+        "text": "Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM. Holiday hours for 2026: Thanksgiving Thursday 11/26 opens at 6 PM, Christmas Eve Thursday 12/24 and Christmas Day Friday 12/25 open at 3 PM, all until 1 AM."
       }
     },
     {
@@ -277,6 +293,7 @@
     <div class="hp-visit__grid">
       <div class="hp-info">
         <div class="hp-row"><span class="k">Hours</span><span class="v">Monday: 3 PM to 1 AM<br>Tue to Sat: 11 AM to 1 AM<br>Sunday: 11 AM to 10 PM<br>Kitchen closes at 9 PM</span></div>
+        <div class="hp-row hp-row--holiday js-holiday-hours"><span class="k">Holidays</span><span class="v">Thanksgiving Thu 11/26: 6 PM to 1 AM<br>Christmas Eve Thu 12/24: 3 PM to 1 AM<br>Christmas Day Fri 12/25: 3 PM to 1 AM<br>Kitchen still closes at 9 PM</span></div>
         <div class="hp-row" data-order-block><span class="k">Order online</span><span class="v">11 AM to 9 PM, pickup from 11:30<br>Monday: 3 PM to 9 PM, pickup from 3:30</span></div>
         <div class="hp-row"><span class="k">Address</span><span class="v"><a href="https://maps.google.com/?q=High+Flyers+Golf+Bar+302+Main+St+Humphrey+NE+68642" target="_blank" rel="noopener">302 Main St<br>Humphrey, NE 68642</a></span></div>
         <div class="hp-row"><span class="k">Phone</span><span class="v"><a href="tel:+14029230160">(402) 923-0160</a></span></div>
@@ -311,7 +328,7 @@
       </div>
       <div class="hp-faq__item">
         <h3>What are your hours?</h3>
-        <p>Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM.</p>
+        <p>Monday 3 PM to 1 AM, Tuesday through Saturday 11 AM to 1 AM, and Sunday 11 AM to 10 PM.<span class="js-holiday-hours"> Holiday hours: Thanksgiving Thu 11/26 opens at 6 PM, Christmas Eve Thu 12/24 and Christmas Day Fri 12/25 open at 3 PM, all until 1 AM.</span></p>
       </div>
       <div class="hp-faq__item">
         <h3>Where is High Flyers Golf Bar?</h3>
@@ -366,7 +383,7 @@
 <div class="hp-sticky away hidden" id="sticky"><a data-order href="/order/">Order Online for Pickup <span>&rarr;</span></a></div>
 
 <script src="app.js?v=hp7"></script>
-<script src="home.js?v=6"></script>
+<script src="home.js?v=7"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "477c9749eb024f018ec797bb7353d0c5"}'></script>
 </body>
 </html>

@@ -72,6 +72,10 @@ const ORDER_URL = '/order/';
     }
   }
   applyOrdering();
+  // Holiday hours notice: hide after close on Christmas Day (1 AM America/Chicago on Dec 26, 2026; CST = 07:00 UTC).
+  if (Date.now() >= Date.parse('2026-12-26T07:00:00Z')) {
+    document.querySelectorAll('.js-holiday-hours').forEach(e => e.remove());
+  }
   // Sticky order button (only when ordering is live): shows after the hero, hides while another big order button is on screen.
   const sticky = $('#sticky');
   if (sticky && ORDERING_LIVE) {

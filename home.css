@@ -100,6 +100,8 @@
 .hp-row .k{flex:none;width:92px;font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--n500);padding-top:3px;}
 .hp-row .v{font-weight:600;}
 .hp-row .v a{color:var(--hg);text-decoration:underline;text-underline-offset:3px;}
+.hp-row--holiday{background:rgba(13,59,41,.07);margin:0 -18px;padding-left:18px;padding-right:18px;}
+.hp-row--holiday .k{color:var(--hg);}
 .hp-btns{display:grid;gap:10px;margin-top:16px;}
 .hp-btns .btn{width:100%;}
 .hp-social{display:flex;align-items:center;gap:10px;margin-top:16px;color:var(--n600);font-size:14px;}
