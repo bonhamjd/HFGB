@@ -1,33 +1,6 @@
 {
- "built": "2026-11-23 09:16 CT",
+ "built": "2026-11-25 09:21 CT",
  "games": [
-  {
-   "id": "401909495",
-   "date": "2026-11-24",
-   "title": "Creighton Hoops vs Michigan",
-   "time": "Tue · 4:30 PM · ESPN",
-   "note": "",
-   "feed": "cu_mbb",
-   "sort": "2026-11-24T16:30:00-06:00"
-  },
-  {
-   "id": "401931743",
-   "date": "2026-11-24",
-   "title": "Husker Volleyball vs Purdue",
-   "time": "Tue · 5 PM",
-   "note": "",
-   "feed": "neb_vb",
-   "sort": "2026-11-24T17:00:00-06:00"
-  },
-  {
-   "id": "401921437",
-   "date": "2026-11-24",
-   "title": "Husker Women's Hoops vs Kansas City",
-   "time": "Tue · 7 PM · B1G+",
-   "note": "",
-   "feed": "neb_wbb",
-   "sort": "2026-11-24T19:00:00-06:00"
-  },
   {
    "id": "401926065",
    "date": "2026-11-25",
@@ -36,6 +9,24 @@
    "note": "",
    "feed": "neb_mbb",
    "sort": "2026-11-25T16:00:00-06:00"
+  },
+  {
+   "id": "401931745",
+   "date": "2026-11-25",
+   "title": "Husker Volleyball vs Wisconsin",
+   "time": "Wed · 7 PM",
+   "note": "",
+   "feed": "neb_vb",
+   "sort": "2026-11-25T19:00:00-06:00"
+  },
+  {
+   "id": "401920538",
+   "date": "2026-11-26",
+   "title": "Creighton Hoops vs TCU",
+   "time": "Thu · 5 PM · ESPN",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-11-26T17:00:00-06:00"
   },
   {
    "id": "401858536",
@@ -152,7 +143,7 @@
    "id": "401918811",
    "date": "2026-12-08",
    "title": "Husker Women's Hoops vs North Dakota",
-   "time": "Tue · 7 PM",
+   "time": "Tue · 7 PM · B1G+",
    "note": "",
    "feed": "neb_wbb",
    "sort": "2026-12-08T19:00:00-06:00"
