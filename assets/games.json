@@ -1,24 +1,6 @@
 {
- "built": "2026-11-25 09:21 CT",
+ "built": "2026-11-26 09:21 CT",
  "games": [
-  {
-   "id": "401926065",
-   "date": "2026-11-25",
-   "title": "Husker Men's Hoops vs Southern",
-   "time": "Wed · 4 PM · BTN",
-   "note": "",
-   "feed": "neb_mbb",
-   "sort": "2026-11-25T16:00:00-06:00"
-  },
-  {
-   "id": "401931745",
-   "date": "2026-11-25",
-   "title": "Husker Volleyball vs Wisconsin",
-   "time": "Wed · 7 PM",
-   "note": "",
-   "feed": "neb_vb",
-   "sort": "2026-11-25T19:00:00-06:00"
-  },
   {
    "id": "401920538",
    "date": "2026-11-26",
