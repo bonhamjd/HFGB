@@ -1,23 +1,23 @@
 {
- "built": "2026-11-26 09:21 CT",
+ "built": "2026-11-27 09:21 CT",
  "games": [
-  {
-   "id": "401920538",
-   "date": "2026-11-26",
-   "title": "Creighton Hoops vs TCU",
-   "time": "Thu · 5 PM · ESPN",
-   "note": "",
-   "feed": "cu_mbb",
-   "sort": "2026-11-26T17:00:00-06:00"
-  },
   {
    "id": "401858536",
    "date": "2026-11-27",
    "title": "Husker Football at Iowa",
-   "time": "Fri · 11 AM · CBS",
+   "time": "Fri · 11:08 AM · CBS",
    "note": "",
    "feed": "neb_fb",
-   "sort": "2026-11-27T11:00:00-06:00"
+   "sort": "2026-11-27T11:08:00-06:00"
+  },
+  {
+   "id": "401920544",
+   "date": "2026-11-27",
+   "title": "Creighton Hoops vs Gonzaga",
+   "time": "Fri · 10 PM · ESPN",
+   "note": "",
+   "feed": "cu_mbb",
+   "sort": "2026-11-27T22:00:00-06:00"
   },
   {
    "id": "401918787",
